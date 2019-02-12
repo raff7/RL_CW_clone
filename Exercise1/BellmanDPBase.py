@@ -35,15 +35,15 @@ class BellmanDPSolver(object):
 if __name__ == '__main__':
 	solution = BellmanDPSolver()
 	solution.initVs()
-	for i in range(1):
+	for i in range(20000):
 		values, policy = solution.BellmanUpdate()
 	#print("Values : ", values)
 	# for k,v in policy.items():
 	# 	print(k,v)
 	#print("Policy : ", policy)
 
-	for k, v in policy.items():
-		print(k,v)
+	for k, v in (policy.items()):
+		print(k,v,values[k])
 
 
 
