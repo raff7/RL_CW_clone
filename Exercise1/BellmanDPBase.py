@@ -8,6 +8,7 @@ class BellmanDPSolver(object):
 	def initVs(self):
 
 		self.VS = dict.fromkeys(self.MDP.S,0)
+		policy =dict.fromkeys(self.MDP.S,self.MDP.A)
 
 	def BellmanUpdate(self):
 		policy =dict.fromkeys(self.MDP.S,[])
