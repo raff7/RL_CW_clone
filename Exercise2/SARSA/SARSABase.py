@@ -22,6 +22,9 @@ class SARSAAgent(Agent):
 	def setExperience(self, state, action, reward, status, nextState):
 		raise NotImplementedError
 
+	def computeHyperparameters(self, numTakenActions, episodeNumber):
+		raise NotImplementedError
+
 	def toStateRepresentation(self, state):
 		raise NotImplementedError
 
@@ -35,15 +38,16 @@ class SARSAAgent(Agent):
 		raise NotImplementedError
 
 if __name__ == '__main__':
+
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--id', type=int, default=0)
 	parser.add_argument('--numOpponents', type=int, default=0)
 	parser.add_argument('--numTeammates', type=int, default=0)
 	parser.add_argument('--numEpisodes', type=int, default=500)
 
-	args = parser.parse_args()
-
-	numEpisodes = 10
+	args=parser.parse_args()
+	
+	numEpisodes = args.numEpisodes
 	# Initialize connection to the HFO environment using HFOAttackingPlayer
 	hfoEnv = HFOAttackingPlayer(numOpponents = args.numOpponents, numTeammates = args.numTeammates, agentId = args.id)
 	hfoEnv.connectToServer()
@@ -62,7 +66,10 @@ if __name__ == '__main__':
 		epsStart = True
 
 		while status==0:
-			learningRate, epsilon = agent.computeHyperparameters(self, numTakenActions, episode)
+			learningRate, epsilon = agent.computeHyperparameters(numTakenActions, episode)
+			agent.setEpsilon(epsilon)
+			agent.setLearningRate(learningRate)
+			
 			obsCopy = observation.copy()
 			agent.setState(agent.toStateRepresentation(obsCopy))
 			action = agent.act()
