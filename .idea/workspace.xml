@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="252e79ad-d3b8-4e13-8f90-d3dcec3862d4" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Exercise2/SARSA/SARSABase.py" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise2/SARSA/SARSABase.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -57,14 +59,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="574">
-              <caret line="51" column="13" selection-start-line="51" selection-start-column="8" selection-end-line="51" selection-end-column="13" />
+            <state relative-caret-position="170">
+              <caret line="21" column="78" selection-start-line="21" selection-start-column="78" selection-end-line="21" selection-end-column="78" />
               <folding>
                 <element signature="e#41#102#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="10" column="61" selection-start-line="10" selection-start-column="61" selection-end-line="10" selection-end-column="61" />
             </state>
           </provider>
         </entry>
@@ -77,15 +88,6 @@
               <folding>
                 <element signature="e#41#102#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Exercise2/DiscreteHFO/Agent.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="28" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="28" />
             </state>
           </provider>
         </entry>
@@ -110,8 +112,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Exercise2/SARSA/SARSABase.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="501">
-              <caret line="51" column="43" selection-start-line="51" selection-start-column="43" selection-end-line="51" selection-end-column="43" />
+            <state relative-caret-position="240">
+              <caret line="16" column="18" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="18" />
               <folding>
                 <element signature="e#41#102#0" expanded="true" />
               </folding>
@@ -131,11 +133,11 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>page</find>
-      <find>computeHyperparameters</find>
       <find>reset</find>
       <find>book</find>
       <find>random</find>
       <find>discountFactor</find>
+      <find>computeHyperparameters</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -146,9 +148,10 @@
       <list>
         <option value="$PROJECT_DIR$/Exercise1/BellmanDPBase.py" />
         <option value="$PROJECT_DIR$/Exercise1/testy.py" />
-        <option value="$PROJECT_DIR$/Exercise2/SARSA/SARSABase.py" />
         <option value="$PROJECT_DIR$/Exercise2/MonteCarlo/MonteCarloBase.py" />
+        <option value="$PROJECT_DIR$/Exercise2/SARSA/SARSABase.py" />
         <option value="$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py" />
+        <option value="$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh" />
       </list>
     </option>
   </component>
@@ -186,6 +189,12 @@
               <item name="RL_CW_clone" type="462c0819:PsiDirectoryNode" />
               <item name="Exercise2" type="462c0819:PsiDirectoryNode" />
               <item name="QLearning" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="RL_CW_clone" type="b2602c69:ProjectViewProjectNode" />
+              <item name="RL_CW_clone" type="462c0819:PsiDirectoryNode" />
+              <item name="Exercise2" type="462c0819:PsiDirectoryNode" />
+              <item name="SARSA" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -341,13 +350,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="7" lean-forward="true" selection-start-line="16" selection-start-column="7" selection-end-line="16" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Exercise2/DiscreteHFO/HFODefendingPlayer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-820" />
@@ -370,16 +372,6 @@
             <caret line="12" column="57" selection-start-line="12" selection-start-column="57" selection-end-line="12" selection-end-column="57" />
           </first_editor>
           <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Exercise2/SARSA/SARSABase.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="501">
-          <caret line="51" column="43" selection-start-line="51" selection-start-column="43" selection-end-line="51" selection-end-column="43" />
-          <folding>
-            <element signature="e#41#102#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -413,16 +405,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Exercise2/MonteCarlo/MonteCarloBase.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-327">
-          <caret line="26" column="30" lean-forward="true" selection-start-line="26" selection-start-column="30" selection-end-line="26" selection-end-column="30" />
-          <folding>
-            <element signature="e#41#102#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Exercise2/DiscreteHFO/HFOAttackingPlayer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1952">
@@ -450,13 +432,40 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py">
+    <entry file="file://$PROJECT_DIR$/Exercise2/MonteCarlo/MonteCarloBase.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="574">
-          <caret line="51" column="13" selection-start-line="51" selection-start-column="8" selection-end-line="51" selection-end-column="13" />
+        <state relative-caret-position="-327">
+          <caret line="26" column="30" lean-forward="true" selection-start-line="26" selection-start-column="30" selection-end-line="26" selection-end-column="30" />
           <folding>
             <element signature="e#41#102#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Exercise2/SARSA/SARSABase.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="18" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="18" />
+          <folding>
+            <element signature="e#41#102#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="21" column="78" selection-start-line="21" selection-start-column="78" selection-end-line="21" selection-end-column="78" />
+          <folding>
+            <element signature="e#41#102#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="61" selection-start-line="10" selection-start-column="61" selection-end-line="10" selection-end-column="61" />
         </state>
       </provider>
     </entry>

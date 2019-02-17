@@ -18,8 +18,9 @@ class QLearningAgent(Agent):
 
 
 	def learn(self):
-		self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + self.learningRate*(self.R + self.discountFactor*self.qValues[self.state][max(self.qValues[self.state])] - self.qValues[self.state][self.A])
-		return self.learningRate*(self.R + self.discountFactor*self.qValues[self.state][max(self.qValues[self.state])] - self.qValues[self.state][self.A])
+		diff = self.learningRate*(self.R + self.discountFactor*self.qValues[self.nextState][max(self.qValues[self.nextState])] - self.qValues[self.state][self.A])
+		self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
+		return diff
 
 	def act(self):
 		if (random.random() < self.epsilon or len(self.qValues[self.state]) == 0):#epsilon greedy policy, chose random with probability epsilon, or when no action was ever performed from this state (all values are 0_)
@@ -42,6 +43,7 @@ class QLearningAgent(Agent):
 	def setExperience(self, state, action, reward, status, nextState):
 		self.R = reward
 		self.A = action
+		self.nextState = nextState
 
 	def setLearningRate(self, learningRate):
 		self.learningRate = learningRate

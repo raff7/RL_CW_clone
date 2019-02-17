@@ -4,23 +4,36 @@
 from DiscreteHFO.HFOAttackingPlayer import HFOAttackingPlayer
 from DiscreteHFO.Agent import Agent
 import argparse
-
+import random
 
 class SARSAAgent(Agent):
 	def __init__(self, learningRate, discountFactor, epsilon, initVals=0.0):
 		super(SARSAAgent, self).__init__()
 
 	def learn(self):
-		raise NotImplementedError
-
+		diff = self.learningRate * (self.R + self.discountFactor * self.qValues[self.state][self.policy(self.nextState)] -self.qValues[self.state][self.A])
+		self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
+		return diff
 	def act(self):
-		raise NotImplementedError
+		self.policy(self.state)
+	def policy(self,state):
+		if (random.random() < self.epsilon or len(self.qValues[state]) == 0):#epsilon greedy policy, chose random with probability epsilon, or when no action was ever performed from this state (all values are 0_)
+			action = self.possibleActions[random.randint(0, 4)]
+		else:
+			action = max(self.qValues[state])
+
+		if (not action in self.qValues[state].keys()):
+			self.qValues[state][action] = 0  # when randomly chose an action we never explored initialize it to 0.
+
+		return action
 
 	def setState(self, state):
-		raise NotImplementedError
+		self.state = state
 
 	def setExperience(self, state, action, reward, status, nextState):
-		raise NotImplementedError
+		self.R = reward
+		self.A = action
+		self.nextState = nextState
 
 	def computeHyperparameters(self, numTakenActions, episodeNumber):
 		raise NotImplementedError
@@ -32,7 +45,7 @@ class SARSAAgent(Agent):
 		raise NotImplementedError
 
 	def setLearningRate(self, learningRate):
-		raise NotImplementedError
+		self.learningRate
 
 	def setEpsilon(self, epsilon):
 		raise NotImplementedError
