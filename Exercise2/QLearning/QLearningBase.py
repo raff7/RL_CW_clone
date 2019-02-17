@@ -12,10 +12,13 @@ class QLearningAgent(Agent):
 	def __init__(self, learningRate, discountFactor, epsilon, initVals=0.0):
 		super(QLearningAgent, self).__init__()
 		self.qValues = {}
+		self.discoundFactor = discountFactor
+		self.epsilon = epsilon
+		self.learningRate=learningRate
 
 
 	def learn(self):
-		self.qValues[self.state][self.action] = self.qValues[self.state][self.A] + self.learningRate*(self.R + self.discountFactor*self.qValues[self.state][max(self.qValues[self.state])] - self.qValues[self.state][self.A])
+		self.qValues[self.state][self.action] = self.qValues[self.state][self.A] + self.learningRate*(self.R + self.discoundFactor*self.qValues[self.state][max(self.qValues[self.state])] - self.qValues[self.state][self.A])
 		return self.learningRate*(self.R + self.discountFactor*self.qValues[self.state][max(self.qValues[self.state])] - self.qValues[self.state][self.A])
 
 	def act(self):
