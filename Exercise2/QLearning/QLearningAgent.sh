@@ -11,13 +11,16 @@ echo "Environment Initialized"
 # Sleep is needed to make sure doesn't get connected too soon, as unum 1 (goalie)
 
 sleep 5
-./QLearningBase.py --numOpponents=1 2>&1
+./QLearningBase.py --numOpponents=1 &
+echo "Attacker Controller Initialized"
 
 sleep 5
-./DiscreteHFO/Goalkeeper.py  >/dev/null 2>&1
+./DiscreteHFO/Goalkeeper.py &
+echo "Goalkeeper Initialized"
 
 sleep 5
-./DiscreteHFO/DiscretizedDefendingPlayer.py --id=1 >/dev/null 2>&1
+./DiscreteHFO/DiscretizedDefendingPlayer.py --id=1 &
+echo "Defending Player Initialized"
 
 sleep 5
 # The magic line
