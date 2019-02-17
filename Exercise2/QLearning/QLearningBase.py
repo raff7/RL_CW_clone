@@ -3,7 +3,7 @@
 
 from DiscreteHFO.HFOAttackingPlayer import HFOAttackingPlayer
 from DiscreteHFO.Agent import Agent
-from random import random
+import random
 import sys
 import argparse
 
@@ -19,7 +19,7 @@ class QLearningAgent(Agent):
 		return self.learningRate*(self.R + self.discountFactor*self.qValues[self.state][max(self.qValues[self.state])] - self.qValues[self.state][self.A])
 
 	def act(self):
-		if (random() < self.epsilon or len(self.qValues[self.state]) == 0):#epsilon greedy policy, chose random with probability epsilon, or when no action was ever performed from this state (all values are 0_)
+		if (random.random() < self.epsilon or len(self.qValues[self.state]) == 0):#epsilon greedy policy, chose random with probability epsilon, or when no action was ever performed from this state (all values are 0_)
 			action = self.possibleActions[random.randint(0, 4)]
 		else:
 			action = max(self.qValues[self.state])
