@@ -11,6 +11,7 @@ import argparse
 class QLearningAgent(Agent):
 	def __init__(self, learningRate, discountFactor, epsilon, initVals=0.0):
 		super(QLearningAgent, self).__init__()
+		self.qValues = {}
 
 
 	def learn(self):
