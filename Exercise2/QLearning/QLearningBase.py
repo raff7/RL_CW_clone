@@ -45,7 +45,7 @@ class QLearningAgent(Agent):
 		self.A = action
 		self.nextState = nextState
 		if(not nextState in self.qValues.keys()):
-			self.qValues[nextState] = {}
+			self.qValues[nextState] = dict.fromkeys(self.possibleActions,0)
 
 
 	def setLearningRate(self, learningRate):
