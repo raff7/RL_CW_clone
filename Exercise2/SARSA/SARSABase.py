@@ -11,8 +11,12 @@ class SARSAAgent(Agent):
 		super(SARSAAgent, self).__init__()
 
 	def learn(self):
-		diff = self.learningRate * (self.R + self.discountFactor * self.qValues[self.state][self.policy(self.nextState)] -self.qValues[self.state][self.A])
-		self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
+		if(self.nextState is None):
+			diff = self.learningRate * (self.R + self.discountFactor * 0 -self.qValues[self.state][self.A])
+			self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
+		else:
+			diff = self.learningRate * (self.R + self.discountFactor * self.qValues[self.state][self.policy(self.nextState)] -self.qValues[self.state][self.A])
+			self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
 		return diff
 	def act(self):
 		self.policy(self.state)
