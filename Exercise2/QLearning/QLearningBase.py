@@ -26,6 +26,8 @@ class QLearningAgent(Agent):
 
 		if (not action in self.qValues[self.state].keys()):
 			self.qValues[self.state][action] = 0  # when randomly chose an action we never explored initialize it to 0.
+
+		return action
 	def toStateRepresentation(self, state):
 		return state[0]
 
@@ -94,7 +96,6 @@ if __name__ == '__main__':
 			action = agent.act()
 			numTakenActions += 1
 
-			print("IMPORTANT PRINT:::::: ",action)
 			nextObservation, reward, done, status = hfoEnv.step(action)
 			agent.setExperience(agent.toStateRepresentation(obsCopy), action, reward, status, agent.toStateRepresentation(nextObservation))
 			update = agent.learn()
