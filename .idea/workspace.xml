@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="252e79ad-d3b8-4e13-8f90-d3dcec3862d4" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Exercise1/BellmanDPBase.py" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise1/BellmanDPBase.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -15,8 +18,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Exercise1/BellmanDPBase.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="750">
-              <caret line="50" column="23" selection-start-line="50" selection-start-column="22" selection-end-line="50" selection-end-column="23" />
+            <state relative-caret-position="228">
+              <caret line="21" column="54" selection-start-line="21" selection-start-column="44" selection-end-line="21" selection-end-column="54" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -28,7 +31,7 @@
         <entry file="file://$PROJECT_DIR$/Exercise2/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="346">
+              <first_editor relative-caret-position="108">
                 <caret line="65" column="16" lean-forward="true" selection-start-line="65" selection-start-column="16" selection-end-line="65" selection-end-column="16" />
               </first_editor>
               <second_editor />
@@ -72,8 +75,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="468">
-              <caret line="47" column="72" selection-start-line="47" selection-start-column="72" selection-end-line="47" selection-end-column="72" />
+            <state relative-caret-position="214">
+              <caret line="97" column="14" selection-start-line="97" selection-start-column="14" selection-end-line="97" selection-end-column="14" />
               <folding>
                 <element signature="e#41#102#0" expanded="true" />
               </folding>
@@ -93,8 +96,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" column="68" selection-end-line="30" />
+            <state relative-caret-position="50">
+              <caret line="13" column="40" selection-start-line="13" selection-start-column="40" selection-end-line="13" selection-end-column="40" />
             </state>
           </provider>
         </entry>
@@ -148,10 +151,10 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Exercise1/BellmanDPBase.py" />
         <option value="$PROJECT_DIR$/Exercise1/testy.py" />
         <option value="$PROJECT_DIR$/Exercise2/MonteCarlo/MonteCarloBase.py" />
         <option value="$PROJECT_DIR$/Exercise2/SARSA/SARSABase.py" />
+        <option value="$PROJECT_DIR$/Exercise1/BellmanDPBase.py" />
         <option value="$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh" />
         <option value="$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py" />
       </list>
@@ -225,7 +228,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.testy">
+  <component name="RunManager" selected="Python.BellmanDPBase">
     <configuration name="BellmanDPBase" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="RL_CW_clone" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -270,8 +273,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.testy" />
         <item itemvalue="Python.BellmanDPBase" />
+        <item itemvalue="Python.testy" />
       </list>
     </recent_temporary>
   </component>
@@ -297,8 +300,8 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32756132" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.3997114" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32756132" />
+      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.3997114" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -395,23 +398,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Exercise2/DiscreteHFO/HFOAttackingPlayer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1952">
-          <caret line="137" column="23" selection-start-line="137" selection-end-line="138" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Exercise2/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="346">
-            <caret line="65" column="16" lean-forward="true" selection-start-line="65" selection-start-column="16" selection-end-line="65" selection-end-column="16" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Exercise2/MonteCarlo/MonteCarloBase.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-327">
@@ -432,20 +418,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh">
+    <entry file="file://$PROJECT_DIR$/Exercise2/DiscreteHFO/Agent.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="68" selection-end-line="30" />
+        <state relative-caret-position="30">
+          <caret line="2" column="28" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Exercise2/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="108">
+            <caret line="65" column="16" lean-forward="true" selection-start-line="65" selection-start-column="16" selection-end-line="65" selection-end-column="16" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Exercise1/BellmanDPBase.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="750">
-          <caret line="50" column="23" selection-start-line="50" selection-start-column="22" selection-end-line="50" selection-end-column="23" />
+        <state relative-caret-position="228">
+          <caret line="21" column="54" selection-start-line="21" selection-start-column="44" selection-end-line="21" selection-end-column="54" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Exercise2/DiscreteHFO/HFOAttackingPlayer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1952">
+          <caret line="137" column="23" selection-start-line="137" selection-end-line="138" />
         </state>
       </provider>
     </entry>
@@ -459,17 +462,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Exercise2/DiscreteHFO/Agent.py">
+    <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="28" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="28" />
+        <state relative-caret-position="50">
+          <caret line="13" column="40" selection-start-line="13" selection-start-column="40" selection-end-line="13" selection-end-column="40" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="47" column="72" selection-start-line="47" selection-start-column="72" selection-end-line="47" selection-end-column="72" />
+        <state relative-caret-position="214">
+          <caret line="97" column="14" selection-start-line="97" selection-start-column="14" selection-end-line="97" selection-end-column="14" />
           <folding>
             <element signature="e#41#102#0" expanded="true" />
           </folding>

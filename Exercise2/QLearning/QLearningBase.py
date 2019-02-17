@@ -89,8 +89,14 @@ if __name__ == '__main__':
 	numEpisodes = args.numEpisodes
 
 	# Run training using Q-Learning
-	numTakenActions = 0 
+	numTakenActions = 0
+	print()
+	print()
+	print("START")
+	print("______________________________")
 	for episode in range(numEpisodes):
+		print()
+		print("episode ",episode)
 		status = 0
 		observation = hfoEnv.reset()
 		
