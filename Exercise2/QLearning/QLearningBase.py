@@ -63,7 +63,7 @@ class QLearningAgent(Agent):
 		return lr, ep
 
 if __name__ == '__main__':
-
+	print("Begin")
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--id', type=int, default=0)
 	parser.add_argument('--numOpponents', type=int, default=0)
@@ -71,6 +71,7 @@ if __name__ == '__main__':
 	parser.add_argument('--numEpisodes', type=int, default=500)
 
 	args=parser.parse_args()
+	print("Args parsed")
 
 	# Initialize connection with the HFO server
 	parser = argparse.ArgumentParser()
@@ -82,10 +83,15 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 
 	hfoEnv = HFOAttackingPlayer(numOpponents = args.numOpponents, numTeammates = args.numTeammates, agentId = args.id)
+	print("create attacking player")
+
 	hfoEnv.connectToServer()
+	print("connected to server")
 
 	# Initialize a Q-Learning Agent
 	agent = QLearningAgent(learningRate = 0.1, discountFactor = 0.99, epsilon = 1.0)
+	print("QL agent created")
+
 	numEpisodes = args.numEpisodes
 
 	# Run training using Q-Learning
