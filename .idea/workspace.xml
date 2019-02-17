@@ -60,8 +60,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="312">
-              <caret line="26" column="34" selection-start-line="26" selection-end-line="27" />
+            <state relative-caret-position="439">
+              <caret line="97" column="45" lean-forward="true" selection-start-line="97" selection-end-line="98" />
               <folding>
                 <element signature="e#41#102#0" expanded="true" />
               </folding>
@@ -134,6 +134,7 @@
       <find>computeHyperparameters</find>
       <find>reset</find>
       <find>book</find>
+      <find>random</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -450,8 +451,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="26" column="34" selection-start-line="26" selection-end-line="27" />
+        <state relative-caret-position="439">
+          <caret line="97" column="45" lean-forward="true" selection-start-line="97" selection-end-line="98" />
           <folding>
             <element signature="e#41#102#0" expanded="true" />
           </folding>
