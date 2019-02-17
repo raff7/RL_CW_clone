@@ -15,12 +15,12 @@ sleep 5
 echo "Attacker Controller Initialized"
 
 sleep 5
-./DiscreteHFO/Goalkeeper.py &
-echo "Goalkeeper Initialized" >/dev/null 2>&1
+./DiscreteHFO/Goalkeeper.py & >/dev/null 2>&1
+echo "Goalkeeper Initialized"
 
 sleep 5
-./DiscreteHFO/DiscretizedDefendingPlayer.py --id=1 &
-echo "Defending Player Initialized" >/dev/null 2>&1
+./DiscreteHFO/DiscretizedDefendingPlayer.py --id=1 & >/dev/null 2>&1
+echo "Defending Player Initialized"
 
 sleep 5
 # The magic line
