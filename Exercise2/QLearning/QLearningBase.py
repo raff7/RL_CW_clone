@@ -18,7 +18,7 @@ class QLearningAgent(Agent):
 
 
 	def learn(self):
-		self.qValues[self.state][self.action] = self.qValues[self.state][self.A] + self.learningRate*(self.R + self.discoundFactor*self.qValues[self.state][max(self.qValues[self.state])] - self.qValues[self.state][self.A])
+		self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + self.learningRate*(self.R + self.discoundFactor*self.qValues[self.state][max(self.qValues[self.state])] - self.qValues[self.state][self.A])
 		return self.learningRate*(self.R + self.discountFactor*self.qValues[self.state][max(self.qValues[self.state])] - self.qValues[self.state][self.A])
 
 	def act(self):
