@@ -36,19 +36,19 @@ class SARSAAgent(Agent):
 		self.nextState = nextState
 
 	def computeHyperparameters(self, numTakenActions, episodeNumber):
-		raise NotImplementedError
+		return self.learningRate, self.epsilon
 
 	def toStateRepresentation(self, state):
-		raise NotImplementedError
+		return state[0]
 
 	def reset(self):
-		raise NotImplementedError
+		pass
 
 	def setLearningRate(self, learningRate):
-		self.learningRate
+		self.learningRate = learningRate
 
 	def setEpsilon(self, epsilon):
-		raise NotImplementedError
+		self.epsilon = epsilon
 
 if __name__ == '__main__':
 

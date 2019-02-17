@@ -33,6 +33,9 @@ class QLearningAgent(Agent):
 
 		return action
 	def toStateRepresentation(self, state):
+		print("\n\nSTATE",state)
+		print("STATE0",state[0])
+
 		return state[0]
 
 	def setState(self, state):
@@ -101,7 +104,6 @@ if __name__ == '__main__':
 		while status==0:
 			learningRate, epsilon = agent.computeHyperparameters(numTakenActions, episode)
 			agent.setEpsilon(epsilon)
-			print(numTakenActions)
 			agent.setLearningRate(learningRate)
 			
 			obsCopy = observation.copy()
@@ -112,7 +114,6 @@ if __name__ == '__main__':
 			nextObservation, reward, done, status = hfoEnv.step(action)
 			agent.setExperience(agent.toStateRepresentation(obsCopy), action, reward, status, agent.toStateRepresentation(nextObservation))
 			update = agent.learn()
-			print("\n\n",update)
-			
+
 			observation = nextObservation
 	
