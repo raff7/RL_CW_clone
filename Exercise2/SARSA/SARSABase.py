@@ -3,6 +3,8 @@
 
 from DiscreteHFO.HFOAttackingPlayer import HFOAttackingPlayer
 from DiscreteHFO.Agent import Agent
+import argparse
+
 
 class SARSAAgent(Agent):
 	def __init__(self, learningRate, discountFactor, epsilon, initVals=0.0):
@@ -33,8 +35,15 @@ class SARSAAgent(Agent):
 		raise NotImplementedError
 
 if __name__ == '__main__':
-	
-	numEpisode = 10
+	parser = argparse.ArgumentParser()
+	parser.add_argument('--id', type=int, default=0)
+	parser.add_argument('--numOpponents', type=int, default=0)
+	parser.add_argument('--numTeammates', type=int, default=0)
+	parser.add_argument('--numEpisodes', type=int, default=500)
+
+	args = parser.parse_args()
+
+	numEpisodes = 10
 	# Initialize connection to the HFO environment using HFOAttackingPlayer
 	hfoEnv = HFOAttackingPlayer(numOpponents = args.numOpponents, numTeammates = args.numTeammates, agentId = args.id)
 	hfoEnv.connectToServer()

@@ -3,41 +3,62 @@
 
 from DiscreteHFO.HFOAttackingPlayer import HFOAttackingPlayer
 from DiscreteHFO.Agent import Agent
+from random import random
+import sys
+import argparse
+
 
 class QLearningAgent(Agent):
 	def __init__(self, learningRate, discountFactor, epsilon, initVals=0.0):
 		super(QLearningAgent, self).__init__()
-		
+
 
 	def learn(self):
-		raise NotImplementedError
+		self.qValues[self.state,self.action] =self.qValues[self.state,self.A] + self.learningRate*(self.R + self.discountFactor*self.qValues[self.state][max(self.qValues[self.state])] - self.qValues[self.state][self.A])
+		return self.learningRate*(self.R + self.discountFactor*self.qValues[self.state][max(self.qValues[self.state])] - self.qValues[self.state][self.A])
 
 	def act(self):
-		raise NotImplementedError
+		if (random() < self.epsilon):#epsilon greedy policy
+			action = self.possibleActions[random.randint(0, 4)]
+		else:
+			action = max(self.qValues[self.state])
 
+		if (not action in self.qValues[self.state].keys()):
+			self.qValues[self.state][action] = 0  # when randomly chose an action we never explored initialize it to 0.
 	def toStateRepresentation(self, state):
-		raise NotImplementedError
+		return state[0]
 
 	def setState(self, state):
-		raise NotImplementedError
+		self.state = state
 
 	def setExperience(self, state, action, reward, status, nextState):
-		raise NotImplementedError
+		self.R = reward
+		self.A = action
 
 	def setLearningRate(self, learningRate):
-		raise NotImplementedError
+		self.learningRate = learningRate
 
 	def setEpsilon(self, epsilon):
-		raise NotImplementedError
+		self.epsilon = epsilon
 
 	def reset(self):
-		raise NotImplementedError
-		
+		pass
+
 	def computeHyperparameters(self, numTakenActions, episodeNumber):
-		raise NotImplementedError
+		lr = 0.05
+		ep = 0.05
+		return lr, ep
 
 if __name__ == '__main__':
 	# Initialize connection with the HFO server
+	parser = argparse.ArgumentParser()
+	parser.add_argument('--id', type=int, default=0)
+	parser.add_argument('--numOpponents', type=int, default=0)
+	parser.add_argument('--numTeammates', type=int, default=0)
+	parser.add_argument('--numEpisodes', type=int, default=500)
+
+	args = parser.parse_args()
+
 	hfoEnv = HFOAttackingPlayer(numOpponents = args.numOpponents, numTeammates = args.numTeammates, agentId = args.id)
 	hfoEnv.connectToServer()
 
@@ -52,7 +73,7 @@ if __name__ == '__main__':
 		observation = hfoEnv.reset()
 		
 		while status==0:
-			learningRate, epsilon = agent.computeHyperparameters(self, numTakenActions, episode)
+			learningRate, epsilon = agent.computeHyperparameters(numTakenActions, episode)
 			agent.setEpsilon(epsilon)
 			agent.setLearningRate(learningRate)
 			
