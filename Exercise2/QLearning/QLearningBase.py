@@ -101,6 +101,7 @@ if __name__ == '__main__':
 		while status==0:
 			learningRate, epsilon = agent.computeHyperparameters(numTakenActions, episode)
 			agent.setEpsilon(epsilon)
+			print(numTakenActions)
 			agent.setLearningRate(learningRate)
 			
 			obsCopy = observation.copy()
