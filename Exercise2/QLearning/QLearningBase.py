@@ -58,15 +58,11 @@ class QLearningAgent(Agent):
 		pass
 
 	def computeHyperparameters(self, numTakenActions, episodeNumber):
-		lr = 0.05
-		ep = 0.05
+		lr = self.learningRate
+		ep = self.epsilon
 		return lr, ep
 
 if __name__ == '__main__':
-	print()
-
-	print("Begin")
-	print()
 
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--id', type=int, default=0)
@@ -75,8 +71,6 @@ if __name__ == '__main__':
 	parser.add_argument('--numEpisodes', type=int, default=500)
 
 	args=parser.parse_args()
-	print("Args parsed")
-	print()
 
 	# Initialize connection with the HFO server
 	parser = argparse.ArgumentParser()
@@ -88,27 +82,16 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 
 	hfoEnv = HFOAttackingPlayer(numOpponents = args.numOpponents, numTeammates = args.numTeammates, agentId = args.id)
-	print()
-	print("create attacking player")
-	print()
-
 	hfoEnv.connectToServer()
-	print()
-	print("connected to server")
-	print()
 
 	# Initialize a Q-Learning Agent
 	agent = QLearningAgent(learningRate = 0.1, discountFactor = 0.99, epsilon = 1.0)
-	print("QL agent created")
 
 	numEpisodes = args.numEpisodes
 
 	# Run training using Q-Learning
 	numTakenActions = 0
-	print()
-	print()
-	print("START")
-	print("______________________________")
+
 	for episode in range(numEpisodes):
 		print()
 		print("episode ",episode)
@@ -128,6 +111,7 @@ if __name__ == '__main__':
 			nextObservation, reward, done, status = hfoEnv.step(action)
 			agent.setExperience(agent.toStateRepresentation(obsCopy), action, reward, status, agent.toStateRepresentation(nextObservation))
 			update = agent.learn()
+			print("\n\n",update)
 			
 			observation = nextObservation
 	
