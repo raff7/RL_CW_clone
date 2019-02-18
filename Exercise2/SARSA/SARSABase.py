@@ -8,8 +8,11 @@ import random
 
 class SARSAAgent(Agent):
 	def __init__(self, learningRate, discountFactor, epsilon, initVals=0.0):
-		super(SARSAAgent, self).__init__()
-
+          super(SARSAAgent, self).__init__()
+          self.qValues = {}
+          self.discountFactor = discountFactor
+          self.epsilon = epsilon
+          self.learningRate=learningRate
 	def learn(self):
 		if(self.nextState is None):
 			diff = self.learningRate * (self.R + self.discountFactor * 0 -self.qValues[self.state][self.A])
@@ -28,11 +31,13 @@ class SARSAAgent(Agent):
 
 		if (not action in self.qValues[state].keys()):
 			self.qValues[state][action] = 0  # when randomly chose an action we never explored initialize it to 0.
-
+         #print('ACTION',action)
 		return action
 
 	def setState(self, state):
 		self.state = state
+		if(not state in self.qValues.keys()):
+			self.qValues[state]={}				#when first time in a state add it to qValue table
 
 	def setExperience(self, state, action, reward, status, nextState):
 		self.R = reward
@@ -70,7 +75,7 @@ if __name__ == '__main__':
 	hfoEnv.connectToServer()
 
 	# Initialize a SARSA Agent
-	agent = SARSAAgent(0.1, 0.99)
+	agent = SARSAAgent(0.1, 0.99, 0.05)
 
 	# Run training using SARSA
 	numTakenActions = 0 

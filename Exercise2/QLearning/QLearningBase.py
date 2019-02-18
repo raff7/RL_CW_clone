@@ -33,9 +33,6 @@ class QLearningAgent(Agent):
 
 		return action
 	def toStateRepresentation(self, state):
-		print("\n\nSTATE",state)
-		print("STATE0",state[0])
-
 		return state[0]
 
 	def setState(self, state):
@@ -88,7 +85,7 @@ if __name__ == '__main__':
 	hfoEnv.connectToServer()
 
 	# Initialize a Q-Learning Agent
-	agent = QLearningAgent(learningRate = 0.1, discountFactor = 0.99, epsilon = 1.0)
+	agent = QLearningAgent(learningRate = 0.1, discountFactor = 0.99, epsilon = 0.1)
 
 	numEpisodes = args.numEpisodes
 
