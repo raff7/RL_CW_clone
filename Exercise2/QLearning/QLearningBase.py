@@ -19,7 +19,7 @@ class QLearningAgent(Agent):
 
 
     def learn(self):
-        greedy_action = self.getGreedy()
+        greedy_action = self.getGreedy(self.nextState)
         diff = self.learningRate*(self.R + self.discountFactor*self.qValues[self.nextState][greedy_action] - self.qValues[self.state][self.A])
 
         self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
@@ -39,7 +39,7 @@ class QLearningAgent(Agent):
             print("epsilon explore")
         else:
             print("greedy")
-            action = self.getGreedy()
+            action = self.getGreedy(self.state)
 
         if (not action in self.qValues[self.state].keys()):
             self.qValues[self.state][action] = 0  # when randomly chose an action we never explored initialize it to 0.
@@ -49,25 +49,26 @@ class QLearningAgent(Agent):
     def toStateRepresentation(self, state):
         return state[0]
 
-    def getGreedy(self):
+    def getGreedy(self,state):
         print("CALLED GETGREEDY")
-        max_k = max(self.qValues[self.state].items(), key=operator.itemgetter(1))[0]
-        max_v = self.qValues[self.state][max_k]
-        actions = [key for (key,value) in self.qValues[self.state].items() if value ==max_v]
+        max_k = max(self.qValues[state].items(), key=operator.itemgetter(1))[0]
+        max_v = self.qValues[state][max_k]
+        actions = [key for (key,value) in self.qValues[state].items() if value ==max_v]
         print(max_v)
+        print(self.qValues[state])
         print(actions)
-        print(random.randint(0,len(action)-1))
-        print(random.randint(0,len(action)-1))
-        print(random.randint(0,len(action)-1))
-        print(random.randint(0,len(action)-1))
-        print(random.randint(0,len(action)-1))
+        print(random.randint(0,len(actions)-1))
+        print(random.randint(0,len(actions)-1))
+        print(random.randint(0,len(actions)-1))
+        print(random.randint(0,len(actions)-1))
+        print(random.randint(0,len(actions)-1))
         print("Test done")
         print()
-        return actions[random.randint(0,len(action)-1)]#chose at random among actions with highest q_value
+        return actions[random.randint(0,len(actions)-1)]#chose at random among actions with highest q_value
     def setState(self, state):
         self.state = state
         if(not state in self.qValues.keys()):
-            self.qValues[state]={}				#when first time in a state add it to qValue table
+            self.qValues[state]= dict.fromkeys(self.possibleActions,0)				#when first time in a state add it to qValue table
 
     def setExperience(self, state, action, reward, status, nextState):
         self.R = reward
