@@ -50,9 +50,19 @@ class QLearningAgent(Agent):
         return state[0]
 
     def getGreedy(self):
+        print("CALLED GETGREEDY")
         max_k = max(self.qValues[self.state].items(), key=operator.itemgetter(1))[0]
         max_v = self.qValues[self.state][max_k]
         actions = [key for (key,value) in self.qValues[self.state].items() if value ==max_v]
+        print(max_v)
+        print(actions)
+        print(random.randint(0,len(action)-1))
+        print(random.randint(0,len(action)-1))
+        print(random.randint(0,len(action)-1))
+        print(random.randint(0,len(action)-1))
+        print(random.randint(0,len(action)-1))
+        print("Test done")
+        print()
         return actions[random.randint(0,len(action)-1)]#chose at random among actions with highest q_value
     def setState(self, state):
         self.state = state
