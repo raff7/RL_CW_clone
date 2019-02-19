@@ -126,6 +126,14 @@ if __name__ == '__main__':
 				epsStart = False
 			
 			observation = nextObservation
+			print("==============================")
+			print("\nPLAY")
+			print("\nState {}".format(agent.state))
+			print("QValues {}".agent.qValues)
+			print("Action: {}".format(agent.A))
+			print("Reward: {}".format(agent.R))
+			print("Next State{}".format(agent.nextState))
+
 
 		agent.setExperience(agent.toStateRepresentation(nextObservation), None, None, None, None)
 		agent.learn()
