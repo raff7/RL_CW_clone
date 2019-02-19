@@ -32,10 +32,10 @@ class QLearningAgent(Agent):
     def act(self):
         print("???????ACT????????")
         print(self.possibleActions)
-        greedy_act = max(self.qValues[self.state].items(), key=operator.itemgetter(1))[0]
-        if(self.qValues[self.state][greedy_act] >0#if the best is 0 chose random (to avoid bias in choices)
-                or random.random() < self.epsilon #epsilon greedy probability of chosing random
-                or len(self.qValues[self.state]) == 0):# or when no action was ever performed from this state (all values are 0_)
+        if(random.random() < self.epsilon #epsilon greedy probability of chosing random
+                or len(self.qValues[self.state]) == 0# or when no action was ever performed from this state (all values are 0_)
+                or self.qValues[self.state][max(self.qValues[self.state].items(), key=operator.itemgetter(1))[0]] > 0): # if the best is 0 chose random (to avoid bias in choices)
+
             action = self.possibleActions[random.randint(0, 5)]
             print("epsilon explore")
         else:
