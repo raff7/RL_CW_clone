@@ -36,7 +36,7 @@ class QLearningAgent(Agent):
                 or len(self.qValues[self.state]) == 0# or when no action was ever performed from this state (all values are 0_)
                 or self.qValues[self.state][max(self.qValues[self.state].items(), key=operator.itemgetter(1))[0]] > 0): # if the best is 0 chose random (to avoid bias in choices)
 
-            action = self.possibleActions[random.randint(0, 5)]
+            action = self.possibleActions[random.randint(0, 4)]
             print("epsilon explore")
         else:
             print("greedy")
