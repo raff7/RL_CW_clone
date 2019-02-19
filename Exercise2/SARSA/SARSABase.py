@@ -22,7 +22,7 @@ class SARSAAgent(Agent):
 			self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
 		return diff
 	def act(self):
-		self.policy(self.state)
+		return self.policy(self.state)
 
 	def policy(self,state):
 		if (random.random() < self.epsilon or len(self.qValues[state]) == 0):#epsilon greedy policy, chose random with probability epsilon, or when no action was ever performed from this state (all values are 0_)
