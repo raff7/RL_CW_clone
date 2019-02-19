@@ -29,9 +29,10 @@ class QLearningAgent(Agent):
 		return diff
 
 	def act(self):
+        print("??????ACT()????????")
+        print("POSSIBLE ACTIONS {}".format(self.possibleActions))
+        print("????????????????????????")
 		if (random.random() < self.epsilon or len(self.qValues[self.state]) == 0):#epsilon greedy policy, chose random with probability epsilon, or when no action was ever performed from this state (all values are 0_)
-			print("POSSIBLE ACTIONS {}".format(self.possibleActions))
-			print("????????????????????????")
 			action = self.possibleActions[random.randint(0, 4)]
 		else:
 			action = max(self.qValues[self.state])
@@ -49,17 +50,19 @@ class QLearningAgent(Agent):
 			self.qValues[state]={}				#when first time in a state add it to qValue table
 
 	def setExperience(self, state, action, reward, status, nextState):
-		self.R = reward
+        self.R = reward
 		self.A = action
 		self.nextState = nextState
-		print("-------------")
+		print("=============")
 		print("setExperience")
 		print("=============")
 		print("Current state: {}".format(state))
 		print("Action: {}".format(action))
-		print("Next state: {}".format(nextState))
-		if(not nextState in self.qValues.keys()):
-			self.qValues[nextState] = dict.fromkeys(self.possibleActions,0)
+        print("Reward: {}".format(reward))
+        print("Next state: {}".format(nextState))
+
+        if(not nextState in self.qValues.keys()):
+            self.qValues[nextState] = dict.fromkeys(self.possibleActions,0)
 
 
 	def setLearningRate(self, learningRate):
