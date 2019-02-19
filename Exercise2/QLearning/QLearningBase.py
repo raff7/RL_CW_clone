@@ -3,6 +3,7 @@
 
 from DiscreteHFO.HFOAttackingPlayer import HFOAttackingPlayer
 from DiscreteHFO.Agent import Agent
+import operator
 import random
 import sys
 import argparse
@@ -31,12 +32,15 @@ class QLearningAgent(Agent):
     def act(self):
         print("???????ACT????????")
         print(self.possibleActions)
-        if(random.random() < self.epsilon or len(self.qValues[self.state]) == 0):#epsilon greedy policy, chose random with probability epsilon, or when no action was ever performed from this state (all values are 0_)
+        greedy_act = max(self.qValues[self.state].items(), key=operator.itemgetter(1))[0]
+        if(self.qValues[self.state][greedy_act] >0#if the best is 0 chose random (to avoid bias in choices)
+                or random.random() < self.epsilon #epsilon greedy probability of chosing random
+                or len(self.qValues[self.state]) == 0):# or when no action was ever performed from this state (all values are 0_)
             action = self.possibleActions[random.randint(0, 5)]
             print("epsilon explore")
         else:
             print("greedy")
-            action = max(self.qValues[self.state])
+            action = max(self.qValues[self.state].items(), key=operator.itemgetter(1))[0]
 
         if (not action in self.qValues[self.state].keys()):
             self.qValues[self.state][action] = 0  # when randomly chose an action we never explored initialize it to 0.
