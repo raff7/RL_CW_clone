@@ -50,20 +50,9 @@ class QLearningAgent(Agent):
         return state[0]
 
     def getGreedy(self,state):
-        print("CALLED GETGREEDY")
         max_k = max(self.qValues[state].items(), key=operator.itemgetter(1))[0]
         max_v = self.qValues[state][max_k]
         actions = [key for (key,value) in self.qValues[state].items() if value ==max_v]
-        print(max_v)
-        print(self.qValues[state])
-        print(actions)
-        print(random.randint(0,len(actions)-1))
-        print(random.randint(0,len(actions)-1))
-        print(random.randint(0,len(actions)-1))
-        print(random.randint(0,len(actions)-1))
-        print(random.randint(0,len(actions)-1))
-        print("Test done")
-        print()
         return actions[random.randint(0,len(actions)-1)]#chose at random among actions with highest q_value
     def setState(self, state):
         self.state = state
@@ -131,6 +120,9 @@ if __name__ == '__main__':
 
     for episode in range(numEpisodes):
         print()
+        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
         print("episode ",episode)
         status = 0
         observation = hfoEnv.reset()
