@@ -115,7 +115,7 @@ if __name__ == '__main__':
 			agent.setState(agent.toStateRepresentation(obsCopy))
 			action = agent.act()
 			numTakenActions += 1
-
+			print("ACTION: ",action)
 			nextObservation, reward, done, status = hfoEnv.step(action)
 			print(obsCopy, action, reward, nextObservation)
 			agent.setExperience(agent.toStateRepresentation(obsCopy), action, reward, status, agent.toStateRepresentation(nextObservation))
