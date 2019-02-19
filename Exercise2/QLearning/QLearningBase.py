@@ -21,25 +21,26 @@ class QLearningAgent(Agent):
     def learn(self):
         greedy_action = self.getGreedy(self.nextState)
         diff = self.learningRate*(self.R + self.discountFactor*self.qValues[self.nextState][greedy_action] - self.qValues[self.state][self.A])
-
-        self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
         print()
-        print("3333333333333333333333333333333333")
+        print("222222222222222222222222222222222222222")
         print("LEARN START")
-        print("Return a[{}]*(R[{}]+expV_next[{}] - Qval[{}]".format(self.learningRate,self.R,self.discountFactor*self.qValues[self.nextState][greedy_action],self.qValues[self.state][self.A]))
+        print("Return {} = a[{}]*(R[{}]+expV_next[{}] - Qval[{}] =".format(diff,self.learningRate,self.R,self.discountFactor*self.qValues[self.nextState][greedy_action],self.qValues[self.state][self.A]))
         print("Qvalues:")
         print("current state{}:".format(self.state))
         print(self.qValues[self.state])
+        self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
+        print("updated state{}:".format(self.state))
+        print(self.qValues[self.state])
         print("next state{}:".format(self.nextState))
         print(self.qValues[self.nextState])
-        print("<<<<<<<<<<<<<<<<<3 END>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<2 END>>>>>>>>>>>>>>>>>>>")
 
         return diff
 
     def act(self):
         print()
         print("1111111111111ACT1111111111111111")
-        print(self.qValues[self.state])
+        print("Chose among ",self.qValues[self.state])
         if(random.random() < self.epsilon #epsilon greedy probability of chosing random
                 or len(self.qValues[self.state]) == 0):# or when no action was ever performed from this state (all values are 0_)
             action = self.possibleActions[random.randint(0, 4)]
@@ -51,7 +52,6 @@ class QLearningAgent(Agent):
         if (not action in self.qValues[self.state].keys()):
             self.qValues[self.state][action] = 0  # when randomly chose an action we never explored initialize it to 0.
         print("Chosen action: {}".format(action))
-        print("<<<<<<<<<<<<<<<<<1 END>>>>>>>>>>>>>>>>>>>")
         return action
     def toStateRepresentation(self, state):
         return state[0]
@@ -71,16 +71,14 @@ class QLearningAgent(Agent):
         self.A = action
         self.nextState = nextState
         print()
-        print("2222222222222222222")
-        print("setExperience")
-        print("2222222222222222222")
+        print()
         print("Current state: {}".format(state))
         print("Action: {}".format(action))
         print("Reward: {}".format(reward))
         print("Next state: {}".format(nextState))
         if(not nextState in self.qValues.keys()):
             self.qValues[nextState] = dict.fromkeys(self.possibleActions,0)
-        print("<<<<<<<<<<<<<<<<<2 END>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<1 END>>>>>>>>>>>>>>>>>>>")
 
     def setLearningRate(self, learningRate):
         self.learningRate = learningRate
