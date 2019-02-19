@@ -19,7 +19,8 @@ class QLearningAgent(Agent):
 
 
     def learn(self):
-        diff = self.learningRate*(self.R + self.discountFactor*self.qValues[self.nextState][max(self.qValues[self.nextState])] - self.qValues[self.state][self.A])
+        greedy_action = self.getGreedy()
+        diff = self.learningRate*(self.R + self.discountFactor*self.qValues[self.nextState][greedy_action] - self.qValues[self.state][self.A])
 
         self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
         print()
@@ -31,16 +32,14 @@ class QLearningAgent(Agent):
 
     def act(self):
         print("???????ACT????????")
-        print(self.possibleActions)
+        print(self.qValues[self.state])
         if(random.random() < self.epsilon #epsilon greedy probability of chosing random
-                or len(self.qValues[self.state]) == 0# or when no action was ever performed from this state (all values are 0_)
-                or self.qValues[self.state][max(self.qValues[self.state].items(), key=operator.itemgetter(1))[0]] > 0): # if the best is 0 chose random (to avoid bias in choices)
-
+                or len(self.qValues[self.state]) == 0):# or when no action was ever performed from this state (all values are 0_)
             action = self.possibleActions[random.randint(0, 4)]
             print("epsilon explore")
         else:
             print("greedy")
-            action = max(self.qValues[self.state].items(), key=operator.itemgetter(1))[0]
+            action = self.getGreedy()
 
         if (not action in self.qValues[self.state].keys()):
             self.qValues[self.state][action] = 0  # when randomly chose an action we never explored initialize it to 0.
@@ -50,6 +49,11 @@ class QLearningAgent(Agent):
     def toStateRepresentation(self, state):
         return state[0]
 
+    def getGreedy(self):
+        max_k = max(self.qValues[self.state].items(), key=operator.itemgetter(1))[0]
+        max_v = self.qValues[self.state][max_k]
+        actions = [key for (key,value) in self.qValues[self.state].items() if value ==max_v]
+        return actions[random.randint(0,len(action)-1)]#chose at random among actions with highest q_value
     def setState(self, state):
         self.state = state
         if(not state in self.qValues.keys()):
