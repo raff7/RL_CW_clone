@@ -15,7 +15,9 @@ class SARSAAgent(Agent):
           self.learningRate=learningRate
 	def learn(self):
 		if(self.nextState is None):
-			diff = self.learningRate * (self.R + self.discountFactor * 0 -self.qValues[self.state][self.A])
+			print("REWARD: ",self.R)
+			print("QVALUE FOR ACTION: ",self.qValues[self.state][self.A])
+			diff = self.learningRate * (self.R -self.qValues[self.state][self.A])
 			self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
 		else:
 			diff = self.learningRate * (self.R + self.discountFactor * self.qValues[self.state][self.policy(self.nextState)] -self.qValues[self.state][self.A])
