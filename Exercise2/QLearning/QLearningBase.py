@@ -24,14 +24,21 @@ class QLearningAgent(Agent):
 
         self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
         print()
+        print("3333333333333333333333333333333333")
         print("LEARN START")
-        print("Return{}.".format(diff))
+        print("Return a[{}]*(R[{}]+expV_next[{}] - Qval[{}]".format(self.learningRate,self.R,self.discountFactor*self.qValues[self.nextState][greedy_action],self.qValues[self.state][self.A]))
         print("Qvalues:")
-        print(self.qValues)
+        print("current state{}:".format(self.state))
+        print(self.qValues[self.state])
+        print("next state{}:".format(self.nextState))
+        print(self.qValues[self.nextState])
+        print("<<<<<<<<<<<<<<<<<3 END>>>>>>>>>>>>>>>>>>>")
+
         return diff
 
     def act(self):
-        print("???????ACT????????")
+        print()
+        print("1111111111111ACT1111111111111111")
         print(self.qValues[self.state])
         if(random.random() < self.epsilon #epsilon greedy probability of chosing random
                 or len(self.qValues[self.state]) == 0):# or when no action was ever performed from this state (all values are 0_)
@@ -44,7 +51,7 @@ class QLearningAgent(Agent):
         if (not action in self.qValues[self.state].keys()):
             self.qValues[self.state][action] = 0  # when randomly chose an action we never explored initialize it to 0.
         print("Chosen action: {}".format(action))
-        print("??????????????<>????????????")
+        print("<<<<<<<<<<<<<<<<<1 END>>>>>>>>>>>>>>>>>>>")
         return action
     def toStateRepresentation(self, state):
         return state[0]
@@ -63,16 +70,17 @@ class QLearningAgent(Agent):
         self.R = reward
         self.A = action
         self.nextState = nextState
-        print("=============")
+        print()
+        print("2222222222222222222")
         print("setExperience")
-        print("=============")
+        print("2222222222222222222")
         print("Current state: {}".format(state))
         print("Action: {}".format(action))
         print("Reward: {}".format(reward))
         print("Next state: {}".format(nextState))
         if(not nextState in self.qValues.keys()):
             self.qValues[nextState] = dict.fromkeys(self.possibleActions,0)
-
+        print("<<<<<<<<<<<<<<<<<2 END>>>>>>>>>>>>>>>>>>>")
 
     def setLearningRate(self, learningRate):
         self.learningRate = learningRate
@@ -122,6 +130,7 @@ if __name__ == '__main__':
 
     for episode in range(numEpisodes):
         print()
+        print()
         print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
         print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
         print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
@@ -130,6 +139,9 @@ if __name__ == '__main__':
         observation = hfoEnv.reset()
 
         while status==0:
+            print()
+            print("WHILE LOOP")
+            print("----------------------------------------------")
             learningRate, epsilon = agent.computeHyperparameters(numTakenActions, episode)
             agent.setEpsilon(epsilon)
             agent.setLearningRate(learningRate)

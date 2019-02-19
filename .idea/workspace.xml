@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="252e79ad-d3b8-4e13-8f90-d3dcec3862d4" name="Default Changelist" comment="dd">
-      <change beforePath="$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -77,8 +76,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="141">
-              <caret line="107" column="51" lean-forward="true" selection-start-line="107" selection-end-line="108" />
+            <state relative-caret-position="335">
+              <caret line="36" column="19" lean-forward="true" selection-start-line="36" selection-start-column="19" selection-end-line="36" selection-end-column="19" />
               <folding>
                 <element signature="e#41#102#0" expanded="true" />
               </folding>
@@ -146,15 +145,15 @@
         <option value="$PROJECT_DIR$/Exercise1/BellmanDPBase.py" />
         <option value="$PROJECT_DIR$/Exercise2/SARSA/SARSABase.py" />
         <option value="$PROJECT_DIR$/Exercise2/RandomAgentExample/RandomAgent.sh" />
-        <option value="$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py" />
         <option value="$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh" />
+        <option value="$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-45" />
     <option name="y" value="71" />
-    <option name="width" value="1017" />
+    <option name="width" value="961" />
     <option name="height" value="821" />
   </component>
   <component name="ProjectView">
@@ -287,10 +286,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-45" y="71" width="1017" height="821" extended-state="0" />
+    <frame x="-45" y="71" width="961" height="821" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3554217" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.37659574" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -476,8 +475,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="107" column="51" lean-forward="true" selection-start-line="107" selection-end-line="108" />
+        <state relative-caret-position="335">
+          <caret line="36" column="19" lean-forward="true" selection-start-line="36" selection-start-column="19" selection-end-line="36" selection-end-column="19" />
           <folding>
             <element signature="e#41#102#0" expanded="true" />
           </folding>
