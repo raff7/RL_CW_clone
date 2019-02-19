@@ -19,7 +19,13 @@ class QLearningAgent(Agent):
 
 	def learn(self):
 		diff = self.learningRate*(self.R + self.discountFactor*self.qValues[self.nextState][max(self.qValues[self.nextState])] - self.qValues[self.state][self.A])
+
 		self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
+		print()
+		print("LEARN START")
+		print("Return{}.".format(diff))
+		print("Qvalues:")
+		print(self.qValues)
 		return diff
 
 	def act(self):
