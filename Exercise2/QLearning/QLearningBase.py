@@ -50,6 +50,12 @@ class QLearningAgent(Agent):
 		self.R = reward
 		self.A = action
 		self.nextState = nextState
+		print("-------------")
+		print("setExperience")
+		print("=============")
+		print("Current state: {}".format(state))
+		print("Action: {}".format(action))
+		print("Next state: {}".format(nextState))
 		if(not nextState in self.qValues.keys()):
 			self.qValues[nextState] = dict.fromkeys(self.possibleActions,0)
 

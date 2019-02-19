@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="252e79ad-d3b8-4e13-8f90-d3dcec3862d4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -77,8 +76,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="491">
-              <caret line="33" column="13" lean-forward="true" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
+            <state relative-caret-position="287">
+              <caret line="54" column="28" selection-start-line="54" selection-start-column="28" selection-end-line="54" selection-end-column="28" />
               <folding>
                 <element signature="e#41#102#0" expanded="true" />
               </folding>
@@ -152,8 +151,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="111" />
-    <option name="y" value="157" />
+    <option name="x" value="63" />
+    <option name="y" value="23" />
     <option name="width" value="1017" />
     <option name="height" value="821" />
   </component>
@@ -272,7 +271,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="111" y="157" width="1017" height="821" extended-state="0" />
+    <frame x="63" y="23" width="1017" height="821" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3554217" />
@@ -456,8 +455,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="491">
-          <caret line="33" column="13" lean-forward="true" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
+        <state relative-caret-position="287">
+          <caret line="54" column="28" selection-start-line="54" selection-start-column="28" selection-end-line="54" selection-end-column="28" />
           <folding>
             <element signature="e#41#102#0" expanded="true" />
           </folding>
