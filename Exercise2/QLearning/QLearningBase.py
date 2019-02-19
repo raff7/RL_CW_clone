@@ -92,15 +92,20 @@ class QLearningAgent(Agent):
     def computeHyperparameters(self, numTakenActions, episodeNumber):
         lr = self.learningRate
         ep = self.epsilon
-        if (episodeNumber > 1000):
+        if (episodeNumber > 2000):
+            lr = 0.04
             ep = 0.03
-        elif (episodeNumber > 400):
+        elif (episodeNumber > 700):
+            lr=0.08
             ep = 0.1
-        elif(episodeNumber>300):
+        elif(episodeNumber>400):
+            lr=0.1
             ep=0.2
-        elif(episodeNumber>200):
+        elif(episodeNumber>300):
+            lr=0.15
             ep=0.3
-        elif(episodeNumber>100):
+        elif(episodeNumber>150):
+            lr= 0.2
             ep=0.5
         return lr, ep
 
@@ -127,7 +132,7 @@ if __name__ == '__main__':
     hfoEnv.connectToServer()
 
     # Initialize a Q-Learning Agent
-    agent = QLearningAgent(learningRate = 0.1, discountFactor = 0.9, epsilon = 0.7)
+    agent = QLearningAgent(learningRate = 0.25, discountFactor = 0.94, epsilon = 0.7)
 
     numEpisodes = args.numEpisodes
 
