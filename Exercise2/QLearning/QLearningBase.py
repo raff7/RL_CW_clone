@@ -31,15 +31,17 @@ class QLearningAgent(Agent):
     def act(self):
         print("???????ACT????????")
         print(self.possibleActions)
-        print("??????????????<>????????????")
         if(random.random() < self.epsilon or len(self.qValues[self.state]) == 0):#epsilon greedy policy, chose random with probability epsilon, or when no action was ever performed from this state (all values are 0_)
-            action = self.possibleActions[random.randint(0, 4)]
+            action = self.possibleActions[random.randint(0, 5)]
+            print("epsilon explore")
         else:
+            print("greedy")
             action = max(self.qValues[self.state])
 
         if (not action in self.qValues[self.state].keys()):
             self.qValues[self.state][action] = 0  # when randomly chose an action we never explored initialize it to 0.
-
+        print("Chosen action: {}".format(action))
+        print("??????????????<>????????????")
         return action
     def toStateRepresentation(self, state):
         return state[0]
