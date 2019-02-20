@@ -14,14 +14,14 @@ class SARSAAgent(Agent):
           self.epsilon = epsilon
           self.learningRate=learningRate
 	def learn(self):
-		if(self.nextState is None):
-			print("REWARD: ",self.R)
-			print("QVALUE FOR ACTION: ",self.qValues[self.state][self.A])
-			diff = self.learningRate * (self.R -self.qValues[self.state][self.A])
-			self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
+		if(self.state is None):#Terminal state, Qvalue 0
+			print("REWARD: ",self.R)#TODO fix this mess.. pre-not pre
+			print("QVALUE FOR ACTION: ",self.qValues[self.preS][self.preA])
+			diff = self.learningRate * (self.preR -self.qValues[self.preS][self.preA])#TODO CHECK IF I INVERTED NEST STATE AND STATE
+			self.qValues[self.preS][self.preA] = self.qValues[self.preS][self.preA] + diff
 		else:
-			diff = self.learningRate * (self.R + self.discountFactor * self.qValues[self.state][self.policy(self.nextState)] -self.qValues[self.state][self.A])
-			self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
+			diff = self.learningRate * (self.preR + self.discountFactor * self.qValues[self.state][self.A] -self.qValues[self.preS][self.preA])
+			self.qValues[self.preS][self.preA] = self.qValues[self.preS][self.preA] + diff
 		return diff
 	def act(self):
 		return self.policy(self.state)
@@ -43,9 +43,13 @@ class SARSAAgent(Agent):
 			self.qValues[state] = dict.fromkeys(self.possibleActions,0)  # when first time in a state add it to qValue table
 
 	def setExperience(self, state, action, reward, status, nextState):
+		self.preA=self.A
+		self.preR =self.R
+		self.preS= self.state
 		self.R = reward
 		self.A = action
 		self.nextState = nextState
+		self.state = state
 		if (not nextState in self.qValues.keys()):
 			self.qValues[nextState] = dict.fromkeys(self.possibleActions, 0)
 
@@ -53,26 +57,26 @@ class SARSAAgent(Agent):
 		lr = self.learningRate
 		ep = self.epsilon
 		if (episodeNumber > 2000):
-			lr = 0.04
 			ep = 0.03
 		elif (episodeNumber > 700):
-			lr = 0.08
 			ep = 0.1
 		elif (episodeNumber > 400):
-			lr = 0.1
 			ep = 0.2
 		elif (episodeNumber > 300):
-			lr = 0.15
 			ep = 0.3
 		elif (episodeNumber > 150):
-			lr = 0.2
 			ep = 0.5
 		return lr, ep
 	def toStateRepresentation(self, state):
 		return state[0]
 
 	def reset(self):
-		pass
+		self.preA = None
+		self.preS = None
+		self.preR = None
+		self.A = None
+		self.state = None
+		self.R = None
 
 	def setLearningRate(self, learningRate):
 		self.learningRate = learningRate
@@ -89,7 +93,7 @@ if __name__ == '__main__':
 	parser.add_argument('--numEpisodes', type=int, default=500)
 
 	args=parser.parse_args()
-	
+
 	numEpisodes = args.numEpisodes
 	# Initialize connection to the HFO environment using HFOAttackingPlayer
 	hfoEnv = HFOAttackingPlayer(numOpponents = args.numOpponents, numTeammates = args.numTeammates, agentId = args.id)
@@ -99,8 +103,8 @@ if __name__ == '__main__':
 	agent = SARSAAgent(0.25, 0.9, 0.8)
 
 	# Run training using SARSA
-	numTakenActions = 0 
-	for episode in range(numEpisodes):	
+	numTakenActions = 0
+	for episode in range(numEpisodes):
 		agent.reset()
 		status = 0
 
@@ -112,7 +116,7 @@ if __name__ == '__main__':
 			learningRate, epsilon = agent.computeHyperparameters(numTakenActions, episode)
 			agent.setEpsilon(epsilon)
 			agent.setLearningRate(learningRate)
-			
+
 			obsCopy = observation.copy()
 			agent.setState(agent.toStateRepresentation(obsCopy))
 			action = agent.act()
@@ -121,12 +125,12 @@ if __name__ == '__main__':
 			nextObservation, reward, done, status = hfoEnv.step(action)
 			print(obsCopy, action, reward, nextObservation)
 			agent.setExperience(agent.toStateRepresentation(obsCopy), action, reward, status, agent.toStateRepresentation(nextObservation))
-			
+
 			if not epsStart :
 				agent.learn()
 			else:
 				epsStart = False
-			
+
 			observation = nextObservation
 			print("==============================")
 			print("\nPLAY")
@@ -139,5 +143,3 @@ if __name__ == '__main__':
 
 		agent.setExperience(agent.toStateRepresentation(nextObservation), None, None, None, None)
 		agent.learn()
-
-	
