@@ -1,0 +1,15 @@
+# Offense: 1
+# Defense:  2
+# Description of Fields:
+# 1) Episode number
+# 2) Start time in simulator steps (100ms)
+# 3) End time in simulator steps (100ms)
+# 4) Duration in simulator steps (100ms)
+# 5) Episode result
+#
+1	0	236	236	OUT_OF_BOUNDS
+2	237	1077	840	OUT_OF_BOUNDS
+3	1078	1367	289	OUT_OF_BOUNDS
+4	1368	1525	157	OUT_OF_BOUNDS
+5	1526	1928	402	OUT_OF_BOUNDS
+6	1929	2174	245	OUT_OF_BOUNDS

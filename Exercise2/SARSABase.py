@@ -15,14 +15,17 @@ class SARSAAgent(Agent):
           self.learningRate=learningRate
 	def learn(self):
 		if(self.nextState is None):
-			diff = self.learningRate * (self.R + self.discountFactor * 0 -self.qValues[self.state][self.A])
+			print("REWARD: ",self.R)
+			print("QVALUE FOR ACTION: ",self.qValues[self.state][self.A])
+			diff = self.learningRate * (self.R -self.qValues[self.state][self.A])
 			self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
 		else:
 			diff = self.learningRate * (self.R + self.discountFactor * self.qValues[self.state][self.policy(self.nextState)] -self.qValues[self.state][self.A])
 			self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
 		return diff
 	def act(self):
-		self.policy(self.state)
+		return self.policy(self.state)
+
 	def policy(self,state):
 		if (random.random() < self.epsilon or len(self.qValues[state]) == 0):#epsilon greedy policy, chose random with probability epsilon, or when no action was ever performed from this state (all values are 0_)
 			action = self.possibleActions[random.randint(0, 4)]
@@ -31,22 +34,40 @@ class SARSAAgent(Agent):
 
 		if (not action in self.qValues[state].keys()):
 			self.qValues[state][action] = 0  # when randomly chose an action we never explored initialize it to 0.
-          print('ACTION',action)
+         #print('ACTION',action)
 		return action
 
 	def setState(self, state):
 		self.state = state
-		if(not state in self.qValues.keys()):
-			self.qValues[state]={}				#when first time in a state add it to qValue table
+		if (not state in self.qValues.keys()):
+			self.qValues[state] = dict.fromkeys(self.possibleActions,0)  # when first time in a state add it to qValue table
 
 	def setExperience(self, state, action, reward, status, nextState):
 		self.R = reward
 		self.A = action
 		self.nextState = nextState
+		if (not nextState in self.qValues.keys()):
+			self.qValues[nextState] = dict.fromkeys(self.possibleActions, 0)
 
 	def computeHyperparameters(self, numTakenActions, episodeNumber):
-		return self.learningRate, self.epsilon
-
+		lr = self.learningRate
+		ep = self.epsilon
+		if (episodeNumber > 2000):
+			lr = 0.04
+			ep = 0.03
+		elif (episodeNumber > 700):
+			lr = 0.08
+			ep = 0.1
+		elif (episodeNumber > 400):
+			lr = 0.1
+			ep = 0.2
+		elif (episodeNumber > 300):
+			lr = 0.15
+			ep = 0.3
+		elif (episodeNumber > 150):
+			lr = 0.2
+			ep = 0.5
+		return lr, ep
 	def toStateRepresentation(self, state):
 		return state[0]
 
@@ -75,7 +96,7 @@ if __name__ == '__main__':
 	hfoEnv.connectToServer()
 
 	# Initialize a SARSA Agent
-	agent = SARSAAgent(0.1, 0.99, 0.05)
+	agent = SARSAAgent(0.25, 0.9, 0.8)
 
 	# Run training using SARSA
 	numTakenActions = 0 
@@ -96,7 +117,7 @@ if __name__ == '__main__':
 			agent.setState(agent.toStateRepresentation(obsCopy))
 			action = agent.act()
 			numTakenActions += 1
-
+			print("ACTION: ",action)
 			nextObservation, reward, done, status = hfoEnv.step(action)
 			print(obsCopy, action, reward, nextObservation)
 			agent.setExperience(agent.toStateRepresentation(obsCopy), action, reward, status, agent.toStateRepresentation(nextObservation))
@@ -107,6 +128,14 @@ if __name__ == '__main__':
 				epsStart = False
 			
 			observation = nextObservation
+			print("==============================")
+			print("\nPLAY")
+			print("\nState {}".format(agent.state))
+			print("QValues {}".format(agent.qValues))
+			print("Action: {}".format(agent.A))
+			print("Reward: {}".format(agent.R))
+			print("Next State: {}".format(agent.nextState))
+
 
 		agent.setExperience(agent.toStateRepresentation(nextObservation), None, None, None, None)
 		agent.learn()

@@ -93,19 +93,14 @@ class QLearningAgent(Agent):
         lr = self.learningRate
         ep = self.epsilon
         if (episodeNumber > 2000):
-            lr = 0.04
             ep = 0.03
         elif (episodeNumber > 700):
-            lr=0.08
             ep = 0.1
         elif(episodeNumber>400):
-            lr=0.1
             ep=0.2
         elif(episodeNumber>300):
-            lr=0.15
             ep=0.3
         elif(episodeNumber>150):
-            lr= 0.2
             ep=0.5
         return lr, ep
 
@@ -132,7 +127,7 @@ if __name__ == '__main__':
     hfoEnv.connectToServer()
 
     # Initialize a Q-Learning Agent
-    agent = QLearningAgent(learningRate = 0.25, discountFactor = 0.9, epsilon = 0.6)
+    agent = QLearningAgent(learningRate = 0.15, discountFactor = 0.85, epsilon = 0.75)
 
     numEpisodes = args.numEpisodes
 
@@ -167,4 +162,3 @@ if __name__ == '__main__':
             update = agent.learn()
 
             observation = nextObservation
-
