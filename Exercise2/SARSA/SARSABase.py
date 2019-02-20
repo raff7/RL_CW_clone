@@ -14,14 +14,14 @@ class SARSAAgent(Agent):
           self.epsilon = epsilon
           self.learningRate=learningRate
 	def learn(self):
-		if(self.nextState is None):
-			print("REWARD: ",self.R)
-			print("QVALUE FOR ACTION: ",self.qValues[self.state][self.A])
-			diff = self.learningRate * (self.R -self.qValues[self.state][self.A])
-			self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
+		if(self.state is None):#Terminal state, Qvalue 0
+			print("REWARD: ",self.R)#TODO fix this mess.. pre-not pre
+			print("QVALUE FOR ACTION: ",self.qValues[self.preS][self.preA])
+			diff = self.learningRate * (self.preR -self.qValues[self.state][self.A])#TODO CHECK IF I INVERTED NEST STATE AND STATE
+			self.qValues[self.preS][self.preA] = self.qValues[self.preS][self.preA] + diff
 		else:
-			diff = self.learningRate * (self.R + self.discountFactor * self.qValues[self.state][self.policy(self.nextState)] -self.qValues[self.state][self.A])
-			self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
+			diff = self.learningRate * (self.preR + self.discountFactor * self.qValues[self.preS][self.preA] -self.qValues[self.preS][self.preA])
+			self.qValues[self.preS][self.preA] = self.qValues[self.preS][self.preA] + diff
 		return diff
 	def act(self):
 		return self.policy(self.state)
@@ -43,9 +43,13 @@ class SARSAAgent(Agent):
 			self.qValues[state] = dict.fromkeys(self.possibleActions,0)  # when first time in a state add it to qValue table
 
 	def setExperience(self, state, action, reward, status, nextState):
+		self.preA=self.A
+		self.preR =self.R
+		self.preS= self.state
 		self.R = reward
 		self.A = action
 		self.nextState = nextState
+		self.state = state
 		if (not nextState in self.qValues.keys()):
 			self.qValues[nextState] = dict.fromkeys(self.possibleActions, 0)
 

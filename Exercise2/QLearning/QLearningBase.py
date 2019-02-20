@@ -20,7 +20,7 @@ class QLearningAgent(Agent):
 
     def learn(self):
         greedy_action = self.getGreedy(self.nextState)
-        diff = self.learningRate*(self.R + self.discountFactor*self.qValues[self.nextState][greedy_action] - self.qValues[self.state][self.A])
+        diff = self.learningRate*(self.R + self.discountFactor*self.qValues[self.nextState][greedy_action] - self.qValues[self.state][self.A])#TODO CHECK IF I INVERTED NEST STATE AND STATE
         print()
         print("222222222222222222222222222222222222222")
         print("LEARN START")
