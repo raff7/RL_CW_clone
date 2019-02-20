@@ -20,7 +20,14 @@ class SARSAAgent(Agent):
 			diff = self.learningRate * (self.preR -self.qValues[self.state][self.A])#TODO CHECK IF I INVERTED NEST STATE AND STATE
 			self.qValues[self.preS][self.preA] = self.qValues[self.preS][self.preA] + diff
 		else:
-			diff = self.learningRate * (self.preR + self.discountFactor * self.qValues[self.preS][self.preA] -self.qValues[self.preS][self.preA])
+			print("pre A",self.preA)
+			print("pre s",self.preS)
+			print("pre r",self.preR)
+			print("a",self.A)
+			print(" s",self.state)
+			print(" r",self.R)
+
+			diff = self.learningRate * (self.preR + self.discountFactor * self.qValues[self.state][self.A] -self.qValues[self.preS][self.preA])
 			self.qValues[self.preS][self.preA] = self.qValues[self.preS][self.preA] + diff
 		return diff
 	def act(self):
