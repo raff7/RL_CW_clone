@@ -3,6 +3,7 @@
 
 from DiscreteHFO.HFOAttackingPlayer import HFOAttackingPlayer
 from DiscreteHFO.Agent import Agent
+import numpy as np
 import argparse
 import random
 
@@ -16,16 +17,18 @@ class SARSAAgent(Agent):
 	def learn(self):
 		if(self.A is None):#Terminal state, Qvalue 0
 			diff = self.learningRate * (self.preR -self.qValues[self.preS][self.preA])
-			self.qValues[self.preS][self.preA] = self.qValues[self.preS][self.preA] + diff
-		else:
-			print("pre A",self.preA)
-			print("pre s",self.preS)
-			print("pre r",self.preR)
-			print("a",self.A)
-			print(" s",self.state)
-			print(" r",self.R)
-			print("next state",self.nextState)
+			print()
+			print("LEARN START")
+			print("Return {} = a[{}]*(R[{}]+expV_next[0] - Qval[{}] =".format(diff, self.learningRate, self.preR,self.qValues[self.preS][self.preA]))
+			print("Qvalues:")
+			print("previous state{}:".format(self.preS))
+			print(self.qValues[self.preS])
 
+			self.qValues[self.preS][self.preA] = self.qValues[self.preS][self.preA] + diff
+
+			print("updated previous state{}:".format(self.preS))
+			print(self.qValues[self.preS])
+		else:
 			diff = self.learningRate * (self.preR + self.discountFactor * self.qValues[self.state][self.A] - self.qValues[self.preS][self.preA])
 
 			print()
@@ -44,12 +47,15 @@ class SARSAAgent(Agent):
 		print("1111111111111ACT1111111111111111")
 		print("Chose among ", self.qValues[self.state])
 		action = self.policy(self.state)
+		print("From state ",self.state)
 		print("Chosen action: {}".format(action))
 		return action
 	def policy(self,state):
 		if (random.random() < self.epsilon or len(self.qValues[state]) == 0):#epsilon greedy policy, chose random with probability epsilon, or when no action was ever performed from this state (all values are 0_)
+			print("Epsilon Explore")
 			action = self.possibleActions[random.randint(0, 4)]
 		else:
+			print("GREEDY")
 			action = max(self.qValues[state])
 
 		if (not action in self.qValues[state].keys()):
@@ -70,31 +76,14 @@ class SARSAAgent(Agent):
 		self.A = action
 		self.nextState = nextState
 		self.state = state
-		print()
-		print()
-		print("Previous state: {}".format(self.preS))
-		print("Previous Action: {}".format(self.preA))
-		print("previous Reward: {}".format(self.preR))
-		print("Current state: {}".format(self.state))
-		print("Current Action: {}".format(self.A))
-		print("Current Reward: {}".format(self.R))
-		print("NEXT state: ",nextState)
 		if (not nextState in self.qValues.keys()):
 			self.qValues[nextState] = dict.fromkeys(self.possibleActions, 0)
 
 	def computeHyperparameters(self, numTakenActions, episodeNumber):
 		lr = self.learningRate
-		ep = self.epsilon
-		if (episodeNumber > 2000):
-			ep = 0.03
-		elif (episodeNumber > 700):
-			ep = 0.1
-		elif (episodeNumber > 400):
-			ep = 0.2
-		elif (episodeNumber > 300):
-			ep = 0.3
-		elif (episodeNumber > 150):
-			ep = 0.5
+		ep = 0.75 * (pow(np.e, (-episodeNumber / 700)))
+
+		return lr, ep
 		return lr, ep
 	def toStateRepresentation(self, state):
 		return state[0]
@@ -129,7 +118,7 @@ if __name__ == '__main__':
 	hfoEnv.connectToServer()
 
 	# Initialize a SARSA Agent
-	agent = SARSAAgent(0.25, 0.9, 0.8)
+	agent = SARSAAgent(0.15, 0.9, 0.8)
 
 	# Run training using SARSA
 	numTakenActions = 0 
@@ -150,6 +139,8 @@ if __name__ == '__main__':
 
 		while status==0:
 			print("EVENT:")
+			print("==============================")
+
 			learningRate, epsilon = agent.computeHyperparameters(numTakenActions, episode)
 			agent.setEpsilon(epsilon)
 			agent.setLearningRate(learningRate)
@@ -158,25 +149,18 @@ if __name__ == '__main__':
 			agent.setState(agent.toStateRepresentation(obsCopy))
 			action = agent.act()
 			numTakenActions += 1
-			print("ACTION: ",action)
 			nextObservation, reward, done, status = hfoEnv.step(action)
-			print(obsCopy, action, reward, nextObservation)
 			agent.setExperience(agent.toStateRepresentation(obsCopy), action, reward, status, agent.toStateRepresentation(nextObservation))
-
+			print("end in state ",agent.nextState)
 			if not epsStart :
 				agent.learn()
 			else:
 				epsStart = False
 
 			observation = nextObservation
-			print("==============================")
-			print("\nPLAY")
-			print("\nState {}".format(agent.state))
-			print("QValues {}".format(agent.qValues))
-			print("Action: {}".format(agent.A))
-			print("Reward: {}".format(agent.R))
-			print("Next State: {}".format(agent.nextState))
 
-
+		print()
+		print("EPISODE OVER, DO ONE MORE TRAIN:")
+		print("6666666666666666666666666666666666")
 		agent.setExperience(agent.toStateRepresentation(nextObservation), None, None, None, None)
 		agent.learn()

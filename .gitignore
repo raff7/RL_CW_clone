@@ -2,3 +2,13 @@
 \.idea/
 
 *.xml
+
+*.pyc
+
+*.rcg
+
+*.rcl
+
+Exercise2/initCoordinates\.txt
+
+Exercise2/log/
