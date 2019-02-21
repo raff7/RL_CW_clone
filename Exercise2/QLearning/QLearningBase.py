@@ -97,7 +97,7 @@ class QLearningAgent(Agent):
 
     def computeHyperparameters(self, numTakenActions, episodeNumber):
         lr = self.learningRate
-        ep = 0.75*(pow(np.e,(-episodeNumber/700)))
+        ep = 0.45*(pow(np.e,(-episodeNumber/800)))
 
         return lr, ep
 

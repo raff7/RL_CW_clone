@@ -14,6 +14,7 @@ class SARSAAgent(Agent):
           self.discountFactor = discountFactor
           self.epsilon = epsilon
           self.learningRate=learningRate
+
 	def learn(self):
 		if(self.A is None):#Terminal state, Qvalue 0
 			diff = self.learningRate * (self.preR -self.qValues[self.preS][self.preA])
@@ -22,6 +23,7 @@ class SARSAAgent(Agent):
 			print("Return {} = a[{}]*(R[{}]+expV_next[0] - Qval[{}] =".format(diff, self.learningRate, self.preR,self.qValues[self.preS][self.preA]))
 			print("Qvalues:")
 			print("previous state{}:".format(self.preS))
+			print("Did action: ",self.preA)
 			print(self.qValues[self.preS])
 
 			self.qValues[self.preS][self.preA] = self.qValues[self.preS][self.preA] + diff
@@ -36,6 +38,7 @@ class SARSAAgent(Agent):
 			print("Return {} = a[{}]*(R[{}]+expV_next[{}] - Qval[{}] =".format(diff, self.learningRate, self.preR,self.discountFactor * self.qValues[self.state][self.A], self.qValues[self.preS][self.preA]))
 			print("Qvalues:")
 			print("previous state{}:".format(self.preS))
+			print("Did action: ",self.preA)
 			print(self.qValues[self.preS])
 
 			self.qValues[self.preS][self.preA] = self.qValues[self.preS][self.preA] + diff
@@ -45,9 +48,9 @@ class SARSAAgent(Agent):
 		return diff
 	def act(self):
 		print("1111111111111ACT1111111111111111")
-		print("Chose among ", self.qValues[self.state])
-		action = self.policy(self.state)
-		print("From state ",self.state)
+		print("Chose among ", self.qValues[self.nextState])
+		action = self.policy(self.nextState)
+		print("From state ",self.nextState)
 		print("Chosen action: {}".format(action))
 		return action
 	def policy(self,state):
@@ -64,18 +67,16 @@ class SARSAAgent(Agent):
 		return action
 
 	def setState(self, state):
-		self.state = state
+		self.state = self.nextStatestate
+		self.nextStatestate = state
 		if (not state in self.qValues.keys()):
 			self.qValues[state] = dict.fromkeys(self.possibleActions,0)  # when first time in a state add it to qValue table
 
 	def setExperience(self, state, action, reward, status, nextState):
-		self.preA=self.A
-		self.preR =self.R
-		self.preS= self.state
-		self.R = reward
-		self.A = action
-		self.nextState = nextState
-		self.state = state
+		self.A = self.nextA
+		self.R = self.nextR
+		self.nextR = reward
+		self.nextA = action
 		if (not nextState in self.qValues.keys()):
 			self.qValues[nextState] = dict.fromkeys(self.possibleActions, 0)
 
@@ -138,7 +139,7 @@ if __name__ == '__main__':
 		epsStart = True
 
 		while status==0:
-			print("EVENT:")
+			print("\nEVENT:")
 			print("==============================")
 
 			learningRate, epsilon = agent.computeHyperparameters(numTakenActions, episode)
@@ -152,6 +153,7 @@ if __name__ == '__main__':
 			nextObservation, reward, done, status = hfoEnv.step(action)
 			agent.setExperience(agent.toStateRepresentation(obsCopy), action, reward, status, agent.toStateRepresentation(nextObservation))
 			print("end in state ",agent.nextState)
+			print("Ger reward: ",reward)
 			if not epsStart :
 				agent.learn()
 			else:
