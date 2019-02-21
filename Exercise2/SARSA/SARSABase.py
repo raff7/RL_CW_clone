@@ -15,7 +15,7 @@ class SARSAAgent(Agent):
           self.learningRate=learningRate
 	def learn(self):
 		if(self.A is None):#Terminal state, Qvalue 0
-			diff = self.learningRate * (self.preR -self.qValues[self.state][self.A])
+			diff = self.learningRate * (self.preR -self.qValues[self.preS][self.preA])
 			self.qValues[self.preS][self.preA] = self.qValues[self.preS][self.preA] + diff
 		else:
 			print("pre A",self.preA)
@@ -24,11 +24,11 @@ class SARSAAgent(Agent):
 			print("a",self.A)
 			print(" s",self.state)
 			print(" r",self.R)
+			print("next state",self.nextState)
 
 			diff = self.learningRate * (self.preR + self.discountFactor * self.qValues[self.state][self.A] - self.qValues[self.preS][self.preA])
 
 			print()
-			print("222222222222222222222222222222222222222")
 			print("LEARN START")
 			print("Return {} = a[{}]*(R[{}]+expV_next[{}] - Qval[{}] =".format(diff, self.learningRate, self.preR,self.discountFactor * self.qValues[self.state][self.A], self.qValues[self.preS][self.preA]))
 			print("Qvalues:")
@@ -42,9 +42,9 @@ class SARSAAgent(Agent):
 		return diff
 	def act(self):
 		print("1111111111111ACT1111111111111111")
-		print("Chose among ", self.qValues[self.preS])
-		action =  self.policy(self.state)
-		print("Chosen previous action: {}".format(action))
+		print("Chose among ", self.qValues[self.state])
+		action = self.policy(self.state)
+		print("Chosen action: {}".format(action))
 		return action
 	def policy(self,state):
 		if (random.random() < self.epsilon or len(self.qValues[state]) == 0):#epsilon greedy policy, chose random with probability epsilon, or when no action was ever performed from this state (all values are 0_)
