@@ -14,9 +14,10 @@ class QLearningAgent(Agent):
         super(QLearningAgent, self).__init__()
         self.qValues = {}
         self.discountFactor = discountFactor
+        self.initEpsilon = epsilon
         self.epsilon = epsilon
         self.learningRate=learningRate
-        self.printing=True
+        self.printing=False
 
 
     def learn(self):
@@ -97,7 +98,7 @@ class QLearningAgent(Agent):
 
     def computeHyperparameters(self, numTakenActions, episodeNumber):
         lr = self.learningRate
-        ep = 0.45*(pow(np.e,(-episodeNumber/800)))
+        ep = self.initEpsilon*(pow(np.e,(-episodeNumber/800)))
 
         return lr, ep
 
