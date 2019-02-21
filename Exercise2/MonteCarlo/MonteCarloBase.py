@@ -8,33 +8,36 @@ from random import random
 
 
 class MonteCarloAgent(Agent):
-	def __init__(self, discountFactor, epsilon, initVals=0.0):
-		super(MonteCarloAgent, self).__init__()
-		self.epsilon = epsilon
-		self.discountFactor = discountFactor
-		self.qValues = {}
+    def __init__(self, discountFactor, epsilon, initVals=0.0):
+        super(MonteCarloAgent, self).__init__()
+        self.epsilon = epsilon
+        self.discountFactor = discountFactor
+        self.qValues = {}
 
 
-	def learn(self):
-		raise NotImplementedError
+    def learn(self):
+        raise NotImplementedError
 
-	def toStateRepresentation(self, state):
-		return state[0]
+    def toStateRepresentation(self, state):
+        return state[0]
 
-	def setExperience(self, state, action, reward, status, nextState):
-		self.path.apend((state,action))
+    def setExperience(self, state, action, reward, status, nextState):
+        self.path.apend((state,action,reward))
 
-	def setState(self, state):
-		self.state = state
-		if(not state in self.qValues.keys()):
-			self.qValues[state]= dict.fromkeys(self.possibleActions,0)				#when first time in a state add it to qValue table
+    def setState(self, state):
+        self.state = state
+        if(not state in self.qValues.keys()):
+            self.qValues[state]= dict.fromkeys(self.possibleActions,0)				#when first time in a state add it to qValue table
 
 
-	def reset(self):
-		self.path = []
+    def reset(self):
+        self.path =  []
+        self.SPath = []
+        self.APath = []
+        self.RPath = []
 
-	def act(self):
-		if(self.printing):
+    def act(self):
+        if(self.printing):
             print()
             print("1111111111111ACT1111111111111111")
             print("Chose among ",self.qValues[self.state])
@@ -54,14 +57,19 @@ class MonteCarloAgent(Agent):
             print("Chosen action: {}".format(action))
         return action
 
+    def getGreedy(self, state):
+        max_k = max(self.qValues[state].items(), key=operator.itemgetter(1))[0]
+        max_v = self.qValues[state][max_k]
+        actions = [key for (key, value) in self.qValues[state].items() if value == max_v]
+        return actions[random.randint(0, len(actions) - 1)]  # chose at random among actions with highest q_value
 
 
 
-	def setEpsilon(self, epsilon):
-		self.epsilon = epsilon
+    def setEpsilon(self, epsilon):
+        self.epsilon = epsilon
 
-	def computeHyperparameters(self, numTakenActions, episodeNumber):
-		lr = self.learningRate
+    def computeHyperparameters(self, numTakenActions, episodeNumber):
+        lr = self.learningRate
         ep = self.epsilon
         if (episodeNumber > 2000):
             ep = 0.03
@@ -77,43 +85,43 @@ class MonteCarloAgent(Agent):
 
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser()
-	parser.add_argument('--id', type=int, default=0)
-	parser.add_argument('--numOpponents', type=int, default=0)
-	parser.add_argument('--numTeammates', type=int, default=0)
-	parser.add_argument('--numEpisodes', type=int, default=500)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--id', type=int, default=0)
+    parser.add_argument('--numOpponents', type=int, default=0)
+    parser.add_argument('--numTeammates', type=int, default=0)
+    parser.add_argument('--numEpisodes', type=int, default=500)
 
-	parser = argparse.ArgumentParser()
-	parser.add_argument('--id', type=int, default=0)
-	parser.add_argument('--numOpponents', type=int, default=0)
-	parser.add_argument('--numTeammates', type=int, default=0)
-	parser.add_argument('--numEpisodes', type=int, default=500)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--id', type=int, default=0)
+    parser.add_argument('--numOpponents', type=int, default=0)
+    parser.add_argument('--numTeammates', type=int, default=0)
+    parser.add_argument('--numEpisodes', type=int, default=500)
 
-	args=parser.parse_args()
+    args=parser.parse_args()
 
-	#Init Connections to HFO Server
-	hfoEnv = HFOAttackingPlayer(numOpponents = args.numOpponents, numTeammates = args.numTeammates, agentId = args.id)
-	hfoEnv.connectToServer()
+    #Init Connections to HFO Server
+    hfoEnv = HFOAttackingPlayer(numOpponents = args.numOpponents, numTeammates = args.numTeammates, agentId = args.id)
+    hfoEnv.connectToServer()
 
-	# Initialize a Monte-Carlo Agent
-	agent = MonteCarloAgent(discountFactor = 0.99, epsilon = 1.0)
-	numEpisodes = args.numEpisodes
-	numTakenActions = 0
-	# Run training Monte Carlo Method
-	for episode in range(numEpisodes):
-		agent.reset()
-		observation = hfoEnv.reset()
-		status = 0
+    # Initialize a Monte-Carlo Agent
+    agent = MonteCarloAgent(discountFactor = 0.99, epsilon = 1.0)
+    numEpisodes = args.numEpisodes
+    numTakenActions = 0
+    # Run training Monte Carlo Method
+    for episode in range(numEpisodes):
+        agent.reset()
+        observation = hfoEnv.reset()
+        status = 0
 
-		while status==0:
-			epsilon = agent.computeHyperparameters(numTakenActions, episode)
-			agent.setEpsilon(epsilon)
-			obsCopy = observation.copy()
-			agent.setState(agent.toStateRepresentation(obsCopy))
-			action = agent.act()
-			numTakenActions += 1
-			nextObservation, reward, done, status = hfoEnv.step(action)
-			agent.setExperience(agent.toStateRepresentation(obsCopy), action, reward, status, agent.toStateRepresentation(nextObservation))
-			observation = nextObservation
+        while status==0:
+            epsilon = agent.computeHyperparameters(numTakenActions, episode)
+            agent.setEpsilon(epsilon)
+            obsCopy = observation.copy()
+            agent.setState(agent.toStateRepresentation(obsCopy))
+            action = agent.act()
+            numTakenActions += 1
+            nextObservation, reward, done, status = hfoEnv.step(action)
+            agent.setExperience(agent.toStateRepresentation(obsCopy), action, reward, status, agent.toStateRepresentation(nextObservation))
+            observation = nextObservation
 
-		agent.learn()
+        agent.learn()

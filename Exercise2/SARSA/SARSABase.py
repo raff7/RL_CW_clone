@@ -134,7 +134,7 @@ if __name__ == '__main__':
     hfoEnv.connectToServer()
 
     # Initialize a SARSA Agent
-    agent = SARSAAgent(0.15, 0.9, 0.5)
+    agent = SARSAAgent(0.3, 0.9, 0.6)
 
     # Run training using SARSA
     numTakenActions = 0
@@ -188,6 +188,7 @@ if __name__ == '__main__':
         if (episode % 50 == 0):
             st = (0, 2)
             ac = 'S'
+            print("Epsilon ",agent.epsilon)
             print('\n\nGreedy policy for episode {}:'.format(episode))
             cout = 0
             while ac != 'G' and st in agent.qValues.keys() and cout < 15:
