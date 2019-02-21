@@ -2,8 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="252e79ad-d3b8-4e13-8f90-d3dcec3862d4" name="Default Changelist" comment="dd">
-      <change beforePath="$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Exercise2/QLearningBase.py" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise2/QLearningBase.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Exercise2/SARSA/SARSAAgent.sh" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise2/SARSA/SARSAAgent.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Exercise2/SARSA/SARSABase.py" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise2/SARSA/SARSABase.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Exercise2/SARSAAgent.sh" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise2/SARSAAgent.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Exercise2/SARSABase.py" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise2/SARSABase.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Exercise2/initCoordinates.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise2/initCoordinates.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Exercise2/log/20190221130328-base_left_0-vs-base_right_0.rcl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Exercise2/log/20190221133955-base_left_0-vs-base_right_0.rcg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Exercise2/log/20190221133955-base_left_0-vs-base_right_0.rcl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Exercise2/log/20190221135057-base_left_0-vs-base_right_0.rcl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Exercise2/log/20190221140232-base_left_0-vs-base_right_0.rcg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Exercise2/log/incomplete.hfo" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise2/log/incomplete.hfo" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,8 +40,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Exercise2/QLearningBase.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="29" column="39" lean-forward="true" selection-start-line="23" selection-start-column="8" selection-end-line="29" selection-end-column="39" />
+            <state relative-caret-position="435">
+              <caret line="29" column="29" selection-start-line="29" selection-start-column="29" selection-end-line="29" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -55,11 +67,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1133">
-              <caret line="140" column="33" lean-forward="true" selection-start-line="135" selection-start-column="7" selection-end-line="140" selection-end-column="33" />
-              <folding>
-                <element signature="e#41#102#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="223">
+              <caret line="31" column="29" selection-start-line="31" selection-end-line="32" />
             </state>
           </provider>
         </entry>
@@ -67,8 +76,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Exercise2/SARSA/SARSABase.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1403">
-              <caret line="168" column="37" selection-start-line="168" selection-start-column="37" selection-end-line="168" selection-end-column="37" />
+            <state relative-caret-position="483">
+              <caret line="170" column="25" selection-start-line="170" selection-start-column="25" selection-end-line="170" selection-end-column="25" />
               <folding>
                 <element signature="e#41#102#0" expanded="true" />
               </folding>
@@ -79,8 +88,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Exercise2/SARSA/SARSAAgent.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="41" selection-start-line="8" selection-start-column="41" selection-end-line="8" selection-end-column="41" />
+            <state relative-caret-position="90">
+              <caret line="6" column="29" selection-start-line="6" selection-start-column="29" selection-end-line="6" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -97,8 +106,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="7" selection-start-line="12" selection-start-column="7" selection-end-line="12" selection-end-column="7" />
+            <state relative-caret-position="30">
+              <caret line="2" column="66" lean-forward="true" selection-start-line="2" selection-start-column="66" selection-end-line="2" selection-end-column="66" />
             </state>
           </provider>
         </entry>
@@ -174,18 +183,6 @@
               <item name="RL_CW_clone" type="462c0819:PsiDirectoryNode" />
               <item name="Exercise2" type="462c0819:PsiDirectoryNode" />
               <item name="QLearning" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RL_CW_clone" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RL_CW_clone" type="462c0819:PsiDirectoryNode" />
-              <item name="Exercise2" type="462c0819:PsiDirectoryNode" />
-              <item name="RandomAgentExample" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RL_CW_clone" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RL_CW_clone" type="462c0819:PsiDirectoryNode" />
-              <item name="Exercise2" type="462c0819:PsiDirectoryNode" />
-              <item name="SARSA" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -430,8 +427,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Exercise2/SARSA/SARSAAgent.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="41" selection-start-line="8" selection-start-column="41" selection-end-line="8" selection-end-column="41" />
+        <state relative-caret-position="90">
+          <caret line="6" column="29" selection-start-line="6" selection-start-column="29" selection-end-line="6" selection-end-column="29" />
         </state>
       </provider>
     </entry>
@@ -444,8 +441,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningAgent.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="7" selection-start-line="12" selection-start-column="7" selection-end-line="12" selection-end-column="7" />
+        <state relative-caret-position="30">
+          <caret line="2" column="66" lean-forward="true" selection-start-line="2" selection-start-column="66" selection-end-line="2" selection-end-column="66" />
         </state>
       </provider>
     </entry>
@@ -458,8 +455,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Exercise2/SARSA/SARSABase.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1403">
-          <caret line="168" column="37" selection-start-line="168" selection-start-column="37" selection-end-line="168" selection-end-column="37" />
+        <state relative-caret-position="483">
+          <caret line="170" column="25" selection-start-line="170" selection-start-column="25" selection-end-line="170" selection-end-column="25" />
           <folding>
             <element signature="e#41#102#0" expanded="true" />
           </folding>
@@ -468,8 +465,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Exercise2/QLearningBase.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="29" column="39" lean-forward="true" selection-start-line="23" selection-start-column="8" selection-end-line="29" selection-end-column="39" />
+        <state relative-caret-position="435">
+          <caret line="29" column="29" selection-start-line="29" selection-start-column="29" selection-end-line="29" selection-end-column="29" />
         </state>
       </provider>
     </entry>
@@ -482,11 +479,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Exercise2/QLearning/QLearningBase.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1133">
-          <caret line="140" column="33" lean-forward="true" selection-start-line="135" selection-start-column="7" selection-end-line="140" selection-end-column="33" />
-          <folding>
-            <element signature="e#41#102#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="223">
+          <caret line="31" column="29" selection-start-line="31" selection-end-line="32" />
         </state>
       </provider>
     </entry>
