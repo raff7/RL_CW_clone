@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # encoding utf-8
-
+import numpy as np
 from DiscreteHFO.HFOAttackingPlayer import HFOAttackingPlayer
 from DiscreteHFO.Agent import Agent
 import operator
@@ -99,17 +99,8 @@ class QLearningAgent(Agent):
 
     def computeHyperparameters(self, numTakenActions, episodeNumber):
         lr = self.learningRate
-        ep = self.epsilon
-        if (episodeNumber > 2000):
-            ep = 0.03
-        elif (episodeNumber > 700):
-            ep = 0.1
-        elif(episodeNumber>400):
-            ep=0.2
-        elif(episodeNumber>300):
-            ep=0.3
-        elif(episodeNumber>150):
-            ep=0.5
+        ep = 0.75*(pow(np.e,(-episodeNumber/700)))
+
         return lr, ep
 
 if __name__ == '__main__':
