@@ -22,31 +22,58 @@ class MonteCarloAgent(Agent):
 		return state[0]
 
 	def setExperience(self, state, action, reward, status, nextState):
-		raise NotImplementedError
+		self.path.apend((state,action))
 
 	def setState(self, state):
 		self.state = state
+		if(not state in self.qValues.keys()):
+			self.qValues[state]= dict.fromkeys(self.possibleActions,0)				#when first time in a state add it to qValue table
+
 
 	def reset(self):
-		raise NotImplementedError
+		self.path = []
 
 	def act(self):
-		if(random()<self.epsilon):
-			action = self.possibleActions[random.randint(0, 4)]
-		else:
-			action = max(self.qValues[self.state])
+		if(self.printing):
+            print()
+            print("1111111111111ACT1111111111111111")
+            print("Chose among ",self.qValues[self.state])
+        if(random.random() < self.epsilon #epsilon greedy probability of chosing random
+                or len(self.qValues[self.state]) == 0):# or when no action was ever performed from this state (all values are 0_)
+            action = self.possibleActions[random.randint(0, 4)]
+            if(self.printing):
+                print("epsilon explore")
+        else:
+            if(self.printing):
+                print("greedy")
+            action = self.getGreedy(self.state)
 
-		if(not action in self.qValues[self.state].keys()):
-			self.qValues[self.state][action] = 0 #when randomly chose an action we never explored initialize it to 0.
+        if (not action in self.qValues[self.state].keys()):
+            self.qValues[self.state][action] = 0  # when randomly chose an action we never explored initialize it to 0.
+        if(self.printing):
+            print("Chosen action: {}".format(action))
+        return action
 
 
 
 
 	def setEpsilon(self, epsilon):
-		raise NotImplementedError
+		self.epsilon = epsilon
 
 	def computeHyperparameters(self, numTakenActions, episodeNumber):
-		raise NotImplementedError
+		lr = self.learningRate
+        ep = self.epsilon
+        if (episodeNumber > 2000):
+            ep = 0.03
+        elif (episodeNumber > 700):
+            ep = 0.1
+        elif(episodeNumber>400):
+            ep=0.2
+        elif(episodeNumber>300):
+            ep=0.3
+        elif(episodeNumber>150):
+            ep=0.5
+        return lr, ep
 
 
 if __name__ == '__main__':
@@ -73,7 +100,7 @@ if __name__ == '__main__':
 	numEpisodes = args.numEpisodes
 	numTakenActions = 0
 	# Run training Monte Carlo Method
-	for episode in range(numEpisodes):	
+	for episode in range(numEpisodes):
 		agent.reset()
 		observation = hfoEnv.reset()
 		status = 0

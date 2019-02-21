@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # encoding utf-8
-
+import numpy as np
 from DiscreteHFO.HFOAttackingPlayer import HFOAttackingPlayer
 from DiscreteHFO.Agent import Agent
 import operator
@@ -16,18 +16,20 @@ class QLearningAgent(Agent):
         self.discountFactor = discountFactor
         self.epsilon = epsilon
         self.learningRate=learningRate
+        self.printing=True
 
 
     def learn(self):
         greedy_action = self.getGreedy(self.nextState)
-        diff = self.learningRate*(self.R + self.discountFactor*self.qValues[self.nextState][greedy_action] - self.qValues[self.state][self.A])#TODO CHECK IF I INVERTED NEST STATE AND STATE
-        print()
-        print("222222222222222222222222222222222222222")
-        print("LEARN START")
-        print("Return {} = a[{}]*(R[{}]+expV_next[{}] - Qval[{}] =".format(diff,self.learningRate,self.R,self.discountFactor*self.qValues[self.nextState][greedy_action],self.qValues[self.state][self.A]))
-        print("Qvalues:")
-        print("current state{}:".format(self.state))
-        print(self.qValues[self.state])
+        diff = self.learningRate*(self.R + self.discountFactor*self.qValues[self.nextState][greedy_action] - self.qValues[self.state][self.A])
+        if(self.printing):
+            print()
+            print("222222222222222222222222222222222222222")
+            print("LEARN START")
+            print("Return {} = a[{}]*(R[{}]+expV_next[{}] - Qval[{}] =".format(diff,self.learningRate,self.R,self.discountFactor*self.qValues[self.nextState][greedy_action],self.qValues[self.state][self.A]))
+            print("Qvalues:")
+            print("current state{}:".format(self.state))
+            print(self.qValues[self.state])
         self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
         print("updated state{}:".format(self.state))
         print(self.qValues[self.state])
@@ -36,20 +38,24 @@ class QLearningAgent(Agent):
         return diff
 
     def act(self):
-        print()
-        print("1111111111111ACT1111111111111111")
-        print("Chose among ",self.qValues[self.state])
+        if(self.printing):
+            print()
+            print("1111111111111ACT1111111111111111")
+            print("Chose among ",self.qValues[self.state])
         if(random.random() < self.epsilon #epsilon greedy probability of chosing random
                 or len(self.qValues[self.state]) == 0):# or when no action was ever performed from this state (all values are 0_)
             action = self.possibleActions[random.randint(0, 4)]
-            print("epsilon explore")
+            if(self.printing):
+                print("epsilon explore")
         else:
-            print("greedy")
+            if(self.printing):
+                print("greedy")
             action = self.getGreedy(self.state)
 
         if (not action in self.qValues[self.state].keys()):
             self.qValues[self.state][action] = 0  # when randomly chose an action we never explored initialize it to 0.
-        print("Chosen action: {}".format(action))
+        if(self.printing):
+            print("Chosen action: {}".format(action))
         return action
     def toStateRepresentation(self, state):
         return state[0]
@@ -68,15 +74,17 @@ class QLearningAgent(Agent):
         self.R = reward
         self.A = action
         self.nextState = nextState
-        print()
-        print()
-        print("Current state: {}".format(state))
-        print("Action: {}".format(action))
-        print("Reward: {}".format(reward))
-        print("Next state: {}".format(nextState))
+        if(self.printing):
+            print()
+            print()
+            print("Current state: {}".format(state))
+            print("Action: {}".format(action))
+            print("Reward: {}".format(reward))
+            print("Next state: {}".format(nextState))
         if(not nextState in self.qValues.keys()):
             self.qValues[nextState] = dict.fromkeys(self.possibleActions,0)
-        print("<<<<<<<<<<<<<<<<<1 END>>>>>>>>>>>>>>>>>>>")
+        if(self.printing):
+            print("<<<<<<<<<<<<<<<<<1 END>>>>>>>>>>>>>>>>>>>")
 
     def setLearningRate(self, learningRate):
         self.learningRate = learningRate
@@ -89,17 +97,8 @@ class QLearningAgent(Agent):
 
     def computeHyperparameters(self, numTakenActions, episodeNumber):
         lr = self.learningRate
-        ep = self.epsilon
-        if (episodeNumber > 2000):
-            ep = 0.03
-        elif (episodeNumber > 700):
-            ep = 0.1
-        elif(episodeNumber>400):
-            ep=0.2
-        elif(episodeNumber>300):
-            ep=0.3
-        elif(episodeNumber>150):
-            ep=0.5
+        ep = 0.75*(pow(np.e,(-episodeNumber/700)))
+
         return lr, ep
 
 if __name__ == '__main__':
@@ -133,19 +132,21 @@ if __name__ == '__main__':
     numTakenActions = 0
 
     for episode in range(numEpisodes):
-        print()
-        print()
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        print("episode ",episode)
+        if(agent.printing):
+            print()
+            print()
+            print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            print("episode ",episode)
         status = 0
         observation = hfoEnv.reset()
 
         while status==0:
-            print()
-            print("WHILE LOOP")
-            print("----------------------------------------------")
+            if(agent.printing):
+                print()
+                print("WHILE LOOP")
+                print("----------------------------------------------")
             learningRate, epsilon = agent.computeHyperparameters(numTakenActions, episode)
             agent.setEpsilon(epsilon)
             agent.setLearningRate(learningRate)
@@ -160,3 +161,25 @@ if __name__ == '__main__':
             update = agent.learn()
 
             observation = nextObservation
+        if(episode%25==0):
+            st = (0,2)
+            ac = 'S'
+            print('\n\nGreedy policy for episode {}:'.format(episode))
+            cout = 0
+            while ac != 'G' and st in agent.qValues.keys() and cout < 15:
+                cout +=1
+                ac = agent.getGreedy(st)
+                print("From state {} do action {}".format(st,ac))
+                if(ac == 'DRIBBLE_UP'):
+                    st= (st[0],st[1]-1)
+                elif(ac == 'DRIBBLE_DOWN'):
+                    st=(st[0],st[1]+1)
+                elif(ac == 'DRIBBLE_RIGHT'):
+                    st= (st[0]+1,st[1])
+                elif(ac == 'DRIBBLE_LEFT'):
+                    st=(st[0]-1, st[1])
+                elif(ac == 'KICK'):
+                    ac = 'G'
+                else:
+                    print('ERROR')
+            print()
