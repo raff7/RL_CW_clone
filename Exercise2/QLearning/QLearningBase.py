@@ -31,8 +31,6 @@ class QLearningAgent(Agent):
         self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
         print("updated state{}:".format(self.state))
         print(self.qValues[self.state])
-        print("next state{}:".format(self.nextState))
-        print(self.qValues[self.nextState])
         print("<<<<<<<<<<<<<<<<<2 END>>>>>>>>>>>>>>>>>>>")
 
         return diff

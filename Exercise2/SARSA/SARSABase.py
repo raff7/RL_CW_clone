@@ -15,24 +15,28 @@ class SARSAAgent(Agent):
           self.learningRate=learningRate
 	def learn(self):
 		if(self.state is None):#Terminal state, Qvalue 0
-			print("REWARD: ",self.R)#TODO fix this mess.. pre-not pre
-			print("QVALUE FOR ACTION: ",self.qValues[self.preS][self.preA])
 			diff = self.learningRate * (self.preR -self.qValues[self.state][self.A])#TODO CHECK IF I INVERTED NEST STATE AND STATE
 			self.qValues[self.preS][self.preA] = self.qValues[self.preS][self.preA] + diff
 		else:
-			print("pre A",self.preA)
-			print("pre s",self.preS)
-			print("pre r",self.preR)
-			print("a",self.A)
-			print(" s",self.state)
-			print(" r",self.R)
-
 			diff = self.learningRate * (self.preR + self.discountFactor * self.qValues[self.state][self.A] -self.qValues[self.preS][self.preA])
+
+			print()
+			print("222222222222222222222222222222222222222")
+			print("LEARN START")
+			print("Return {} = a[{}]*(R[{}]+expV_next[{}] - Qval[{}] =".format(diff, self.learningRate, self.preR,self.discountFactor * self.qValues[self.state][self.A], self.qValues[self.preS][self.preA]))
+			print("Qvalues:")
+			print("previous state{}:".format(self.preS))
+			print(self.qValues[self.preS])
 			self.qValues[self.preS][self.preA] = self.qValues[self.preS][self.preA] + diff
+			print("updated previous state{}:".format(self.state))
+			print(self.qValues[self.state])
 		return diff
 	def act(self):
+		print("1111111111111ACT1111111111111111")
+		print("Chose among ", self.qValues[self.preS])
 		return self.policy(self.state)
-
+		print("Chosen previous action: {}".format(self.preA))
+		return action
 	def policy(self,state):
 		if (random.random() < self.epsilon or len(self.qValues[state]) == 0):#epsilon greedy policy, chose random with probability epsilon, or when no action was ever performed from this state (all values are 0_)
 			action = self.possibleActions[random.randint(0, 4)]
@@ -57,6 +61,15 @@ class SARSAAgent(Agent):
 		self.A = action
 		self.nextState = nextState
 		self.state = state
+		print()
+		print()
+		print("Previous state: {}".format(self.preS))
+		print("Previous Action: {}".format(self.preA))
+		print("previous Reward: {}".format(self.preR))
+		print("Current state: {}".format(self.state))
+		print("Current Action: {}".format(self.A))
+		print("Current Reward: {}".format(self.R))
+		print("NEXT state: ",nextState)
 		if (not nextState in self.qValues.keys()):
 			self.qValues[nextState] = dict.fromkeys(self.possibleActions, 0)
 
@@ -111,7 +124,14 @@ if __name__ == '__main__':
 
 	# Run training using SARSA
 	numTakenActions = 0 
-	for episode in range(numEpisodes):	
+	for episode in range(numEpisodes):
+		print()
+		print()
+		print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+		print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+		print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+		print("episode ", episode)
+
 		agent.reset()
 		status = 0
 
@@ -120,6 +140,7 @@ if __name__ == '__main__':
 		epsStart = True
 
 		while status==0:
+			print("EVENT:")
 			learningRate, epsilon = agent.computeHyperparameters(numTakenActions, episode)
 			agent.setEpsilon(epsilon)
 			agent.setLearningRate(learningRate)
