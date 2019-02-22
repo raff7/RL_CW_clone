@@ -97,7 +97,7 @@ class SARSAAgent(Agent):
 
     def computeHyperparameters(self, numTakenActions, episodeNumber):
         lr = self.learningRate
-        ep = self.initEpsilon * (pow(np.e, (-episodeNumber / 700)))
+        ep = self.initEpsilon * (pow(np.e, (-episodeNumber / 600)))
 
         return lr, ep
         return lr, ep
@@ -134,7 +134,7 @@ if __name__ == '__main__':
     hfoEnv.connectToServer()
 
     # Initialize a SARSA Agent
-    agent = SARSAAgent(0.2, 0.9, 0.6)
+    agent = SARSAAgent(0.3, 0.99, 0.6)#Best so far 0.3 0.9 0.6(600)
 
     # Run training using SARSA
     numTakenActions = 0
