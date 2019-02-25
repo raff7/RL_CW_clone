@@ -7,7 +7,49 @@ import argparse
 import random
 import operator
 import numpy as np
+import time
+import matplotlib.pyplot as plt
 
+def plot_greedy_policy(q_vals, f, ax, iteration):
+    if f == ax == None:
+        plt.ion()
+        f, ax = plt.subplots(1, 1, figsize=(6, 4))
+        plt.show()
+
+    possible_actions = ['DRIBBLE_UP','DRIBBLE_DOWN','DRIBBLE_LEFT','DRIBBLE_RIGHT','KICK']
+    ax.clear()
+    ax.set_title('Iteration {}'.format(iteration))
+    ax.set_ylim([0, 6])
+    ax.set_xlim([0, 5])
+    ax.invert_yaxis()
+
+    for y in range(6):
+        for x in range(5):
+            if(not (x,y) in q_vals.keys()):
+                continue
+
+            max_k = max(q_vals[(x,y)].items(), key=operator.itemgetter(1))[0]
+            max_v = q_vals[(x,y)][max_k]
+            actions = [key for (key, value) in q_vals[(x,y)].items() if value == max_v]
+
+
+            for action in actions:
+                if action == 'DRIBBLE_UP':
+                    ax.annotate('', (x + 0.5, y), (x + 0.5, y + 0.5), arrowprops={'width': 0.1})
+                if action == 'DRIBBLE_DOWN':
+                    ax.annotate('', (x + 0.5, y + 1), (x + 0.5, y + 0.5), arrowprops={'width': 0.1})
+                if action == 'DRIBBLE_RIGHT':
+                    ax.annotate('', (x + 1, y + 0.5), (x + 0.5, y + 0.5), arrowprops={'width': 0.1})
+                if action == 'DRIBBLE_LEFT':
+                    ax.annotate('', (x, y + 0.5), (x + 0.5, y + 0.5), arrowprops={'width': 0.1})
+                if action == 'KICK':
+                    ax.text(x + 0.5, y + 0.5, action, horizontalalignment='center', verticalalignment='center', )
+
+    f.canvas.draw()
+    f.canvas.flush_events()
+    time.sleep(0.001)
+
+    return f, ax
 
 class MonteCarloAgent(Agent):
     def __init__(self, discountFactor, epsilon, initVals=0.0):
@@ -16,7 +58,7 @@ class MonteCarloAgent(Agent):
         self.discountFactor = discountFactor
         self.qValues = {}
         self.returns = {}
-        self.printing=True
+        self.printing=False
 
 
     def learn(self):
@@ -24,9 +66,12 @@ class MonteCarloAgent(Agent):
             print("------------------LEARN STAGE------------------")
             print(self.path)
         G = 0
-        visited = []
+        toVisit = []
+        for e in self.path:
+            toVisit.append((e[0],e[1]))
         returns = []
-        for i in range(len(self.path)-1,-1,-1):
+        for i in range(len(self.path)-1,-1,-1):#Loop from last state-action pair to 1st.
+            del toVisit[-1]#Remove ith element from to visit
             step = self.path[i]
             if (self.printing):
                 print()
@@ -35,22 +80,26 @@ class MonteCarloAgent(Agent):
             if (self.printing):
                 print("G:{} =  discG[{}] + R[{}] ".format(self.discountFactor*G + step[2],self.discountFactor*G,step[2]))
             G = self.discountFactor*G + step[2]
-            if(not (step[0],step[1]) in visited):
+            if(not (step[0],step[1]) in toVisit):
                 if (self.printing):
                     print("step not visited")
-                visited.append((step[0],step[1]))
                 if(not (step[0],step[1]) in self.returns.keys()):
                     self.returns[(step[0],step[1])] = []
                 self.returns[(step[0],step[1])].append(G)
                 if(self.printing):
-                    print("QValues ",self.qValues[step[0]][step[1]])
+                    print("QValues ",self.qValues[step[0]])
                 if(not step[0] in self.qValues.keys()):
                     self.qValues[step[0]] = dict.fromkeys(self.possibleActions,0)
-                self.qValues[step[0]][step[1]] = np.mean(self.returns[(step[0],step[1])])
+                self.qValues[step[0]][step[1]] = np.mean(self.returns[(step[0],step[1])])#add [len(self.returns[(step[0],step[1])])-20:] as second index to use moving average
                 returns.append(self.qValues[step[0]][step[1]])
                 if (self.printing):
-                    print("updated QValue= ",self.qValues[step[0]][step[1]])
-        print("\nReturns ",returns[::-1])
+                    print("updated QValue= ",self.qValues[step[0]])
+                    print("R 20({}) {}".format(len(self.returns[step[0],step[1]]),self.returns[(step[0],step[1])][len(self.returns[(step[0],step[1])])-20:]))
+            else:
+                if(self.printing):
+                    print("Step already visited")
+        if(self.printing):
+            print("\nQvalue list in order ",returns[::-1])
         return returns[::-1]
 
     def toStateRepresentation(self, state):
@@ -102,17 +151,7 @@ class MonteCarloAgent(Agent):
         self.epsilon = epsilon
 
     def computeHyperparameters(self, numTakenActions, episodeNumber):
-        ep = self.epsilon
-        if (episodeNumber > 2000):
-            ep = 0.03
-        elif (episodeNumber > 700):
-            ep = 0.1
-        elif(episodeNumber>400):
-            ep=0.2
-        elif(episodeNumber>300):
-            ep=0.3
-        elif(episodeNumber>150):
-            ep=0.5
+        ep = 0.6 * (pow(np.e, (-episodeNumber / 1200))) #600
         return ep
 
 
@@ -136,10 +175,11 @@ if __name__ == '__main__':
     hfoEnv.connectToServer()
 
     # Initialize a Monte-Carlo Agent
-    agent = MonteCarloAgent(discountFactor = 0.9, epsilon = 1.0)
+    agent = MonteCarloAgent(discountFactor = 0.9, epsilon = 0.6)
     numEpisodes = args.numEpisodes
     numTakenActions = 0
     # Run training Monte Carlo Method
+    f, ax = plot_greedy_policy(agent.qValues,None, None,0)
     for episode in range(numEpisodes):
         agent.reset()
         observation = hfoEnv.reset()
@@ -157,3 +197,28 @@ if __name__ == '__main__':
             observation = nextObservation
 
         agent.learn()
+        if (episode % 50 == 0):
+            f, ax = plot_greedy_policy(agent.qValues, f, ax, episode)
+            st = (0, 2)
+            ac = 'S'
+            print("Epsilon ",agent.epsilon)
+            print('\n\nGreedy policy for episode {}:'.format(episode))
+            cout = 0
+            while ac != 'G' and st in agent.qValues.keys() and cout < 15:
+                cout += 1
+                ac = agent.getGreedy(st)
+                print("From state {} do action {}".format(st, ac))
+                if (ac == 'DRIBBLE_UP'):
+                    st = (st[0], st[1] - 1)
+                elif (ac == 'DRIBBLE_DOWN'):
+                    st = (st[0], st[1] + 1)
+                elif (ac == 'DRIBBLE_RIGHT'):
+                    st = (st[0] + 1, st[1])
+                elif (ac == 'DRIBBLE_LEFT'):
+                    st = (st[0] - 1, st[1])
+                elif (ac == 'KICK'):
+                    ac = 'G'
+                else:
+                    print('ERROR')
+            print()
+
