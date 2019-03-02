@@ -100,7 +100,7 @@ class MonteCarloAgent(Agent):
                     print("Step already visited")
         if(self.printing):
             print("\nQvalue list in order ",returns[::-1])
-        return returns[::-1]
+        return (self.qValues,returns[::-1])
 
     def toStateRepresentation(self, state):
         return state[0]
