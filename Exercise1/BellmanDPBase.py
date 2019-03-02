@@ -68,7 +68,7 @@ def plot_value_and_policy(values, policy):
 	plt.show()
 		
 if __name__ == '__main__':
-	solution = BellmanDPSolver()
+	solution = BellmanDPSolver(0.9)
 	solution.initVs()
 	for i in range(20000):
 		values, policy = solution.BellmanUpdate()

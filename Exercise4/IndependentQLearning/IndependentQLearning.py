@@ -1,6 +1,8 @@
+import sys
+sys.path.append('../')
+
 #!/usr/bin/env python3
 # encoding utf-8
-
 import random
 import argparse
 from DiscreteMARLUtils.Environment import DiscreteMARLEnvironment
@@ -36,6 +38,12 @@ class IndependentQLearningAgent(Agent):
 		raise NotImplementedError
 
 if __name__ == '__main__':
+	parser = argparse.ArgumentParser()
+	parser.add_argument('--numOpponents', type=int, default=1)
+	parser.add_argument('--numAgents', type=int, default=2)
+
+	args = parser.parse_args()
+
 	MARLEnv = DiscreteMARLEnvironment(numOpponents = args.numOpponents, numAgents = args.numAgents)
 	agents = []
 	for i in range(args.numAgents):
