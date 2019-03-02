@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 class BellmanDPSolver(object):
-	def __init__(self):
+	def __init__(self, discountRate):
 		self.MDP = MDP()
 		self.disc = 0.9
 
