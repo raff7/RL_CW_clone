@@ -10,6 +10,7 @@ from DiscreteMARLUtils.Environment import DiscreteMARLEnvironment
 from DiscreteMARLUtils.Agent import Agent
 from copy import deepcopy
 import operator
+import argparse
 		
 class IndependentQLearningAgent(Agent):
 	def __init__(self, learningRate, discountFactor, epsilon, initVals=0.0):
@@ -112,8 +113,9 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--numOpponents', type=int, default=1)
 	parser.add_argument('--numAgents', type=int, default=2)
+	parser.add_argument('--numEpisodes', type=int, default=50000)
 
-	args = parser.parse_args()
+	args=parser.parse_args()
 
 	MARLEnv = DiscreteMARLEnvironment(numOpponents = args.numOpponents, numAgents = args.numAgents)
 	agents = []
@@ -135,7 +137,7 @@ if __name__ == '__main__':
 				agent.setEpsilon(epsilon)
 				agent.setLearningRate(learningRate)
 			actions = []
-			stateCopies, nextStateCopies = [],[]
+			stateCopies = []
 			for agentIdx in range(args.numAgents):
 				obsCopy = deepcopy(observation[agentIdx])
 				stateCopies.append(obsCopy)
