@@ -11,6 +11,51 @@ from DiscreteMARLUtils.Agent import Agent
 from copy import deepcopy
 import operator
 import argparse
+import time
+import matplotlib.pyplot as plt
+
+
+def plot_greedy_policy(q_vals, f, ax, iteration, agentID):
+	if f == ax == None:
+		plt.ion()
+		f, ax = plt.subplots(1, 1, figsize=(6, 4))
+		plt.show()
+		f.canvas.set_window_title(agentID)
+
+	possible_actions = ['DRIBBLE_UP', 'DRIBBLE_DOWN', 'DRIBBLE_LEFT', 'DRIBBLE_RIGHT', 'KICK']
+	ax.clear()
+	ax.set_title('Iteration {}'.format(iteration))
+	ax.set_ylim([0, 6])
+	ax.set_xlim([0, 5])
+	ax.invert_yaxis()
+
+	for y in range(6):
+		for x in range(5):
+			if (not (x, y) in q_vals.keys()):
+				continue
+
+			max_k = max(q_vals[(x, y)].items(), key=operator.itemgetter(1))[0]
+			max_v = q_vals[(x, y)][max_k]
+			actions = [key for (key, value) in q_vals[(x, y)].items() if value == max_v]
+
+			for action in actions:
+				if action == 'MOVE_UP':
+					ax.annotate('', (x + 0.5, y), (x + 0.5, y + 0.5), arrowprops={'width': 0.1})
+				if action == 'MOVE_DOWN':
+					ax.annotate('', (x + 0.5, y + 1), (x + 0.5, y + 0.5), arrowprops={'width': 0.1})
+				if action == 'MOVE_RIGHT':
+					ax.annotate('', (x + 1, y + 0.5), (x + 0.5, y + 0.5), arrowprops={'width': 0.1})
+				if action == 'MOVE_LEFT':
+					ax.annotate('', (x, y + 0.5), (x + 0.5, y + 0.5), arrowprops={'width': 0.1})
+				if action == 'KICK':
+					ax.text(x + 0.5, y + 0.5, action, horizontalalignment='center', verticalalignment='center', )
+
+	f.canvas.draw()
+	f.canvas.flush_events()
+	# f.canvas.set_window_title('Window Title')
+	time.sleep(0.001)
+
+	return f, ax
 		
 class IndependentQLearningAgent(Agent):
 	def __init__(self, learningRate, discountFactor, epsilon, initVals=0.0):
@@ -20,6 +65,7 @@ class IndependentQLearningAgent(Agent):
 		self.epsilon = epsilon
 		self.learningRate = learningRate
 		self.printing = False
+
 
 	def setExperience(self, state, action, reward, status, nextState):
 		self.R = reward
@@ -90,7 +136,9 @@ class IndependentQLearningAgent(Agent):
 		return actions[random.randint(0, len(actions) - 1)]  # chose at random among actions with highest q_value
 
 	def toStateRepresentation(self, state):
-		return(state[0][0])
+		if(isinstance(state,str)):
+			return state
+		return((state[0][0][0],state[0][0][1]))
 
 	def setState(self, state):
 		self.state = state
@@ -105,7 +153,7 @@ class IndependentQLearningAgent(Agent):
 		
 	def computeHyperparameters(self, numTakenActions, episodeNumber):
 		lr = 0.3
-		ep = 0.6 * (pow(np.e, (-episodeNumber / 600)))
+		ep = 0.8 * (pow(np.e, (-episodeNumber / 6000)))
 
 		return lr, ep
 
@@ -125,6 +173,11 @@ if __name__ == '__main__':
 
 	numEpisodes = 50000
 	numTakenActions = 0
+
+	f1, ax1 = plot_greedy_policy(agents[0].qValues, None, None, 0,'agent 1')
+	f2, ax2 = plot_greedy_policy(agents[1].qValues, None, None, 0,'agent 2')
+	score = 0
+	moving_average = np.zeros(5000)
 	for episode in range(numEpisodes):
 		status = ["IN_GAME","IN_GAME","IN_GAME"]
 		observation = MARLEnv.reset()
@@ -152,4 +205,15 @@ if __name__ == '__main__':
 				agents[agentIdx].learn()
 
 			observation = nextObservation
-
+			if(reward[0] > 0 or reward[1]>0):
+				if(reward[0]!=reward[1]):
+					print(f"Life is a line, rewards not matching: {reward[0]} is not {reward[1]}")
+				score +=1
+			for i in range(0,len(moving_average)-1):
+				moving_average[i] = moving_average[i+1]
+			moving_average[0]= reward[0]
+		if (episode % 100 == 0):
+			print(f"Score {score}/{episode} {score/max(episode,1)}")
+			print(f"Moving average {moving_average.mean()}")
+			f1, ax1 = plot_greedy_policy(agents[0].qValues, f1, ax1, episode,'Agent 1')
+			f2, ax2 = plot_greedy_policy(agents[1].qValues, f2, ax2, episode, 'Agent 2')
