@@ -4,38 +4,109 @@ sys.path.append('../')
 #!/usr/bin/env python3
 # encoding utf-8
 import random
+import numpy as np
 import argparse
 from DiscreteMARLUtils.Environment import DiscreteMARLEnvironment
 from DiscreteMARLUtils.Agent import Agent
 from copy import deepcopy
+import operator
 		
 class IndependentQLearningAgent(Agent):
 	def __init__(self, learningRate, discountFactor, epsilon, initVals=0.0):
 		super(IndependentQLearningAgent, self).__init__()
+		self.qValues = {}
+		self.discountFactor = discountFactor
+		self.epsilon = epsilon
+		self.learningRate = learningRate
+		self.printing = False
 
 	def setExperience(self, state, action, reward, status, nextState):
-		raise NotImplementedError
+		self.R = reward
+		self.A = action
+		self.nextState = nextState
+		if (self.printing):
+			print()
+			print()
+			print("Current state: {}".format(state))
+			print("Action: {}".format(action))
+			print("Reward: {}".format(reward))
+			print("Next state: {}".format(nextState))
+		if (not nextState in self.qValues.keys()):
+			self.qValues[nextState] = dict.fromkeys(self.possibleActions, 0)
+		if (self.printing):
+			print("<<<<<<<<<<<<<<<<<1 END>>>>>>>>>>>>>>>>>>>")
 	
 	def learn(self):
-		raise NotImplementedError
+		greedy_action = self.getGreedy(self.nextState)
+		diff = self.learningRate * (self.R + self.discountFactor * self.qValues[self.nextState][greedy_action] -
+									self.qValues[self.state][self.A])
+		if (self.printing):
+			print()
+			print("222222222222222222222222222222222222222")
+			print("LEARN START")
+			print("Return {} = a[{}]*(R[{}]+expV_next[{}] - Qval[{}] =".format(diff, self.learningRate, self.R,
+																			   self.discountFactor *
+																			   self.qValues[self.nextState][
+																				   greedy_action],
+																			   self.qValues[self.state][self.A]))
+			print("Qvalues:")
+			print("current state{}:".format(self.state))
+			print(self.qValues[self.state])
+		self.qValues[self.state][self.A] = self.qValues[self.state][self.A] + diff
+		if (self.printing):
+			print("updated state{}:".format(self.state))
+			print(self.qValues[self.state])
+			print("<<<<<<<<<<<<<<<<<2 END>>>>>>>>>>>>>>>>>>>")
+
+		return diff
 
 	def act(self):
-		raise NotImplementedError
+		if (self.printing):
+			print()
+			print("1111111111111ACT1111111111111111")
+			print("Chose among ", self.qValues[self.state])
+		if (random.random() < self.epsilon  # epsilon greedy probability of chosing random
+				or len(self.qValues[
+						   self.state]) == 0):  # or when no action was ever performed from this state (all values are 0_)
+			action = self.possibleActions[random.randint(0, 4)]
+			if (self.printing):
+				print("epsilon explore")
+		else:
+			if (self.printing):
+				print("greedy")
+			action = self.getGreedy(self.state)
+
+		if (not action in self.qValues[self.state].keys()):
+			self.qValues[self.state][action] = 0  # when randomly chose an action we never explored initialize it to 0.
+		if (self.printing):
+			print("Chosen action: {}".format(action))
+		return action
+
+	def getGreedy(self, state):
+		max_k = max(self.qValues[state].items(), key=operator.itemgetter(1))[0]
+		max_v = self.qValues[state][max_k]
+		actions = [key for (key, value) in self.qValues[state].items() if value == max_v]
+		return actions[random.randint(0, len(actions) - 1)]  # chose at random among actions with highest q_value
 
 	def toStateRepresentation(self, state):
-		raise NotImplementedError
+		return(state[0][0])
 
 	def setState(self, state):
-		raise NotImplementedError
+		self.state = state
+		if (not state in self.qValues.keys()):
+			self.qValues[state] = dict.fromkeys(self.possibleActions, 0)  # when first time in a state add it to qValue table
+
+	def setLearningRate(self, learningRate):
+		self.learningRate = learningRate
 
 	def setEpsilon(self, epsilon):
-		raise NotImplementedError
-		
-	def setLearningRate(self, learningRate):
-		raise NotImplementedError
+		self.epsilon = epsilon
 		
 	def computeHyperparameters(self, numTakenActions, episodeNumber):
-		raise NotImplementedError
+		lr = 0.3
+		ep = 0.6 * (pow(np.e, (-episodeNumber / 600)))
+
+		return lr, ep
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
@@ -52,19 +123,19 @@ if __name__ == '__main__':
 
 	numEpisodes = 50000
 	numTakenActions = 0
-	for episode in range(numEpisodes):	
+	for episode in range(numEpisodes):
 		status = ["IN_GAME","IN_GAME","IN_GAME"]
 		observation = MARLEnv.reset()
 		totalReward = 0.0
 		timeSteps = 0
-			
+
 		while status[0]=="IN_GAME":
 			for agent in agents:
 				learningRate, epsilon = agent.computeHyperparameters(numTakenActions, episode)
 				agent.setEpsilon(epsilon)
 				agent.setLearningRate(learningRate)
 			actions = []
-			stateCopies, nextStateCopies = []
+			stateCopies, nextStateCopies = [],[]
 			for agentIdx in range(args.numAgents):
 				obsCopy = deepcopy(observation[agentIdx])
 				stateCopies.append(obsCopy)
@@ -74,9 +145,9 @@ if __name__ == '__main__':
 			nextObservation, reward, done, status = MARLEnv.step(actions)
 
 			for agentIdx in range(args.numAgents):
-				agents[agentIdx].setExperience(agent.toStateRepresentation(stateCopies[agentIdx]), actions[agentIdx], reward[agentIdx], 
+				agents[agentIdx].setExperience(agent.toStateRepresentation(stateCopies[agentIdx]), actions[agentIdx], reward[agentIdx],
 					status[agentIdx], agent.toStateRepresentation(nextObservation[agentIdx]))
 				agents[agentIdx].learn()
-				
+
 			observation = nextObservation
-				
+
