@@ -33,14 +33,16 @@ class WolfPHCAgent(Agent):
         self.action = action
         self.R = reward
         self.nextState = nextState
+        if (not nextState in self.qValues.keys()):
+            self.qValues[nextState] = dict.fromkeys(self.possibleActions, 0)
 
     def learn(self):
-        diff = self.learningRate * (self.R + self.discountFactor * self.qValues[self.nextState][self.greedyAction()] - self.qValues[self.state][self.A])
+        diff = self.learningRate * (self.R + self.discountFactor * self.qValues[self.nextState][self.greedyAction()] - self.qValues[self.state][self.action])
         self.qValues[self.state][self.action]+= diff
         return diff
 
     def act(self):
-        return np.random.choice(list(self.pi.keys()),p=list(self.pi.values()))
+        return np.random.choice(list(self.pi[self.state].keys()),p=list(self.pi[self.state].values()))
 
     def calculateAveragePolicyUpdate(self):
         if (not self.state in self.mean_pi.keys()):
@@ -78,8 +80,9 @@ class WolfPHCAgent(Agent):
     def setState(self, state):
         self.state = state
         if (not state in self.qValues.keys()):
-            self.C[state] = 1#initialize C(S) and start it at 1 (as you just visited it)
             self.qValues[state] = dict.fromkeys(self.possibleActions, 0)
+        if(not state in self.pi.keys()):
+            self.C[state] = 1#initialize C(S) and start it at 1 (as you just visited it)
             self.pi[state] = dict.fromkeys(self.possibleActions,1/len(self.possibleActions))
         else:
             self.C[self.state] +=1
