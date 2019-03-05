@@ -15,47 +15,7 @@ import time
 import matplotlib.pyplot as plt
 
 
-def plot_greedy_policy(q_vals, f, ax, iteration, agentID):
-    if f == ax == None:
-        plt.ion()
-        f, ax = plt.subplots(1, 1, figsize=(6, 4))
-        plt.show()
-        f.canvas.set_window_title(agentID)
 
-    possible_actions = ['MOVE_UP', 'MOVE_DOWN', 'MOVE_LEFT', 'MOVE_RIGHT', 'KICK']
-    ax.clear()
-    ax.set_title('Iteration {}'.format(iteration))
-    ax.set_ylim([0, 6])
-    ax.set_xlim([0, 5])
-    ax.invert_yaxis()
-
-    for y in range(6):
-        for x in range(5):
-            if (not (x, y) in q_vals.keys()):
-                continue
-
-            max_k = max(q_vals[(x, y)].items(), key=operator.itemgetter(1))[0]
-            max_v = q_vals[(x, y)][max_k]
-            actions = [key for (key, value) in q_vals[(x, y)].items() if value == max_v]
-
-            for action in actions:
-                if action == 'MOVE_UP':
-                    ax.annotate('', (x + 0.5, y), (x + 0.5, y + 0.5), arrowprops={'width': 0.1})
-                if action == 'MOVE_DOWN':
-                    ax.annotate('', (x + 0.5, y + 1), (x + 0.5, y + 0.5), arrowprops={'width': 0.1})
-                if action == 'MOVE_RIGHT':
-                    ax.annotate('', (x + 1, y + 0.5), (x + 0.5, y + 0.5), arrowprops={'width': 0.1})
-                if action == 'MOVE_LEFT':
-                    ax.annotate('', (x, y + 0.5), (x + 0.5, y + 0.5), arrowprops={'width': 0.1})
-                if action == 'KICK':
-                    ax.text(x + 0.5, y + 0.5, action, horizontalalignment='center', verticalalignment='center', )
-
-    f.canvas.draw()
-    f.canvas.flush_events()
-    # f.canvas.set_window_title('Window Title')
-    time.sleep(0.001)
-
-    return f, ax
         
 class IndependentQLearningAgent(Agent):
     def __init__(self, learningRate, discountFactor, epsilon, initVals=0.0):
@@ -174,8 +134,6 @@ if __name__ == '__main__':
     numEpisodes = 50000
     numTakenActions = 0
 
-    f1, ax1 = plot_greedy_policy(agents[0].qValues, None, None, 0,'agent 1')
-    f2, ax2 = plot_greedy_policy(agents[1].qValues, None, None, 0,'agent 2')
     score = 0
     moving_average = np.zeros(500)
     for episode in range(numEpisodes):
@@ -223,5 +181,4 @@ if __name__ == '__main__':
         if (episode % 100 == 0):
             print("Score {}/{} {}".format(score,episode,score/max(episode,1)))
 #            print("Moving average {}".format(moving_average.mean()))
-            f1, ax1 = plot_greedy_policy(agents[0].qValues, f1, ax1, episode,'Agent 1')
-            f2, ax2 = plot_greedy_policy(agents[1].qValues, f2, ax2, episode, 'Agent 2')
+            
