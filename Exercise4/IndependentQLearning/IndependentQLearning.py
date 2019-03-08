@@ -132,8 +132,8 @@ if __name__ == '__main__':
         agent = IndependentQLearningAgent(learningRate = 0.3, discountFactor = 0.95, epsilon = 1.0)
         agents.append(agent)
 
-    numEpisodes = 50000
-    numTakenActions = 0
+	numTakenActions = 0
+	numEpisodes = args.numEpisodes
 
     score = 0
     prew=0
