@@ -112,8 +112,9 @@ class IndependentQLearningAgent(Agent):
         self.epsilon = epsilon
         
     def computeHyperparameters(self, numTakenActions, episodeNumber):
-        lr = 0.3
-        ep = 0.8 * (pow(np.e, (-episodeNumber / 6000)))
+        lr = 0.4 * (pow(np.e, (-episodeNumber / 10000)))
+        lr=0.3
+        ep = 0.7 * (pow(np.e, (-episodeNumber / 6000)))
 
         return lr, ep
 
@@ -128,14 +129,14 @@ if __name__ == '__main__':
     MARLEnv = DiscreteMARLEnvironment(numOpponents = args.numOpponents, numAgents = args.numAgents)
     agents = []
     for i in range(args.numAgents):
-        agent = IndependentQLearningAgent(learningRate = 0.1, discountFactor = 0.9, epsilon = 1.0)
+        agent = IndependentQLearningAgent(learningRate = 0.3, discountFactor = 0.95, epsilon = 1.0)
         agents.append(agent)
 
     numEpisodes = 50000
     numTakenActions = 0
 
     score = 0
-    moving_average = np.zeros(500)
+    prew=0
     for episode in range(numEpisodes):
         if(agent.printing):
             print()
@@ -175,10 +176,8 @@ if __name__ == '__main__':
             observation = nextObservation
             if(reward[0] > 0 or reward[1]>0):
                 score +=1
-#            for i in range(0,len(moving_average)-1):
-#                moving_average[i] = moving_average[i+1]
-#            moving_average[0]= reward[0]
-        if (episode % 100 == 0):
-            print("Score {}/{} {}".format(score,episode,score/max(episode,1)))
-#            print("Moving average {}".format(moving_average.mean()))
+        if (episode % 200 == 0):
+            print(f"Epsilon {agent.epsilon}, LR {agent.learningRate}")
+            print("Episode {}/{}, tot win% {}, partial win %: {}".format(score, episode, score / max(1, episode),(score - prew) / 200))
+            prew = score
             

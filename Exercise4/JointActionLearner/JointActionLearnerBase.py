@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # encoding utf-8
-
+import sys
+sys.path.append('../')
 import random
 import argparse
 from DiscreteMARLUtils.Environment import DiscreteMARLEnvironment
@@ -8,34 +9,80 @@ from DiscreteMARLUtils.Agent import Agent
 from copy import deepcopy
 import itertools
 import argparse
+import numpy as np
 		
 class JointQLearningAgent(Agent):
 	def __init__(self, learningRate, discountFactor, epsilon, numTeammates, initVals=0.0):
-		super(JointQLearningAgent, self).__init__()	
+		super(JointQLearningAgent, self).__init__()
+		self.lr = learningRate
+		self.df = discountFactor
+		self.eps = epsilon
+		self.numMates = numTeammates
+
+		self.qValues = {}
+		self.C = {}
+		self.n = {}
 
 	def setExperience(self, state, action, oppoActions, reward, status, nextState):
-		raise NotImplementedError
+		self.state = state
+		self.A = action
+		self.oppA = oppoActions[0]
+		self.R = reward
+		self.nextState = nextState
+		if (not nextState in self.qValues.keys()):
+			self.qValues[nextState] = dict.fromkeys([(x,y) for x in self.possibleActions for y in self.possibleActions], 0)
 		
 	def learn(self):
-		raise NotImplementedError
+		a = (self.A,self.oppA)
+		V = self.getBestAction(self.nextState)[1]#TODO check if this is right
+		diff = self.lr*(self.R + self.df * V - self.qValues[self.state][a])
+		self.qValues[self.state][a] += diff
+		self.C[self.state][self.oppA] +=1
+		self.n[self.state]+=1
+		return diff
+
+	def getBestAction(self,state):
+		max_v = 0
+		if (not state in self.n.keys() or self.n[state] == 0):
+			max_A = self.possibleActions  # 1st iteration, chose at random (and avoid division by 0)
+		else:
+			max_A = []
+			for A in self.possibleActions:
+				v = 0
+				for oppA in self.possibleActions:
+					v += (self.C[state][oppA] / self.n[state]) * (self.qValues[state][(A, oppA)])
+				if (v >= max_v):
+					max_v = v
+					max_A.append(A)
+
+		return np.random.choice(max_A), max_v
 
 	def act(self):
-		raise NotImplementedError
+		return self.getBestAction(self.state)[0]
+
+
 
 	def setEpsilon(self, epsilon) :
-		raise NotImplementedError
-		
+		self.eps = epsilon
+
 	def setLearningRate(self, learningRate) :
-		raise NotImplementedError
+		self.lr = learningRate
 
 	def setState(self, state):
-		raise NotImplementedError
-
-	def toStateRepresentation(self, rawState):
-		raise NotImplementedError
+		self.state = state
+		if (not state in self.qValues.keys()):
+			self.qValues[state] = dict.fromkeys([(x,y) for x in self.possibleActions for y in self.possibleActions],0)  # when first time in a state add it to qValue table
+		if (not state in self.n.keys()):
+			self.n[state] = 0
+			self.C[state] = dict.fromkeys(self.possibleActions,0)
+	def toStateRepresentation(self, state):
+		if (isinstance(state, str)):
+			return state
+		return (((state[0][0][0], state[0][0][1]), (state[0][1][0], state[0][1][1])))
 		
 	def computeHyperparameters(self, numTakenActions, episodeNumber):
-		raise NotImplementedError
+		eps =  0.7 * (pow(np.e, (-episodeNumber / 6000)))
+		return self.lr, eps
 
 if __name__ == '__main__':
 
@@ -56,8 +103,14 @@ if __name__ == '__main__':
 
 	numEpisodes = numEpisodes
 	numTakenActions = 0
+	wins = 0
+	prew = 0
 
-	for episode in range(numEpisodes):	
+	for episode in range(numEpisodes):
+		if (episode % 200 == 0):
+			print(f"Epsilon {agent.eps}")
+			print("Episode {}/{}, tot win% {}, partial win %: {}".format(wins, episode, wins / max(1, episode),	(wins - prew) / 200))
+			prew = wins
 		status = ["IN_GAME","IN_GAME","IN_GAME"]
 		observation = MARLEnv.reset()
 			
@@ -85,3 +138,5 @@ if __name__ == '__main__':
 				agents[agentIdx].learn()
 				
 			observation = nextObservation
+		if (reward[0] == 1):
+			wins += 1
