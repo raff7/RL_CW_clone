@@ -70,23 +70,38 @@ class WolfPHCAgent(Agent):
             delta = self.loseDelta
         #Update
         gr_action = self.greedyAction(self.state)
+        p_mass = 0
+        max_q_count =0
+        max_q_actions = []
+        for action in self.possibleActions:
+            if(self.qValues[self.state][action] == self.qValues[self.state][gr_action]):
+                max_q_count +=1
+                max_q_actions.append(action)
 
-        if(self.qValues[self.state][self.action] == self.qValues[self.state][gr_action]):
-            self.pi[self.state][self.action] += delta
-        else:
-            self.pi[self.state][self.action] -= delta/(len(self.possibleActions)-1)
+            else:
+                subtr = (delta / (len(self.possibleActions) - 1))
+                if ((self.pi[self.state][action]) > subtr):
+                    p_mass += subtr
+                self.pi[self.state][action] = max(0,(self.pi[self.state][action])-subtr)
+
+        for action in max_q_actions:
+            self.pi[self.state][action] += (p_mass)/max_q_count
 
 
+        if(sum(self.pi[self.state].values()) > 1+0.0001  or sum(self.pi[self.state].values())<1-0.0001):
+            print(sum(self.pi[self.state].values()))
+            print()
 
-        # constrain to valid probability distribution
-        for pi in self.pi[self.state]:
-            if (self.pi[self.state][pi] < 0):
-                self.pi[self.state][pi] = 0
-
-
-        tot = sum(self.pi[self.state].values())
-        for pi in self.pi[self.state]:
-            self.pi[self.state][pi] /= tot
+        #
+        # # constrain to valid probability distribution
+        # for pi in self.pi[self.state]:
+        #     if (self.pi[self.state][pi] < 0):
+        #         self.pi[self.state][pi] = 0
+        #
+        #
+        # tot = sum(self.pi[self.state].values())
+        # for pi in self.pi[self.state]:
+        #     self.pi[self.state][pi] /= tot
 
 
         return self.pi[self.state].values()
