@@ -45,10 +45,8 @@ class WolfPHCAgent(Agent):
         return diff
 
     def act(self):
-        if(random.random() > self.epsilon):
-            return np.random.choice(list(self.pi[self.state].keys()),p=list(self.pi[self.state].values()))
-        else:
-            return np.random.choice(list(self.pi[self.state].keys()))
+        return np.random.choice(list(self.pi[self.state].keys()),p=list(self.pi[self.state].values()))
+
 
     def calculateAveragePolicyUpdate(self):
         if (not self.state in self.mean_pi.keys()):
@@ -71,37 +69,24 @@ class WolfPHCAgent(Agent):
         #Update
         gr_action = self.greedyAction(self.state)
         p_mass = 0
-        max_q_count =0
         max_q_actions = []
+        subopt_actions = []
         for action in self.possibleActions:
             if(self.qValues[self.state][action] == self.qValues[self.state][gr_action]):
-                max_q_count +=1
                 max_q_actions.append(action)
 
             else:
-                subtr = (delta / (len(self.possibleActions) - 1))
-                if ((self.pi[self.state][action]) > subtr):
-                    p_mass += subtr
-                self.pi[self.state][action] = max(0,(self.pi[self.state][action])-subtr)
+                subopt_actions.append(action)
+
+
+
+        for action in subopt_actions:
+            subtr = (delta / (len(subopt_actions)))
+            p_mass += min(self.pi[self.state][action], subtr)
+            self.pi[self.state][action] -= min(self.pi[self.state][action], subtr)
 
         for action in max_q_actions:
-            self.pi[self.state][action] += (p_mass)/max_q_count
-
-
-        if(sum(self.pi[self.state].values()) > 1+0.0001  or sum(self.pi[self.state].values())<1-0.0001):
-            print(sum(self.pi[self.state].values()))
-            print()
-
-        #
-        # # constrain to valid probability distribution
-        # for pi in self.pi[self.state]:
-        #     if (self.pi[self.state][pi] < 0):
-        #         self.pi[self.state][pi] = 0
-        #
-        #
-        # tot = sum(self.pi[self.state].values())
-        # for pi in self.pi[self.state]:
-        #     self.pi[self.state][pi] /= tot
+            self.pi[self.state][action] += p_mass/len(max_q_actions)
 
 
         return self.pi[self.state].values()
@@ -131,11 +116,14 @@ class WolfPHCAgent(Agent):
         self.loseDelta = loseDelta
     
     def computeHyperparameters(self, numTakenActions, episodeNumber):
-        self.epsilon  = 0.7 * (pow(np.e, (-episodeNumber / 7000)))
-        ld = 0.2 * (pow(np.e, (-episodeNumber / 15000)))
-        wd = 0.02 * (pow(np.e, (-episodeNumber / 15000)))
 
-        return self.loseDelta, self.winDelta, self.learningRate
+        # ld = 0.3 * (pow(np.e, (-episodeNumber / 15000)))
+        # wd = 0.03 * (pow(np.e, (-episodeNumber / 15000)))
+        ld = self.loseDelta
+        wd = self.winDelta
+        # lr = 0.5 * (pow(np.e, (-episodeNumber / 15000)))
+        lr = self.learningRate
+        return ld, wd, lr
 
 if __name__ == '__main__':
 
