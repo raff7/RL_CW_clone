@@ -117,12 +117,12 @@ class WolfPHCAgent(Agent):
     
     def computeHyperparameters(self, numTakenActions, episodeNumber):
 
-        # ld = 0.3 * (pow(np.e, (-episodeNumber / 15000)))
-        # wd = 0.03 * (pow(np.e, (-episodeNumber / 15000)))
-        ld = self.loseDelta
-        wd = self.winDelta
-        # lr = 0.5 * (pow(np.e, (-episodeNumber / 15000)))
-        lr = self.learningRate
+        ld = 0.01 * (pow(np.e, (-episodeNumber / 10000)))+0.001
+        wd = 0.001 * (pow(np.e, (-episodeNumber / 10000)))+0.0001
+        #ld = self.loseDelta
+        #wd = self.winDelta
+        lr = 0.4 * (pow(np.e, (-episodeNumber / 35000)))
+        #lr = self.learningRate
         return ld, wd, lr
 
 if __name__ == '__main__':
@@ -140,7 +140,7 @@ if __name__ == '__main__':
 
     agents = []
     for i in range(args.numAgents):
-        agent = WolfPHCAgent(learningRate = 0.3, discountFactor = 0.95, winDelta=0.0075, loseDelta=0.075)
+        agent = WolfPHCAgent(learningRate = 0.25, discountFactor = 0.95, winDelta=0.0005, loseDelta=0.005)#winDelta=0.00075, loseDelta=0.0075
         agents.append(agent)
 
     numEpisodes = args.numEpisodes
@@ -150,7 +150,7 @@ if __name__ == '__main__':
 
     for episode in range(numEpisodes):
         if(episode%200==0):
-            print(f"Epsilon {agent.epsilon}")
+            print("Epsilon {}".format(agent.epsilon))
             print("Episode {}/{}, tot win% {}, partial win %: {}".format(wins,episode,wins/max(1,episode) ,(wins-prew)/200))
             prew=wins
 

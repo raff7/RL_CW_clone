@@ -73,9 +73,8 @@ class IndependentQLearningAgent(Agent):
             print("1111111111111ACT1111111111111111")
             print("Chose among ", self.qValues[self.state])
         if (random.random() < self.epsilon  # epsilon greedy probability of chosing random
-                or len(self.qValues[
-                           self.state]) == 0):  # or when no action was ever performed from this state (all values are 0_)
-            action = self.possibleActions[random.randint(0, 4)]
+                or len(self.qValues[self.state]) == 0):  # or when no action was ever performed from this state (all values are 0_)
+            action = self.possibleActions[random.randint(0, len(self.possibleActions)-1)]
             if (self.printing):
                 print("epsilon explore")
         else:
@@ -114,7 +113,7 @@ class IndependentQLearningAgent(Agent):
     def computeHyperparameters(self, numTakenActions, episodeNumber):
         lr = 0.4 * (pow(np.e, (-episodeNumber / 10000)))
         lr=0.3
-        ep = 0.7 * (pow(np.e, (-episodeNumber / 6000)))
+        ep = 0.7 * (pow(np.e, (-episodeNumber / 10000)))
 
         return lr, ep
 
@@ -132,8 +131,8 @@ if __name__ == '__main__':
         agent = IndependentQLearningAgent(learningRate = 0.3, discountFactor = 0.95, epsilon = 1.0)
         agents.append(agent)
 
-	numTakenActions = 0
-	numEpisodes = args.numEpisodes
+    numTakenActions = 0
+    numEpisodes = args.numEpisodes
 
     score = 0
     prew=0
@@ -177,7 +176,7 @@ if __name__ == '__main__':
             if(reward[0] > 0 or reward[1]>0):
                 score +=1
         if (episode % 200 == 0):
-            print(f"Epsilon {agent.epsilon}, LR {agent.learningRate}")
+            print("Epsilon {}, LR {}".format(agent.epsilon,agent.learningRate))
             print("Episode {}/{}, tot win% {}, partial win %: {}".format(score, episode, score / max(1, episode),(score - prew) / 200))
             prew = score
             
