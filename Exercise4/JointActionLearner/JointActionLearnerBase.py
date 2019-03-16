@@ -108,7 +108,7 @@ if __name__ == '__main__':
     numAgents = args.numAgents
     numEpisodes = args.numEpisodes
     for i in range(numAgents):
-        agent = JointQLearningAgent(learningRate = 0.1, discountFactor = 0.9, epsilon = 1.0, numTeammates=args.numAgents-1)
+        agent = JointQLearningAgent(learningRate = 0.1, discountFactor = 0.95, epsilon = 1.0, numTeammates=args.numAgents-1)
         agents.append(agent)
 
     numEpisodes = numEpisodes
