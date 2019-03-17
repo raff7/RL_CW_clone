@@ -9,14 +9,12 @@ import math
 # and define the computations for the forward pass in the forward method.
 
 class ValueNetwork(nn.Module):
-	def __init__(self):
+	def __init__(self,input_dim = 68,hidden_dim = 50,nActions=4):
 		super(ValueNetwork, self).__init__()
-		input_dim = 5
-		hidden_dim = 5
-		output_dim = 1
+
 		self.l1 = nn.Linear(input_dim,hidden_dim)
 		self.l2 = nn.Linear(hidden_dim, hidden_dim)
-		self.l3 = nn.Linear(hidden_dim, output_dim)
+		self.l3 = nn.Linear(hidden_dim, nActions)
 
 	def forward(self, inputs) :
 		h = F.leaky_relu(self.l1(inputs))
