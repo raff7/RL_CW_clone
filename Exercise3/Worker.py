@@ -16,6 +16,8 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
     hfoEnv.connectToServer()
     newObservation =hfoEnv.reset()
     episodeN=0
+    local_counter=0
+    old_count=0
     while counter.value <args.numEpisodes:
         action, actionID = act(newObservation,value_network,args,hfoEnv,episodeN)
         newObservation, reward, done, status, info = hfoEnv.step(action)
@@ -27,12 +29,16 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
         
         with lock:
             counter.value +=1
+            local_counter +=1
             if(counter.value % args.trainIter):
                 optimizer.step()
                 optimizer.zero_grad()
             if(counter.value % args.updateTarget ==0):
                 hard_update(target_value_network,value_network)
         if done:
+            if(episodeN % 1 ==0):
+                print('\ntook {} timesteps, reward is {}'.format(local_counter-old_count,reward))
+                old_count = local_counter
             episodeN+=1
             newObservation =hfoEnv.reset()
 
