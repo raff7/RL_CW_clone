@@ -35,6 +35,9 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
                 optimizer.zero_grad()
             if(counter.value % args.updateTarget ==0):
                 hard_update(target_value_network,value_network)
+            if(counter.value% 1000000 ==0 ):
+                saveModelNetwork(value_network,'model/saveModel.pt')
+                
         if done:
             if(episodeN % 1 ==0):
                 print('\ntook {} timesteps, reward is {}'.format(local_counter-old_count,reward))
