@@ -37,8 +37,8 @@ if __name__ == "__main__" :
     all_time_goal= []
     all_goals = []
     all_cum_rew=[]
-    avg_time_goal= 500
-    avg_goals = 0
+    avg_time_goal= 200
+    avg_goals = 0.5
     avg_cum_rew=0
     avg_coef = 0.001
     last_time = time.time()
@@ -81,21 +81,39 @@ if __name__ == "__main__" :
     
     while True:
         time.sleep(0.0001)
+        
         if(time_goal.qsize()>0):
             new_time_goal = time_goal.get()
             avg_time_goal = (1-avg_coef)*(avg_time_goal) + avg_coef*new_time_goal
             all_time_goal.append(avg_time_goal)
+            
+        if(goals.qsize()>0):
+            new_goals = goals.get()
+            avg_goals = (1-avg_coef)*(avg_goals) + avg_coef*new_goals
+            all_goals.append(avg_goals)
+            
+        if(cum_rew.qsize()>0):
+            new_cum_rew = cum_rew.get()
+            avg_cum_rew = (1-avg_coef)*(avg_cum_rew) + avg_coef*new_cum_rew
+            all_cum_rew.append(avg_cum_rew)
         
         
         if(time.time()-last_time>2):
             time_line.set_ydata(all_time_goal)
             time_line.set_xdata(range(len(all_time_goal)))
             
+            goal_line.set_ydata(all_goals)
+            goal_line.set_xdata(range(len(all_goals)))
+            
+            
+            rew_line.set_ydata(all_cum_rew)
+            rew_line.set_xdata(range(len(all_cum_rew)))
+            
             
             [axxx.relim() for axxx in ax[:-1]]
             [axxx.autoscale_view() for axxx in ax[:-1]]
             
-            text_params.set_text(last_time)
+            text_params.set_text('Counter {}'.format(counter.value))
             
             f.canvas.draw()
             f.canvas.flush_events()

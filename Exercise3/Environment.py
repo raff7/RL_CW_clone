@@ -85,13 +85,13 @@ class HFOEnv(object):
         reward = -0.05
         info = {}
         if(status == GOAL):
-            reward =1
+            reward =1.5
         elif(status ==CAPTURED_BY_DEFENSE):
-            reward = -0.5
-        elif(status ==OUT_OF_BOUNDS):
-            reward = -0.15
-        elif(status ==OUT_OF_TIME):
             reward = -0.4
+        elif(status ==OUT_OF_BOUNDS):
+            reward = -0.5
+        elif(status ==OUT_OF_TIME):
+            reward = -0.3
         return reward, info
 
     # Method that serves as an interface between a script controlling the agent
