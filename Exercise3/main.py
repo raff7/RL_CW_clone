@@ -44,7 +44,7 @@ if __name__ == "__main__" :
     avg_time_goal= 200
     avg_goals = 0.5
     avg_cum_rew=0
-    avg_coef = 0.0025
+    avg_coef = 0.005
     last_time = time.time()
     f, ax = plt.subplots(2, 2, figsize=(12, 8))
     ax = ax.flatten()
