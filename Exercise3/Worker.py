@@ -8,28 +8,35 @@ from Networks import ValueNetwork
 from torch.autograd import Variable
 from Environment import HFOEnv
 import random
+import matplotlib.pyplot as plt
+import time
+from hfo import GOAL
 
-def train(idx, args, value_network, target_value_network, optimizer, lock, counter):
+
+
+
+
+def train(idx, args, value_network, target_value_network, optimizer, lock, counter, mp_done,time_goal, goals, cum_rew):
     port =5000+idx*10
     seed =0
     hfoEnv = HFOEnv(numTeammates=0, numOpponents=1, port=port, seed=seed)
     hfoEnv.connectToServer()
     newObservation =hfoEnv.reset()
     episodeN=0
-    local_counter=0
-    old_count=0
+    steps_episode = 0
+    cum_reward = 0
     while counter.value <args.numEpisodes:
+        steps_episode +=1
         action, actionID = act(newObservation,value_network,args,hfoEnv,episodeN)
         newObservation, reward, done, status, info = hfoEnv.step(action)
+        cum_reward += reward
         reward = torch.Tensor([reward])
         tar = computeTargets(reward, newObservation, args.discountFactor, done, target_value_network)
         pred = computePrediction(torch.Tensor(newObservation),actionID,value_network)
         loss = 0.5*(pred-tar)**2
         loss.backward()
-        
         with lock:
             counter.value +=1
-            local_counter +=1
             if(counter.value % args.trainIter):
                 optimizer.step()
                 optimizer.zero_grad()
@@ -39,11 +46,15 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
                 saveModelNetwork(value_network,'model/saveModel.pt')
                 
         if done:
-            if(episodeN % 1 ==0):
-                print('\ntook {} timesteps, reward is {}'.format(local_counter-old_count,reward))
-                old_count = local_counter
+            goals.put_nowait(1.0 if status == GOAL else 0.0)
+            time_goal.put_nowait(steps_episode)
+            cum_rew.put_nowait(cum_reward)
             episodeN+=1
             newObservation =hfoEnv.reset()
+            steps_episode=0
+            cum_reward= 0
+    with lock:
+        mp_done.value = True
 
         
         
