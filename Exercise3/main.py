@@ -44,7 +44,7 @@ if __name__ == "__main__" :
     avg_time_goal= 200
     avg_goals = 0.5
     avg_cum_rew=0
-    avg_coef = 0.005
+    avg_coef = 0.004
     last_time = time.time()
     f, ax = plt.subplots(2, 2, figsize=(12, 8))
     ax = ax.flatten()
@@ -90,7 +90,7 @@ if __name__ == "__main__" :
         time.sleep(0.0001)
         
         for _ in range(time_goal.qsize()):
-            c_coef = avg_coef if len(all_time_goal)>100 else 0.1*np.exp(-len(all_cum_rew)/50)
+            c_coef = avg_coef*2 if len(all_time_goal)>100 else 0.1*np.exp(-len(all_cum_rew)/50)
             new_time_goal = time_goal.get()
             avg_time_goal = (1-c_coef)*(avg_time_goal) + c_coef*new_time_goal
             all_time_goal.append(avg_time_goal)
@@ -102,7 +102,7 @@ if __name__ == "__main__" :
             all_goals.append(avg_goals)
             
         if(cum_rew.qsize()>0):
-            c_coef = avg_coef if len(all_cum_rew)>100 else 0.1*np.exp(-len(all_cum_rew)/50)
+            c_coef = avg_coef*2 if len(all_cum_rew)>100 else 0.1*np.exp(-len(all_cum_rew)/50)
             new_cum_rew = cum_rew.get()
             avg_cum_rew = (1-c_coef)*(avg_cum_rew) + c_coef*new_cum_rew
             all_cum_rew.append(avg_cum_rew)
@@ -110,14 +110,14 @@ if __name__ == "__main__" :
         
         if(time.time()-last_time>2):
             time_line.set_ydata(all_time_goal)
-            time_line.set_xdata(range(len(all_time_goal)))
+            rew_line.set_xdata(np.linspace(0, counter.value,len(all_time_goal)))
             
             goal_line.set_ydata(all_goals)
-            goal_line.set_xdata(range(len(all_goals)))
+            rew_line.set_xdata(np.linspace(0, counter.value,len(all_goals)))
             
             
             rew_line.set_ydata(all_cum_rew)
-            rew_line.set_xdata(range(len(all_cum_rew)))
+            rew_line.set_xdata(np.linspace(0, counter.value,len(all_cum_rew)))
             
             
             [axxx.relim() for axxx in ax[:-1]]
