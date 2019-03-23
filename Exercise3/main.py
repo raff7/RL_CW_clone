@@ -73,12 +73,14 @@ if __name__ == "__main__" :
     optimizer = SharedAdam(value_network.parameters(),lr=args.lr, weight_decay=args.weightDecay)
         
     counter = mp.Value('i', 0)
+    games_counter = mp.Value('i', 0)
+
     lock = mp.Lock()
     
     processes =[]
     #Start Training
     for idx in range(0, args.numWorkers):
-        trainingArgs = (idx, args, value_network, target_value_network, optimizer, lock, counter, done,time_goal, goals, cum_rew,print_eps)
+        trainingArgs = (idx, args, value_network, target_value_network, optimizer, lock, counter, games_counter, done,time_goal, goals, cum_rew,print_eps)
         p = mp.Process(target=train, args=(trainingArgs))
         p.start()
         processes.append(p)
@@ -88,19 +90,19 @@ if __name__ == "__main__" :
         time.sleep(0.0001)
         
         for _ in range(time_goal.qsize()):
-            c_coef = avg_coef if len(all_time_goal)>100 else 0.9
+            c_coef = avg_coef if len(all_time_goal)>100 else 0.4*np.epx(-len(all_cum_rew)/500)
             new_time_goal = time_goal.get()
             avg_time_goal = (1-c_coef)*(avg_time_goal) + c_coef*new_time_goal
             all_time_goal.append(avg_time_goal)
             
         if(goals.qsize()>0):
-            c_coef = avg_coef if len(all_goals)>100 else 0.9
+            c_coef = avg_coef if len(all_cum_rew)>100 else 0.01
             new_goals = goals.get()
             avg_goals = (1-c_coef)*(avg_goals) + c_coef*new_goals
             all_goals.append(avg_goals)
             
         if(cum_rew.qsize()>0):
-            c_coef = avg_coef if len(all_cum_rew)>100 else 0.9
+            c_coef = avg_coef if len(all_cum_rew)>100 else 0.4*np.epx(-len(all_cum_rew)/500)
             new_cum_rew = cum_rew.get()
             avg_cum_rew = (1-c_coef)*(avg_cum_rew) + c_coef*new_cum_rew
             all_cum_rew.append(avg_cum_rew)
@@ -121,7 +123,7 @@ if __name__ == "__main__" :
             [axxx.relim() for axxx in ax[:-1]]
             [axxx.autoscale_view() for axxx in ax[:-1]]
             
-            text_params.set_text('Counter: {}\nEpsilon: {}'.format(counter.value,print_eps.value ))
+            text_params.set_text('Game Counter: {}\nCounter: {}\nEpsilon: {}'.format(games_counter.value,counter.value,print_eps.value ))
             
             f.canvas.draw()
             f.canvas.flush_events()

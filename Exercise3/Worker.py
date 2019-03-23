@@ -16,7 +16,7 @@ from hfo import GOAL
 
 
 
-def train(idx, args, value_network, target_value_network, optimizer, lock, counter, mp_done,time_goal, goals, cum_rew,print_eps):
+def train(idx, args, value_network, target_value_network, optimizer, lock, counter, games_counter, mp_done,time_goal, goals, cum_rew,print_eps):
     port =5000+idx*10
     seed =0
     hfoEnv = HFOEnv(numTeammates=0, numOpponents=1, port=port, seed=seed)
@@ -48,6 +48,7 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
                 saveModelNetwork(value_network,'model/saveModel.pt')
                 
         if done:
+            games_counter.value +=1
             goals.put_nowait(1.0 if status == GOAL else 0.0)
             time_goal.put_nowait(steps_episode)
             cum_rew.put_nowait(cum_reward)
