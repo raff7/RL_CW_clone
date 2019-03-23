@@ -16,7 +16,7 @@ from hfo import GOAL
 
 
 
-def train(idx, args, value_network, target_value_network, optimizer, lock, counter, mp_done,time_goal, goals, cum_rew):
+def train(idx, args, value_network, target_value_network, optimizer, lock, counter, mp_done,time_goal, goals, cum_rew,print_eps):
     port =5000+idx*10
     seed =0
     hfoEnv = HFOEnv(numTeammates=0, numOpponents=1, port=port, seed=seed)
@@ -27,7 +27,9 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
     cum_reward = 0
     while counter.value <args.numEpisodes:
         steps_episode +=1
-        action, actionID = act(newObservation,value_network,args,hfoEnv,episodeN)
+        epsilon = updateEpsilon(args.initEpsilon, counter.value)
+        print_eps.value = epsilon
+        action, actionID = act(newObservation,value_network,args,hfoEnv,epsilon)
         newObservation, reward, done, status, info = hfoEnv.step(action)
         cum_reward += reward
         reward = torch.Tensor([reward])

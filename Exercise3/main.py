@@ -8,7 +8,7 @@ import argparse
 from Networks import ValueNetwork
 from SharedAdam import SharedAdam
 from Worker import *
-from ctypes import c_bool
+from ctypes import c_bool, c_double
 import os
 import matplotlib.pyplot as plt
 import time
@@ -29,8 +29,12 @@ if __name__ == "__main__" :
     parser.add_argument('--lr', type=int, default=0.0001)
     parser.add_argument('--weightDecay', type=int, default=0.1)
     parser.add_argument('--discountFactor', type=int, default=0.95)
-    
+
+    args=parser.parse_args()
+
+    #PLOT
     done = mp.Value(c_bool, False)
+    print_eps = mp.Value(c_double ,args.initEpsilon)
     time_goal = mp.Queue()
     goals = mp.Queue()
     cum_rew = mp.Queue()
@@ -55,17 +59,16 @@ if __name__ == "__main__" :
     ax[2].set_title("reward")
     
     text_params = ax[3].text(0.5,0.5,'TESTP')
-    ax[3].set_title("shit")
+    ax[3].set_title("Parameters")
     
     plt.ion()
     plt.show()
 
-
+    #CREATE NETWORKS
     value_network = ValueNetwork()
     target_value_network = ValueNetwork()
     hard_update(target_value_network, value_network)
 
-    args=parser.parse_args()
 
     optimizer = SharedAdam(value_network.parameters(),lr=args.lr, weight_decay=args.weightDecay)
         
@@ -73,13 +76,15 @@ if __name__ == "__main__" :
     lock = mp.Lock()
     
     processes =[]
+    #Start Training
     for idx in range(0, args.numWorkers):
-        trainingArgs = (idx, args, value_network, target_value_network, optimizer, lock, counter, done,time_goal, goals, cum_rew)
+        trainingArgs = (idx, args, value_network, target_value_network, optimizer, lock, counter, done,time_goal, goals, cum_rew,print_eps)
         p = mp.Process(target=train, args=(trainingArgs))
         p.start()
         processes.append(p)
     
     while True:
+        #Print update
         time.sleep(0.0001)
         
         if(time_goal.qsize()>0):
@@ -113,7 +118,7 @@ if __name__ == "__main__" :
             [axxx.relim() for axxx in ax[:-1]]
             [axxx.autoscale_view() for axxx in ax[:-1]]
             
-            text_params.set_text('Counter {}'.format(counter.value))
+            text_params.set_text('Counter: {}\nEpsilon: {}'.format(counter.value,print_eps.value ))
             
             f.canvas.draw()
             f.canvas.flush_events()
