@@ -15,7 +15,7 @@ import time
 
 # Use this script to handle arguments and 
 # initialize important components of your experiment.
-# These might include important parameters for your experiment,
+# These might include important parameters for your experiment, and initialization of
 # your models, torch's multiprocessing methods, etc.
 if __name__ == "__main__" :
     
