@@ -44,7 +44,7 @@ if __name__ == "__main__" :
     avg_time_goal= 200
     avg_goals = 0.5
     avg_cum_rew=0
-    avg_coef = 0.001
+    avg_coef = 0.0025
     last_time = time.time()
     f, ax = plt.subplots(2, 2, figsize=(12, 8))
     ax = ax.flatten()
@@ -90,19 +90,19 @@ if __name__ == "__main__" :
         time.sleep(0.0001)
         
         for _ in range(time_goal.qsize()):
-            c_coef = avg_coef if len(all_time_goal)>100 else 0.4*np.epx(-len(all_cum_rew)/500)
+            c_coef = avg_coef if len(all_time_goal)>100 else 0.1*np.exp(-len(all_cum_rew)/50)
             new_time_goal = time_goal.get()
             avg_time_goal = (1-c_coef)*(avg_time_goal) + c_coef*new_time_goal
             all_time_goal.append(avg_time_goal)
             
         if(goals.qsize()>0):
-            c_coef = avg_coef if len(all_cum_rew)>100 else 0.01
+            c_coef = avg_coef if len(all_cum_rew)>100 else 0.05*np.exp(-len(all_cum_rew)/50)
             new_goals = goals.get()
             avg_goals = (1-c_coef)*(avg_goals) + c_coef*new_goals
             all_goals.append(avg_goals)
             
         if(cum_rew.qsize()>0):
-            c_coef = avg_coef if len(all_cum_rew)>100 else 0.4*np.epx(-len(all_cum_rew)/500)
+            c_coef = avg_coef if len(all_cum_rew)>100 else 0.1*np.exp(-len(all_cum_rew)/50)
             new_cum_rew = cum_rew.get()
             avg_cum_rew = (1-c_coef)*(avg_cum_rew) + c_coef*new_cum_rew
             all_cum_rew.append(avg_cum_rew)
