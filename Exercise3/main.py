@@ -87,7 +87,7 @@ if __name__ == "__main__" :
         #Print update
         time.sleep(0.0001)
         
-        for _ in range(len(time_goal.qsize())):
+        for _ in range(time_goal.qsize()):
             c_coef = avg_coef if len(all_time_goal)>100 else 0.9
             new_time_goal = time_goal.get()
             avg_time_goal = (1-c_coef)*(avg_time_goal) + c_coef*new_time_goal
