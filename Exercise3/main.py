@@ -88,20 +88,20 @@ if __name__ == "__main__" :
     while True:
         #Print update
         time.sleep(0.0001)
-        
-        for _ in range(time_goal.qsize()):
+        time_qsize = time_goal.qsize()
+        if time_qsize>0:
             c_coef = avg_coef*2 if len(all_time_goal)>100 else 0.1*np.exp(-len(all_cum_rew)/50)
             new_time_goal = time_goal.get()
             avg_time_goal = (1-c_coef)*(avg_time_goal) + c_coef*new_time_goal
             all_time_goal.append(avg_time_goal)
-            
-        if(goals.qsize()>0):
+        goal_qsize = goals.qsize()
+        if goal_qsize>0:
             c_coef = avg_coef if len(all_cum_rew)>100 else 0.05*np.exp(-len(all_cum_rew)/50)
             new_goals = goals.get()
             avg_goals = (1-c_coef)*(avg_goals) + c_coef*new_goals
             all_goals.append(avg_goals)
-            
-        if(cum_rew.qsize()>0):
+        cum_rew_qsize = cum_rew.qsize()
+        if(cum_rew_qsize>0):
             c_coef = avg_coef*2 if len(all_cum_rew)>100 else 0.1*np.exp(-len(all_cum_rew)/50)
             new_cum_rew = cum_rew.get()
             avg_cum_rew = (1-c_coef)*(avg_cum_rew) + c_coef*new_cum_rew
