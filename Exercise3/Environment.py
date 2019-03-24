@@ -85,9 +85,9 @@ class HFOEnv(object):
         reward = -0.05
         info = {}
         if(status == GOAL):
-            reward =1.5
+            reward =10
         elif(status ==CAPTURED_BY_DEFENSE):
-            reward = -0.4
+            reward = -0.5
         elif(status ==OUT_OF_BOUNDS):
             reward = -0.5
         elif(status ==OUT_OF_TIME):

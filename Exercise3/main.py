@@ -56,13 +56,13 @@ if __name__ == "__main__" :
     ax = ax.flatten()
     
     time_line = ax[0].plot([0],[0])[0]
-    ax[0].set_title("Time")
+    ax[0].set_title("Time-steps between goals")
 
     goal_line = ax[1].plot([0],[0])[0]
-    ax[1].set_title("Goals")
+    ax[1].set_title("Goal probability")
     
     rew_line = ax[2].plot([0],[0])[0]
-    ax[2].set_title("reward")
+    ax[2].set_title("Cumulative reward")
     
     text_params = ax[3].text(0.5,0.5,'TESTP')
     ax[3].set_title("Parameters")
