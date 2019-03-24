@@ -91,8 +91,9 @@ class JointQLearningAgent(Agent):
         return (((state[0][0][0], state[0][0][1]), (state[0][1][0], state[0][1][1])))
         
     def computeHyperparameters(self, numTakenActions, episodeNumber):
-        eps =  0.7 * (pow(np.e, (-episodeNumber / 10000)))
-        lr = 0.6 * (pow(np.e, (-episodeNumber / 10000)))
+        eps =  0.6 * (pow(np.e, (-episodeNumber / 16000)))
+        lr = 0.5 * (pow(np.e, (-episodeNumber / 10000)))
+        #lr = 0.3
 
         return lr, eps
 
