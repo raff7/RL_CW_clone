@@ -100,12 +100,12 @@ if __name__ == "__main__" :
             new_time_goal = time_goal.get()
             avg_time_goal = (1-c_coef)*(avg_time_goal) + c_coef*new_time_goal
             all_time_goal.append(avg_time_goal)
-        if goals.full():
+        if not goals.empty():
             c_coef = avg_coef if len(all_cum_rew)>100 else 0.05*np.exp(-len(all_cum_rew)/50)
             new_goals = goals.get()
             avg_goals = (1-c_coef)*(avg_goals) + c_coef*new_goals
             all_goals.append(avg_goals)
-        if(cum_rew.full()):
+        if(not cum_rew.empty()):
             c_coef = avg_coef*2 if len(all_cum_rew)>100 else 0.1*np.exp(-len(all_cum_rew)/50)
             new_cum_rew = cum_rew.get()
             avg_cum_rew = (1-c_coef)*(avg_cum_rew) + c_coef*new_cum_rew
@@ -114,14 +114,16 @@ if __name__ == "__main__" :
         if(time.time()-last_time>2):
             print("\n\n\n\n\n\n\nTIMEEEEEEEE\n-----------------------\n\n\n\n\n\n\n\n\n\n\n\n")
             time_line.set_ydata(all_time_goal)
-            #rew_line.set_xdata(range(len(all_time_goal)))
-            rew_line.set_xdata(np.linspace(0, counter.value,len(all_time_goal)))
+            time_line.set_xdata(range(len(all_time_goal)))
+            #time_line.set_xdata(np.linspace(0, counter.value,len(all_time_goal)))
             
             goal_line.set_ydata(all_goals)
-            rew_line.set_xdata(np.linspace(0, counter.value,len(all_goals)))
+            goal_line.set_xdata(range(len(all_goals)))
+            #rew_line.set_xdata(np.linspace(0, counter.value,len(all_goals)))
 
             rew_line.set_ydata(all_cum_rew)
-            rew_line.set_xdata(np.linspace(0, counter.value,len(all_cum_rew)))
+            rew_line.set_xdata(range(len(all_cum_rew)))
+            #rew_line.set_xdata(np.linspace(0, counter.value,len(all_cum_rew)))
             #print('\n\nax {}\n\n'.format(ax))
             [axxx.relim() for axxx in ax[:-1]]
             [axxx.autoscale_view() for axxx in ax[:-1]]

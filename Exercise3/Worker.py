@@ -23,10 +23,10 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
     hfoEnv.connectToServer()
     newObservation =hfoEnv.reset()
     episodeN=0
-    steps_episode = 0
+    steps_since_goal = 0
     cum_reward = 0
     while counter.value <args.numEpisodes:
-        steps_episode +=1
+        steps_since_goal +=1
         epsilon = updateEpsilon(args.initEpsilon, counter.value)
         print_eps.value = epsilon
         action, actionID = act(newObservation,value_network,args,hfoEnv,epsilon)
@@ -50,11 +50,13 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
         if done:
             games_counter.value +=1
             goals.put_nowait(1.0 if status == GOAL else 0.0)
-            time_goal.put_nowait(steps_episode)
+            if status == GOAL:
+                time_goal.put_nowait(steps_since_goal)
+                steps_since_goal = 0
+
             cum_rew.put_nowait(cum_reward)
             episodeN+=1
             newObservation =hfoEnv.reset()
-            steps_episode=0
             cum_reward= 0
 
     with lock:
