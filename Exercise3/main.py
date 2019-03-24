@@ -128,7 +128,7 @@ if __name__ == "__main__" :
             [axxx.relim() for axxx in ax[:-1]]
             [axxx.autoscale_view() for axxx in ax[:-1]]
             
-            text_params.set_text('Game Counter: {}\nCounter: {}\nEpsilon: {}'.format(games_counter.value,counter.value,print_eps.value))
+            text_params.set_text('Game Counter: {}\nCounter: {}\nEpsilon: {}\nTotal goal percentage: {}'.format(games_counter.value,counter.value,print_eps.value, len(all_goals)/len(all_time_goal)))
             
             f.canvas.draw()
             f.canvas.flush_events()
