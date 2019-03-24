@@ -17,7 +17,7 @@ from hfo import GOAL
 
 
 def train(idx, args, value_network, target_value_network, optimizer, lock, counter, games_counter, mp_done,time_goal, goals, cum_rew,print_eps):
-    port =5000+idx*10
+    port =6000+idx*10
     seed =0
     hfoEnv = HFOEnv(numTeammates=0, numOpponents=1, port=port, seed=seed)
     hfoEnv.connectToServer()
