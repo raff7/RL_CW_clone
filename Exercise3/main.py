@@ -2,6 +2,7 @@
 # encoding utf-8
 
 
+
 from Environment import HFOEnv
 import multiprocessing as mp
 import argparse
@@ -13,6 +14,11 @@ import os
 import matplotlib.pyplot as plt
 import time
 
+try:
+    from subprocess import DEVNULL  # Python 3.
+except ImportError:
+    DEVNULL = open(os.devnull, 'wb')
+
 # Use this script to handle arguments and 
 # initialize important components of your experiment.
 # These might include important parameters for your experiment, and initialization of
@@ -22,7 +28,7 @@ if __name__ == "__main__" :
     os.system("killall -9 rcssserver")
     parser = argparse.ArgumentParser()
     parser.add_argument('--numEpisodes', type=int, default=30000000)
-    parser.add_argument('--numWorkers', type=int, default=3)
+    parser.add_argument('--numWorkers', type=int, default=4)
     parser.add_argument('--initEpsilon', type=int, default=0.6)
     parser.add_argument('--updateTarget', type=int, default=500)
     parser.add_argument('--trainIter', type=int, default=100)
@@ -86,6 +92,7 @@ if __name__ == "__main__" :
         processes.append(p)
     
     while True:
+        print("\nWHILE++++++++++++++++++++++++++++++++++++++++++++++++\n++++++++++++++++++++++++++++++++++++++++++++++++\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
         #Print update
         time.sleep(0.001)
@@ -94,7 +101,6 @@ if __name__ == "__main__" :
             new_time_goal = time_goal.get()
             avg_time_goal = (1-c_coef)*(avg_time_goal) + c_coef*new_time_goal
             all_time_goal.append(avg_time_goal)
-        print("\n++++++++++++++++++++\n++++++++++++++\n{}\n".format(goals.full()))
         if not goals.full():
             c_coef = avg_coef if len(all_cum_rew)>100 else 0.05*np.exp(-len(all_cum_rew)/50)
             new_goals = goals.get()
@@ -105,9 +111,10 @@ if __name__ == "__main__" :
             new_cum_rew = cum_rew.get()
             avg_cum_rew = (1-c_coef)*(avg_cum_rew) + c_coef*new_cum_rew
             all_cum_rew.append(avg_cum_rew)
-        
-        
+
+        print("\nCHECK UPDATE {} --------------------------------------------------\n--------------------------------------------------\n--------------------------------------------------\n\n\n\n\n\n".formrat(time.time()-last_time))
         if(time.time()-last_time>2):
+            print("\nUPDATE GRAPH++++++++++++++++++++++++++++++++++++++++++++++++\n++++++++++++++++++++++++++++++++++++++++++++++++\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
             time_line.set_ydata(all_time_goal)
             rew_line.set_xdata(range(len(all_time_goal)))
             #rew_line.set_xdata(np.linspace(0, counter.value,len(all_time_goal)))
@@ -129,6 +136,7 @@ if __name__ == "__main__" :
             f.canvas.flush_events()
             last_time = time.time()
         if(done.value):
+            print("DONE!!!!")
             break
             
         
