@@ -92,7 +92,6 @@ if __name__ == "__main__" :
         processes.append(p)
     
     while True:
-        print("\nWHILE++++++++++++++++++++++++++++++++++++++++++++++++\n++++++++++++++++++++++++++++++++++++++++++++++++\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
         #Print update
         time.sleep(0.001)
@@ -112,32 +111,28 @@ if __name__ == "__main__" :
             avg_cum_rew = (1-c_coef)*(avg_cum_rew) + c_coef*new_cum_rew
             all_cum_rew.append(avg_cum_rew)
 
-        print("\nCHECK UPDATE {} --------------------------------------------------\n--------------------------------------------------\n--------------------------------------------------\n\n\n\n\n\n".format(time.time()-last_time))
         if(time.time()-last_time>2):
-            print("\nUPDATE GRAPH++++++++++++++++++++++++++++++++++++++++++++++++\n++++++++++++++++++++++++++++++++++++++++++++++++\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            print("\n\n\n\n\n\n\nTIMEEEEEEEE\n-----------------------\n\n\n\n\n\n\n\n\n\n\n\n")
             time_line.set_ydata(all_time_goal)
-            rew_line.set_xdata(range(len(all_time_goal)))
-            #rew_line.set_xdata(np.linspace(0, counter.value,len(all_time_goal)))
+            #rew_line.set_xdata(range(len(all_time_goal)))
+            rew_line.set_xdata(np.linspace(0, counter.value,len(all_time_goal)))
             
             goal_line.set_ydata(all_goals)
             rew_line.set_xdata(np.linspace(0, counter.value,len(all_goals)))
-            
-            
+
             rew_line.set_ydata(all_cum_rew)
             rew_line.set_xdata(np.linspace(0, counter.value,len(all_cum_rew)))
-            
-            
+            #print('\n\nax {}\n\n'.format(ax))
             [axxx.relim() for axxx in ax[:-1]]
             [axxx.autoscale_view() for axxx in ax[:-1]]
             
-            text_params.set_text('Game Counter: {}\nCounter: {}\nEpsilon: {}'.format(games_counter.value,counter.value,print_eps.value ))
+            text_params.set_text('Game Counter: {}\nCounter: {}\nEpsilon: {}'.format(games_counter.value,counter.value,print_eps.value))
             
             f.canvas.draw()
             f.canvas.flush_events()
             last_time = time.time()
-        print("$&£(($&()£Q*80965w7089738q390\n{}\n".format(done.value))
+            plt.show()
         if(done.value):
-            print("DONE!!!!")
             break
             
         
