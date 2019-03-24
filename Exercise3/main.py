@@ -101,7 +101,7 @@ if __name__ == "__main__" :
             new_time_goal = time_goal.get()
             avg_time_goal = (1-c_coef)*(avg_time_goal) + c_coef*new_time_goal
             all_time_goal.append(avg_time_goal)
-        if not goals.full():
+        if goals.full():
             c_coef = avg_coef if len(all_cum_rew)>100 else 0.05*np.exp(-len(all_cum_rew)/50)
             new_goals = goals.get()
             avg_goals = (1-c_coef)*(avg_goals) + c_coef*new_goals
@@ -135,6 +135,7 @@ if __name__ == "__main__" :
             f.canvas.draw()
             f.canvas.flush_events()
             last_time = time.time()
+        print("$&£(($&()£Q*80965w7089738q390\n{}\n".format(done.value))
         if(done.value):
             print("DONE!!!!")
             break
