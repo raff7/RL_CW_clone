@@ -82,16 +82,16 @@ class HFOEnv(object):
     
     def get_reward(self, status, nextState):
 
-        reward = -0.05
+        reward = -0.01
         info = {}
         if(status == GOAL):
             reward =10
         elif(status ==CAPTURED_BY_DEFENSE):
-            reward = -0.5
+            reward = -1
         elif(status ==OUT_OF_BOUNDS):
-            reward = -0.5
+            reward = -1
         elif(status ==OUT_OF_TIME):
-            reward = -0.3
+            reward = -0.5
         return reward, info
 
     # Method that serves as an interface between a script controlling the agent
