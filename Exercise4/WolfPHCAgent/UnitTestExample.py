@@ -39,6 +39,7 @@ if __name__ == '__main__':
 		observation = ast.literal_eval(inputData[1][1])
 
 		while status[0]=="IN_GAME":
+
 			for agent in agents:
 				agent.setWinDelta(winDelta)
 				agent.setLoseDelta(loseDelta)
@@ -68,7 +69,7 @@ if __name__ == '__main__':
 			reward, done, status = float(inputData[timeSteps+1][4]),(inputData[timeSteps+1][6] == "True"), [inputData[timeSteps+1][7]]*2
 
 			for agentIdx in range(2):
-				agents[agentIdx].setExperience(agents[agentIdx].toStateRepresentation(stateCopies[agentIdx]), actions[agentIdx], 
+				agents[agentIdx].setExperience(agents[agentIdx].toStateRepresentation(stateCopies[agentIdx]), actions[agentIdx],
 					reward, status[agentIdx], agent.toStateRepresentation(nextObservation))
 				learnRes = agents[agentIdx].learn()
 				
@@ -83,7 +84,7 @@ if __name__ == '__main__':
 
 				for idx in range(len(averageUpdateOut)):
 					if not math.isclose(averageUpdateOut[idx], correctAvg[idx], abs_tol=1e-4):
-						print("Wrong Average Output")
+						print("Wrong Average Output\nReturns: {}\nShould be: {}".format(averageUpdateOut,correctAvg))
 						exit()
 				print("Correct Average Output")
 
@@ -93,7 +94,7 @@ if __name__ == '__main__':
 				policyOut = agents[agentIdx].calculatePolicyUpdate()
 				for idx in range(len(policyOut)):
 					if not math.isclose(policyOut[idx], correctPol[idx], abs_tol=1e-4):
-						print("Wrong Policy Output")
+						print("Wrong Policy Output\nReturns: {}\nShould be: {}".format(policyOut,correctPol))
 						exit()
 				print("Correct Policy Output")
 

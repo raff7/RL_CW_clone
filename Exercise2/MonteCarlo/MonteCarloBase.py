@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # encoding utf-8
-
+import sys
+sys.path.append('../')
 from DiscreteHFO.HFOAttackingPlayer import HFOAttackingPlayer
 from DiscreteHFO.Agent import Agent
 import argparse
@@ -151,7 +152,7 @@ class MonteCarloAgent(Agent):
         self.epsilon = epsilon
 
     def computeHyperparameters(self, numTakenActions, episodeNumber):
-        ep = 0.6 * (pow(np.e, (-episodeNumber / 600))) #600
+        ep = 0.7 * (pow(np.e, (-episodeNumber / 600))) #600
         return ep
 
 

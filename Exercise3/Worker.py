@@ -56,6 +56,7 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
             newObservation =hfoEnv.reset()
             steps_episode=0
             cum_reward= 0
+
     with lock:
         mp_done.value = True
 

@@ -8,6 +8,7 @@ from DiscreteMARLUtils.Environment import DiscreteMARLEnvironment
 from DiscreteMARLUtils.Agent import Agent
 from copy import deepcopy
 import numpy as np
+import math
 import operator
 import time
         
@@ -29,8 +30,8 @@ class WolfPHCAgent(Agent):
         max_k = max(self.qValues[state].items(), key=operator.itemgetter(1))[0]
         max_v = self.qValues[state][max_k]
         actions = [key for (key, value) in self.qValues[state].items() if value == max_v]
-        return actions[random.randint(0, len(actions) - 1)]  # chose at random among actions with highest q_value
-    
+        #return actions[random.randint(0, len(actions) - 1)]  # chose at random among actions with highest q_value
+        return actions[0]
     def setExperience(self, state, action, reward, status, nextState):
         self.state = state
         self.action = action
@@ -50,11 +51,15 @@ class WolfPHCAgent(Agent):
 
     def calculateAveragePolicyUpdate(self):
         if (not self.state in self.mean_pi.keys()):
-            self.mean_pi[self.state] = self.pi[self.state]
+            self.mean_pi[self.state] = self.pi[self.state].copy()
+
         else:
             for action in self.possibleActions:
                 self.mean_pi[self.state][action] += (1/self.C[self.state] ) * (self.pi[self.state][action]-self.mean_pi[self.state][action])
-        return self.mean_pi[self.state]
+        avgp_list = []
+        for a in self.possibleActions:
+            avgp_list.append(self.mean_pi[self.state][a])
+        return avgp_list
     def calculatePolicyUpdate(self):
         #Calculate delta
         v1=0
@@ -62,7 +67,8 @@ class WolfPHCAgent(Agent):
         for action in self.possibleActions:
             v1 += self.pi[self.state][action]*self.qValues[self.state][action]
             v2 += self.mean_pi[self.state][action]*self.qValues[self.state][action]
-        if(v1>v2):
+            v2 += self.mean_pi[self.state][action]*self.qValues[self.state][action]
+        if(v1>=v2):
             delta = self.winDelta
         else:
             delta = self.loseDelta
@@ -71,13 +77,12 @@ class WolfPHCAgent(Agent):
         p_mass = 0
         max_q_actions = []
         subopt_actions = []
-        for action in self.possibleActions:
-            if(self.qValues[self.state][action] == self.qValues[self.state][gr_action]):
+        for i,action in enumerate(self.possibleActions):
+            if math.isclose(self.qValues[self.state][action], self.qValues[self.state][gr_action], abs_tol=1e-3):
                 max_q_actions.append(action)
 
             else:
                 subopt_actions.append(action)
-
 
 
         for action in subopt_actions:
@@ -89,7 +94,11 @@ class WolfPHCAgent(Agent):
             self.pi[self.state][action] += p_mass/len(max_q_actions)
 
 
-        return self.pi[self.state].values()
+        #Sort
+        p_list = []
+        for a in self.possibleActions:
+            p_list.append(self.pi[self.state][a])
+        return p_list
 
     def toStateRepresentation(self, state):
         if(isinstance(state,str)):
@@ -119,12 +128,12 @@ class WolfPHCAgent(Agent):
 
         #ld = 0.009 * (pow(np.e, (-episodeNumber / 20000)))+0.001
         #wd = 0.0009 * (pow(np.e, (-episodeNumber / 20000)))+0.0001
-        #ld = 0.25*(np.log(episodeNumber / 8000 + 1))
-        #wd = 0.025*(np.log(episodeNumber / 8000 + 1))
-        ld = self.loseDelta
-        wd = self.winDelta
-        #lr = 0.4 * (pow(np.e, (-episodeNumber / 35000)))
-        lr = self.learningRate
+        ld = 0.25*(np.log(episodeNumber / 8000 + 1))
+        wd = 0.025*(np.log(episodeNumber / 8000 + 1))
+        #ld = self.loseDelta
+        #wd = self.winDelta
+        lr = 0.4 * (pow(np.e, (-episodeNumber / 30000)))
+        #lr = self.learningRate
         return ld, wd, lr
 
 if __name__ == '__main__':

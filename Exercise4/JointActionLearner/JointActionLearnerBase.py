@@ -34,7 +34,7 @@ class JointQLearningAgent(Agent):
         
     def learn(self):
         a = (self.A,self.oppA)
-        V = self.getBestAction(self.nextState)[1]#TODO check if this is right
+        V = self.getBestAction(self.nextState)[1]
         diff = self.lr*(self.R + self.df * V - self.qValues[self.state][a])
         self.qValues[self.state][a] += diff
         self.C[self.state][self.oppA] +=1
@@ -91,8 +91,10 @@ class JointQLearningAgent(Agent):
         return (((state[0][0][0], state[0][0][1]), (state[0][1][0], state[0][1][1])))
         
     def computeHyperparameters(self, numTakenActions, episodeNumber):
-        eps =  0.7 * (pow(np.e, (-episodeNumber / 8000)))
-        return self.lr, eps
+        eps =  0.7 * (pow(np.e, (-episodeNumber / 10000)))
+        lr = 0.6 * (pow(np.e, (-episodeNumber / 10000)))
+
+        return lr, eps
 
 if __name__ == '__main__':
 
