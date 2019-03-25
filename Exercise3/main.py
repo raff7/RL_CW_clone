@@ -28,16 +28,16 @@ if __name__ == "__main__" :
     os.system("killall -9 rcssserver")
     parser = argparse.ArgumentParser()
     parser.add_argument('--numEpisodes', type=int, default=30000000)
-    parser.add_argument('--numWorkers', type=int, default=8)
+    parser.add_argument('--numWorkers', type=int, default=4)
     parser.add_argument('--initEpsilon', type=int, default=0.6)
-    parser.add_argument('--updateTarget', type=int, default=500)
-    parser.add_argument('--trainIter', type=int, default=100)
+    parser.add_argument('--updateTarget', type=int, default=3000)
+    parser.add_argument('--trainIter', type=int, default=1000)
     parser.add_argument('--lr', type=int, default=0.0001)
     parser.add_argument('--weightDecay', type=int, default=0.1)
     parser.add_argument('--discountFactor', type=int, default=0.95)
 
     args=parser.parse_args()
-
+    #print('\n\n\n\n\n\n\n\n\n\ncores {}\n\n\n\n\n\n\n\n'.format(mp.cpu_count()))
     #PLOT
     done = mp.Value(c_bool, False)
     print_eps = mp.Value(c_double ,args.initEpsilon)
@@ -112,7 +112,7 @@ if __name__ == "__main__" :
             all_cum_rew.append(avg_cum_rew)
 
         if(time.time()-last_time>2):
-            print("\n\n\n\n\n\n\nTIMEEEEEEEE\n-----------------------\n\n\n\n\n\n\n\n\n\n\n\n")
+
             time_line.set_ydata(all_time_goal)
             time_line.set_xdata(range(len(all_time_goal)))
             #time_line.set_xdata(np.linspace(0, counter.value,len(all_time_goal)))
@@ -128,7 +128,7 @@ if __name__ == "__main__" :
             [axxx.relim() for axxx in ax[:-1]]
             [axxx.autoscale_view() for axxx in ax[:-1]]
             
-            text_params.set_text('Game Counter: {}\nCounter: {}\nEpsilon: {}\nTotal goal percentage: {}'.format(games_counter.value,counter.value,print_eps.value, len(all_goals)/len(all_time_goal)))
+            text_params.set_text('Game Counter: {}\nCounter: {}\nEpsilon: {}\nTotal goal percentage: {}'.format(games_counter.value,counter.value,print_eps.value, len(all_time_goal)/max(1,len(all_goals))))
             
             f.canvas.draw()
             f.canvas.flush_events()
