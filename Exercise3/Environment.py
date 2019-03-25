@@ -7,6 +7,7 @@ import math
 import random
 import os
 import time
+import numpy as np
 
 class HFOEnv(object):
 
@@ -81,18 +82,26 @@ class HFOEnv(object):
     # for monitoring purposes.
     
     def get_reward(self, status, nextState):
-        features = hfo.getState()
-        reward = -0.01
+        goal = (1,0)
+        ball = (nextState[3],nextState[4])
+        angle = nextState[8]
+        reward = 0
         info = {}
-        print("\n\nFEATURES \n{}\n\n".format(features))
         if(status == GOAL):
-            reward =7
+            reward += 1
+        elif(status == IN_GAME):
+            reward -= 0#0.015
         elif(status ==CAPTURED_BY_DEFENSE):
-            reward = -2
+            reward -= 1
         elif(status ==OUT_OF_BOUNDS):
-            reward = -2
-        elif(status ==OUT_OF_TIME):
-            reward = -1
+            reward -= 1
+        elif(status == OUT_OF_TIME):
+            reward -= 1
+        #print("\n\nREWARD (no H): {}".format(reward))    
+        reward -= 0.005 *abs(angle)
+        reward -= 0.05* self.euclDist(goal[0],goal[1],ball[0],ball[1])
+        
+        #print("\n\nREWARD (post H): {}".format(reward))   
         return reward, info
 
     # Method that serves as an interface between a script controlling the agent
@@ -115,9 +124,8 @@ class HFOEnv(object):
         return state
 
 
-
-
-
+    def euclDist(self,x1,y1,x2,y2):
+        return np.sqrt((x1-y1)**2+(x2-y2)**2)
 
 
 

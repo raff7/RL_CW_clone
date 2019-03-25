@@ -17,7 +17,7 @@ class ValueNetwork(nn.Module):
 		self.l3 = nn.Linear(hidden_dim, nActions)
 
 	def forward(self, inputs) :
-		h = F.leaky_relu(self.l1(inputs))
-		h = F.leaky_relu(self.l2(h))
+		h = F.elu(self.l1(inputs))
+		h = F.elu(self.l2(h))
 		value = self.l3(h)
 		return value

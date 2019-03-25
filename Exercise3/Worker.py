@@ -16,48 +16,72 @@ from hfo import GOAL
 
 
 
-def train(idx, args, value_network, target_value_network, optimizer, lock, counter, games_counter, mp_done,time_goal, goals, cum_rew,print_eps):
-    port =5000+idx*10
-    seed =0
+def train(idx, args, value_network, target_value_network, optimizer, lock, counter, games_counter, mp_done,time_goal, goals, cum_rew,print_eps,print_lr):
+    new_lr = args.lr
+    port = 2600+idx*20
+    seed =idx*100
     hfoEnv = HFOEnv(numTeammates=0, numOpponents=1, port=port, seed=seed)
     hfoEnv.connectToServer()
     newObservation =hfoEnv.reset()
     episodeN=0
     steps_since_goal = 0
+    current_steps = 0
     cum_reward = 0
     while counter.value <args.numEpisodes:
-        steps_since_goal +=1
-        epsilon = updateEpsilon(args.initEpsilon, counter.value)
-        print_eps.value = epsilon
-        action, actionID = act(newObservation,value_network,args,hfoEnv,epsilon)
-        newObservation, reward, done, status, info = hfoEnv.step(action)
-        cum_reward += reward
-        reward = torch.Tensor([reward])
-        tar = computeTargets(reward, newObservation, args.discountFactor, done, target_value_network)
-        pred = computePrediction(torch.Tensor(newObservation),actionID,value_network)
-        loss = 0.5*(pred-tar)**2
-        loss.backward()
+        if(idx!=0):
+            #steps_since_goal +=1
+            #current_steps +=1
+            epsilon,new_lr = updateParams(args, counter.value)
+            print_eps.value = epsilon
+            action, actionID = act(newObservation,value_network,args,hfoEnv,epsilon)
+            newObservation, reward, done, status, info = hfoEnv.step(action)
+            #cum_reward += reward
+            reward = torch.Tensor([reward])
+            tar = computeTargets(reward, newObservation, args.discountFactor, done, target_value_network)
+            pred = computePrediction(torch.Tensor(newObservation),actionID,value_network)
+            loss = 0.5*(tar-pred)**2
+            loss.backward()
+        else:
+            steps_since_goal +=1
+            current_steps +=1
+            epsilon,new_lr = updateParams(args, counter.value)
+            epsilon = 0
+            print_eps.value, print_lr.value = updateParams(args, counter.value)
+            action, actionID = act(newObservation,value_network,args,hfoEnv,epsilon)
+            newObservation, reward, done, status, info = hfoEnv.step(action)
+            cum_reward += reward
+            reward = torch.Tensor([reward])
+            tar = computeTargets(reward, newObservation, args.discountFactor, done, target_value_network)
+            pred = computePrediction(torch.Tensor(newObservation),actionID,value_network)
+            loss = 0.5*(tar-pred)**2
         with lock:
             counter.value +=1
             if(counter.value % args.trainIter):
+                for param_group in optimizer.param_groups:
+                    param_group['lr'] = new_lr
                 optimizer.step()
                 optimizer.zero_grad()
             if(counter.value % args.updateTarget ==0):
                 hard_update(target_value_network,value_network)
-            if(counter.value% 1000000 ==0 ):
+            if(counter.value% 500000 ==0 ):
                 saveModelNetwork(value_network,'model/saveModel.pt')
                 
         if done:
-            games_counter.value +=1
-            goals.put_nowait(1.0 if status == GOAL else 0.0)
-            if status == GOAL:
-                time_goal.put_nowait(steps_since_goal)
-                steps_since_goal = 0
 
-            cum_rew.put_nowait(cum_reward)
+            games_counter.value +=1
+            if(idx==0):
+                goals.put_nowait(1.0 if status == GOAL else 0.0)
+                if status == GOAL:
+                    time_goal.put_nowait(steps_since_goal)
+                    steps_since_goal = 0
+                elif(status == OUT_OF_BOUNDS):
+                    steps_since_goal += (500-current_steps)
+                current_steps = 0
+                cum_rew.put_nowait(cum_reward)
+                cum_reward= 0
             episodeN+=1
             newObservation =hfoEnv.reset()
-            cum_reward= 0
+            
 
     with lock:
         mp_done.value = True
@@ -66,8 +90,7 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
         
 
         
-def act(state,value_network,args,hfoEnv,episodeN):
-    epsilon = updateEpsilon(args.initEpsilon,episodeN)
+def act(state,value_network,args,hfoEnv,epsilon):
     if(random.random()<epsilon):
         actionID = random.randint(0,3)
         action = hfoEnv.possibleActions[actionID]
@@ -77,14 +100,16 @@ def act(state,value_network,args,hfoEnv,episodeN):
         action = hfoEnv.possibleActions[actionID]
     return action, actionID
     
-def updateEpsilon(initEps,episodeN):
-    return initEps*(pow(np.e, (-episodeN / 5000000)))
+def updateParams(args,episodeN):
+    eps= args.initEpsilon*(pow(np.e, (-episodeN / 5000000)))
+    lr= args.lr *(args.numEpisodes-episodeN )/args.numEpisodes
+    return eps, lr
 
 def computeTargets(reward, nextObservation, discountFactor, done, targetNetwork):
     if(done):
         target = reward
     else:
-        qVals = targetNetwork(torch.Tensor(nextObservation))
+        qVals = targetNetwork(torch.Tensor(nextObservation)).detach()
         target = reward +discountFactor*max(qVals)
     return target
 

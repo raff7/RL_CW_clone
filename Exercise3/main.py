@@ -28,19 +28,20 @@ if __name__ == "__main__" :
     os.system("killall -9 rcssserver")
     parser = argparse.ArgumentParser()
     parser.add_argument('--numEpisodes', type=int, default=30000000)
-    parser.add_argument('--numWorkers', type=int, default=16)
+    parser.add_argument('--numWorkers', type=int, default=8)
     parser.add_argument('--initEpsilon', type=int, default=0.6)
-    parser.add_argument('--updateTarget', type=int, default=3000)
-    parser.add_argument('--trainIter', type=int, default=1000)
-    parser.add_argument('--lr', type=int, default=0.0002)
-    parser.add_argument('--weightDecay', type=int, default=0.1)
-    parser.add_argument('--discountFactor', type=int, default=0.97)
+    parser.add_argument('--updateTarget', type=int, default=1500)
+    parser.add_argument('--trainIter', type=int, default=50)
+    parser.add_argument('--lr', type=int, default=0.001)
+    parser.add_argument('--weightDecay', type=int, default=0.001)#0.00001
+    parser.add_argument('--discountFactor', type=int, default=0.99)
 
     args=parser.parse_args()
     #print('\n\n\n\n\n\n\n\n\n\ncores {}\n\n\n\n\n\n\n\n'.format(mp.cpu_count()))
     #PLOT
     done = mp.Value(c_bool, False)
     print_eps = mp.Value(c_double ,args.initEpsilon)
+    print_lr = mp.Value(c_double,args.lr)
     time_goal = mp.Queue()
     goals = mp.Queue()
     cum_rew = mp.Queue()
@@ -79,6 +80,7 @@ if __name__ == "__main__" :
     optimizer = SharedAdam(value_network.parameters(),lr=args.lr, weight_decay=args.weightDecay)
         
     counter = mp.Value('i', 0)
+    iter_update = counter.value
     games_counter = mp.Value('i', 0)
 
     lock = mp.Lock()
@@ -86,7 +88,7 @@ if __name__ == "__main__" :
     processes =[]
     #Start Training
     for idx in range(0, args.numWorkers):
-        trainingArgs = (idx, args, value_network, target_value_network, optimizer, lock, counter, games_counter, done,time_goal, goals, cum_rew,print_eps)
+        trainingArgs = (idx, args, value_network, target_value_network, optimizer, lock, counter, games_counter, done,time_goal, goals, cum_rew,print_eps, print_lr)
         p = mp.Process(target=train, args=(trainingArgs))
         p.start()
         processes.append(p)
@@ -96,6 +98,7 @@ if __name__ == "__main__" :
         #Print update
         time.sleep(0.001)
         if not time_goal.empty():
+            print("\n"*30,all_time_goal,"\n"*30)
             c_coef = avg_coef*2 if len(all_time_goal)>100 else 0.1*np.exp(-len(all_cum_rew)/50)
             new_time_goal = time_goal.get()
             avg_time_goal = (1-c_coef)*(avg_time_goal) + c_coef*new_time_goal
@@ -112,7 +115,6 @@ if __name__ == "__main__" :
             all_cum_rew.append(avg_cum_rew)
 
         if(time.time()-last_time>2):
-
             time_line.set_ydata(all_time_goal)
             time_line.set_xdata(range(len(all_time_goal)))
             #time_line.set_xdata(np.linspace(0, counter.value,len(all_time_goal)))
@@ -128,8 +130,8 @@ if __name__ == "__main__" :
             [axxx.relim() for axxx in ax[:-1]]
             [axxx.autoscale_view() for axxx in ax[:-1]]
             
-            text_params.set_text('Game Counter: {}\nCounter: {}\nEpsilon: {}\nTotal goal percentage: {}'.format(games_counter.value,counter.value,print_eps.value, len(all_time_goal)/max(1,len(all_goals))))
-            
+            text_params.set_text('Game Counter: {}\nCounter: {}\nEpsilon: {}\nLearning Rate {}\nTotal goal percentage: {}\niterations in update: {}\nTime left{}'.format(games_counter.value,counter.value,print_eps.value,print_lr.value, len(all_time_goal)/max(1,len(all_goals)),counter.value-iter_update,(args.numEpisodes-counter.value)/((counter.value+0.01-iter_update)/2)/3600))
+            iter_update = counter.value
             f.canvas.draw()
             f.canvas.flush_events()
             last_time = time.time()
