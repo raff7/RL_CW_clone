@@ -78,7 +78,7 @@ def act(state,value_network,args,hfoEnv,episodeN):
     return action, actionID
     
 def updateEpsilon(initEps,episodeN):
-    return initEps*(pow(np.e, (-episodeN / 1000000)))
+    return initEps*(pow(np.e, (-episodeN / 5000000)))
 
 def computeTargets(reward, nextObservation, discountFactor, done, targetNetwork):
     if(done):

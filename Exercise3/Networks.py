@@ -9,7 +9,7 @@ import math
 # and define the computations for the forward pass in the forward method.
 
 class ValueNetwork(nn.Module):
-	def __init__(self,input_dim = 15,hidden_dim = 30,nActions=4):
+	def __init__(self,input_dim = 15,hidden_dim = 50,nActions=4):
 		super(ValueNetwork, self).__init__()
 
 		self.l1 = nn.Linear(input_dim,hidden_dim)
