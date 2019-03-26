@@ -33,10 +33,10 @@ class HFOEnv(object):
     # Method to initialize the server for HFO environment
     def startEnv(self):
         if self.numTeammates == 0:
-            os.system("./../../../bin/HFO --seed {} --defense-npcs=0 --headless --defense-agents={} --offense-agents=1 --trials 8000 --untouched-time 500 --frames-per-trial 500 --port {} --fullstate &".format(str(self.seed),
+            os.system("./../../../bin/HFO --seed {} --defense-npcs=0 --headless --defense-agents={} --offense-agents=1 --trials 80000 --untouched-time 500 --frames-per-trial 500 --port {} --fullstate &".format(str(self.seed),
                 str(self.numOpponents), str(self.port)))
         else :
-            os.system("./../../../bin/HFO --seed {} --defense-agents={} --headless --defense-npcs=0 --offense-npcs={} --offense-agents=1 --trials 8000 --untouched-time 500 --frames-per-trial 500 --port {} --fullstate &".format(
+            os.system("./../../../bin/HFO --seed {} --defense-agents={} --headless --defense-npcs=0 --offense-npcs={} --offense-agents=1 --trials 80000 --untouched-time 500 --frames-per-trial 500 --port {} --fullstate &".format(
                 str(self.seed), str(self.numOpponents), str(self.numTeammates), str(self.port)))
         time.sleep(5)
 
@@ -52,7 +52,7 @@ class HFOEnv(object):
     # Connect the custom weaker goalkeeper to the server and 
     # establish agent's connection with HFO server
     def connectToServer(self):
-        os.system("./Goalkeeper.py --numEpisodes=8000 --port={} &".format(str(self.port)))
+        os.system("./Goalkeeper.py --numEpisodes=80000 --port={} &".format(str(self.port)))
         time.sleep(2)
         self.hfo.connectToServer(HIGH_LEVEL_FEATURE_SET,self.config_dir,self.port,self.server_addr,self.team_name,self.play_goalie)
 
@@ -82,25 +82,39 @@ class HFOEnv(object):
     # for monitoring purposes.
     
     def get_reward(self, status, nextState):
+        if not hasattr(self, 'pre_ball_goal_distance'):
+            self.pre_ball_goal_distance = 0
+        if not hasattr(self, 'pre_angent_ball_distance'):
+            self.pre_angent_ball_distance = 0
         goal = (1,0)
         ball = (nextState[3],nextState[4])
+        agent_pos = (nextState[0],nextState[1])
         angle = nextState[8]
+        agent_ball_distance= self.euclDist(agent_pos[0],agent_pos[1],ball[0],ball[1])
+        ball_goal_distance = self.euclDist(goal[0],goal[1],ball[0],ball[1])
         reward = 0
         info = {}
         if(status == GOAL):
-            reward += 5
+            reward += 2.0
         elif(status == IN_GAME):
-            reward -= 0#0.015
+            reward -= 0.02
         elif(status ==CAPTURED_BY_DEFENSE):
-            reward -= 1.4
+            reward -= 5
         elif(status ==OUT_OF_BOUNDS):
-            reward -= 1.4
+            reward -= 6
         elif(status == OUT_OF_TIME):
-            reward -= 1
+            reward -= 6
         #print("\n\nREWARD (no H): {}".format(reward))    
-        reward -= 0.001 *abs(angle)
-        reward -= 0.01* self.euclDist(goal[0],goal[1],ball[0],ball[1])
+        #reward += 0.001 *  abs(self.pre_angle)-abs(angle)
         
+        reward += 0.05* (self.pre_angent_ball_distance - agent_ball_distance)
+        reward += 0.05* (self.pre_ball_goal_distance - ball_goal_distance)
+        if(status == IN_GAME):
+            self.pre_ball_goal_distance = ball_goal_distance
+            self.pre_angent_ball_distance = agent_ball_distance
+        else:
+            self.pre_ball_goal_distance = 0
+            self.pre_angent_ball_distance = 0
         #print("\n\nREWARD (post H): {}".format(reward))   
         return reward, info
 
@@ -125,7 +139,7 @@ class HFOEnv(object):
 
 
     def euclDist(self,x1,y1,x2,y2):
-        return np.sqrt((x1-y1)**2+(x2-y2)**2)
+        return np.sqrt((x1-x2)**2+(y1-y2)**2)
 
 
 

@@ -18,12 +18,11 @@ from hfo import GOAL, OUT_OF_BOUNDS,IN_GAME ,CAPTURED_BY_DEFENSE ,OUT_OF_TIME ,S
 
 def train(idx, args, value_network, target_value_network, optimizer, lock, counter, games_counter, mp_done,time_goal, goals, cum_rew,print_eps,print_lr):
     new_lr = args.lr
-    port = 4001+idx*20
+    port = int(random.random()*10000)+idx*20
     seed =idx*100
     hfoEnv = HFOEnv(numTeammates=0, numOpponents=1, port=port, seed=seed)
     hfoEnv.connectToServer()
-    newObservation =hfoEnv.reset()
-    episodeN=0
+    observation =hfoEnv.reset()
     steps_to_goal = 0
     cum_reward = 0
     while counter.value <args.numEpisodes:
@@ -31,14 +30,14 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
             steps_to_goal +=1
             epsilon,new_lr = updateParams(args, counter.value)
             print_eps.value, print_lr.value = epsilon,new_lr
-            action, actionID = act(newObservation,value_network,args,hfoEnv,epsilon)
+            action, actionID = act(observation,value_network,args,hfoEnv,epsilon)
             newObservation, reward, done, status, info = hfoEnv.step(action)
             cum_reward += reward
-            reward = torch.Tensor([reward])
             tar = computeTargets(reward, newObservation, args.discountFactor, done, target_value_network)
-            pred = computePrediction(torch.Tensor(newObservation),actionID,value_network)
-            loss = 0.5*(tar-pred)**2
+            pred = computePrediction(observation,actionID,value_network)
+            loss = 0.5*(pred-tar)**2
             loss.backward()
+            
         else:
             steps_to_goal +=1
             epsilon,new_lr = updateParams(args, counter.value)
@@ -47,10 +46,6 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
             action, actionID = act(newObservation,value_network,args,hfoEnv,epsilon)
             newObservation, reward, done, status, info = hfoEnv.step(action)
             cum_reward += reward
-            reward = torch.Tensor([reward])
-            tar = computeTargets(reward, newObservation, args.discountFactor, done, target_value_network)
-            pred = computePrediction(torch.Tensor(newObservation),actionID,value_network)
-            loss = 0.5*(tar-pred)**2
         with lock:
             counter.value +=1
             if(counter.value % args.trainIter):
@@ -60,9 +55,9 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
                 optimizer.zero_grad()
             if(counter.value % args.updateTarget ==0):
                 hard_update(target_value_network,value_network)
-            if(counter.value% 500000 ==0 ):
+            if(counter.value% 100000 ==0 ):
                 saveModelNetwork(value_network,'model/saveModel.pt')
-                
+        observation = newObservation
         if done:
             games_counter.value +=1
             if(True):#idx==0):
@@ -73,7 +68,6 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
                 steps_to_goal = 0
                 cum_rew.put_nowait(cum_reward)
                 cum_reward= 0
-            episodeN+=1
             newObservation =hfoEnv.reset()
             
 
@@ -90,22 +84,24 @@ def act(state,value_network,args,hfoEnv,epsilon):
         action = hfoEnv.possibleActions[actionID]
     else:
         qVals = value_network(torch.Tensor(state))
-        print("\n"*30,"Possible actions\n",hfoEnv.possibleActions,"Qvals\n",qVals,"\n"*30)
+        #print("\n"*5,"Possible actions\n",hfoEnv.possibleActions,"Qvals\n",qVals,"\n"*5)
         actionID = np.argmax(qVals.detach().numpy())
         action = hfoEnv.possibleActions[actionID]
     return action, actionID
     
 def updateParams(args,episodeN):
-    eps= args.initEpsilon*(pow(np.e, (-episodeN / 5000000)))
+    eps= args.initEpsilon*(pow(np.e, (-episodeN / 1500000)))
     lr= args.lr *(args.numEpisodes-episodeN )/args.numEpisodes
     return eps, lr
 
 def computeTargets(reward, nextObservation, discountFactor, done, targetNetwork):
+    reward = torch.Tensor([reward])
     if(done):
         target = reward
     else:
         qVals = targetNetwork(torch.Tensor(nextObservation)).detach()
-        target = reward + discountFactor*max(qVals)
+        maxqval = torch.max(qVals)
+        target = reward + discountFactor*maxqval
     return target
 
         
@@ -113,7 +109,7 @@ def computeTargets(reward, nextObservation, discountFactor, done, targetNetwork)
     
 
 def computePrediction(state, action, valueNetwork):
-    qVals = valueNetwork(torch.Tensor(state))
+    qVals = valueNetwork(torch.Tensor(state))#
     return qVals[action]
 	
 # Function to save parameters of a neural network in pytorch.

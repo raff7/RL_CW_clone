@@ -1,0 +1,1 @@
+{"n_hidden_nodes": 64, "live_plot": true, "save_every": 100000.0, "discount_factor": 0.99, "train_every": 50, "eps_decay": 2000000.0, "max_trans": 5000000.0, "start_eps": 0.95, "n_workers": 12, "copy_every": 1500, "lr_decay": true, "save_name": "2019-03-26 18:56:05", "lr": 0.001, "l2alpha": 0.01}

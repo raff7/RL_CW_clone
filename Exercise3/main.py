@@ -27,13 +27,13 @@ if __name__ == "__main__" :
     
     os.system("killall -9 rcssserver")
     parser = argparse.ArgumentParser()
-    parser.add_argument('--numEpisodes', type=int, default=10000000)
-    parser.add_argument('--numWorkers', type=int, default=4)
-    parser.add_argument('--initEpsilon', type=int, default=0.6)
-    parser.add_argument('--updateTarget', type=int, default=10000)
+    parser.add_argument('--numEpisodes', type=int, default=5000000)
+    parser.add_argument('--numWorkers', type=int, default=12)
+    parser.add_argument('--initEpsilon', type=int, default=0.95)
+    parser.add_argument('--updateTarget', type=int, default=5000)
     parser.add_argument('--trainIter', type=int, default=50)
-    parser.add_argument('--lr', type=int, default=0.0001)
-    parser.add_argument('--weightDecay', type=int, default=0.00001)#0.00001
+    parser.add_argument('--lr', type=int, default=0.001)
+    parser.add_argument('--weightDecay', type=int, default=0.01)#0.00001
     parser.add_argument('--discountFactor', type=int, default=0.99)
 
     args=parser.parse_args()
@@ -51,7 +51,7 @@ if __name__ == "__main__" :
     avg_time_goal= 200
     avg_goals = 0.5
     avg_cum_rew=0
-    avg_coef = 0.004
+    avg_coef = 0.00025
     last_time = time.time()
     f, ax = plt.subplots(2, 2, figsize=(12, 8))
     ax = ax.flatten()
@@ -98,17 +98,17 @@ if __name__ == "__main__" :
         #Print update
         time.sleep(0.001)
         if not time_goal.empty():
-            c_coef = avg_coef*2 if len(all_time_goal)>100 else 0.1*np.exp(-len(all_cum_rew)/50)
+            c_coef = avg_coef*2 if len(all_time_goal)>100 else 0.05*np.exp(-len(all_cum_rew)/50)
             new_time_goal = time_goal.get()
             avg_time_goal = (1-c_coef)*(avg_time_goal) + c_coef*new_time_goal
             all_time_goal.append(avg_time_goal)
         if not goals.empty():
-            c_coef = avg_coef if len(all_cum_rew)>100 else 0.05*np.exp(-len(all_cum_rew)/50)
+            c_coef = avg_coef if len(all_cum_rew)>100 else 0.025*np.exp(-len(all_cum_rew)/50)
             new_goals = goals.get()
             avg_goals = (1-c_coef)*(avg_goals) + c_coef*new_goals
             all_goals.append(avg_goals)
         if(not cum_rew.empty()):
-            c_coef = avg_coef*2 if len(all_cum_rew)>100 else 0.1*np.exp(-len(all_cum_rew)/50)
+            c_coef = avg_coef*2 if len(all_cum_rew)>100 else 0.05*np.exp(-len(all_cum_rew)/50)
             new_cum_rew = cum_rew.get()
             avg_cum_rew = (1-c_coef)*(avg_cum_rew) + c_coef*new_cum_rew
             all_cum_rew.append(avg_cum_rew)
