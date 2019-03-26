@@ -27,6 +27,7 @@ if __name__ == "__main__" :
     
     os.system("killall -9 rcssserver")
     parser = argparse.ArgumentParser()
+    parser.add_argument('--save', type=str, default="MODEL1")
     parser.add_argument('--numEpisodes', type=int, default=5000000)
     parser.add_argument('--numWorkers', type=int, default=8)
     parser.add_argument('--initEpsilon', type=int, default=0.95)
@@ -141,6 +142,7 @@ if __name__ == "__main__" :
         
         
     for p in processes:
+        print("\nKILLING {} IT AT {}\n".format(p,counter.value)*100)
         p.join()
 
 

@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
-
+import os
 import numpy as np
 from Networks import ValueNetwork
 from torch.autograd import Variable
@@ -56,7 +56,10 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
                 hard_update(target_value_network,value_network)
 
             if(counter.value% 100000 ==0 ):
-                saveModelNetwork(value_network,'model/saveModel.pt')
+                folder = os.path.join('Model', args.save)
+                if(not os.path.exists(folder)):
+                    os.makedirs(folder)
+                saveModelNetwork(value_network,os.path.join(folder, 'Saving_step={}.pt'.format(counter.value)))
 
             if counter.value >= args.numEpisodes:
                 mp_done.value = True
