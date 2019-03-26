@@ -28,7 +28,7 @@ if __name__ == "__main__" :
     os.system("killall -9 rcssserver")
     parser = argparse.ArgumentParser()
     parser.add_argument('--numEpisodes', type=int, default=30000000)
-    parser.add_argument('--numWorkers', type=int, default=8)
+    parser.add_argument('--numWorkers', type=int, default=4)
     parser.add_argument('--initEpsilon', type=int, default=0.6)
     parser.add_argument('--updateTarget', type=int, default=1500)
     parser.add_argument('--trainIter', type=int, default=50)

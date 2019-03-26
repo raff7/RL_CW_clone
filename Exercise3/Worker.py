@@ -10,7 +10,7 @@ from Environment import HFOEnv
 import random
 import matplotlib.pyplot as plt
 import time
-from hfo import GOAL
+from hfo import GOAL, OUT_OF_BOUNDS,IN_GAME ,CAPTURED_BY_DEFENSE ,OUT_OF_TIME ,SERVER_DOWN
 
 
 
@@ -67,9 +67,9 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
                 saveModelNetwork(value_network,'model/saveModel.pt')
                 
         if done:
-
             games_counter.value +=1
             if(idx==0):
+                #print("\n"*30,idx," status ",status,"GOAL is ",GOAL,"OUT OF is ", OUT_OF_BOUNDS,"Capture",CAPTURED_BY_DEFENSE ,"TIME ",OUT_OF_TIME ,"server ",SERVER_DOWN,"\n"*30)
                 goals.put_nowait(1.0 if status == GOAL else 0.0)
                 if status == GOAL:
                     time_goal.put_nowait(steps_since_goal)
