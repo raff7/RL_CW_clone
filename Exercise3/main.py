@@ -28,7 +28,7 @@ if __name__ == "__main__" :
     os.system("killall -9 rcssserver")
     parser = argparse.ArgumentParser()
     parser.add_argument('--numEpisodes', type=int, default=30000000)
-    parser.add_argument('--numWorkers', type=int, default=4)
+    parser.add_argument('--numWorkers', type=int, default=12)
     parser.add_argument('--initEpsilon', type=int, default=0.6)
     parser.add_argument('--updateTarget', type=int, default=1500)
     parser.add_argument('--trainIter', type=int, default=50)
@@ -57,7 +57,7 @@ if __name__ == "__main__" :
     ax = ax.flatten()
     
     time_line = ax[0].plot([0],[0])[0]
-    ax[0].set_title("Time-steps between goals")
+    ax[0].set_title("avg Time-steps to score a goal")
 
     goal_line = ax[1].plot([0],[0])[0]
     ax[1].set_title("Goal probability")
@@ -98,7 +98,6 @@ if __name__ == "__main__" :
         #Print update
         time.sleep(0.001)
         if not time_goal.empty():
-            print("\n"*30,all_time_goal,"\n"*30)
             c_coef = avg_coef*2 if len(all_time_goal)>100 else 0.1*np.exp(-len(all_cum_rew)/50)
             new_time_goal = time_goal.get()
             avg_time_goal = (1-c_coef)*(avg_time_goal) + c_coef*new_time_goal

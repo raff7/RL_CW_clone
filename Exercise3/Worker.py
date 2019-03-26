@@ -24,29 +24,26 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
     hfoEnv.connectToServer()
     newObservation =hfoEnv.reset()
     episodeN=0
-    steps_since_goal = 0
-    current_steps = 0
+    steps_to_goal = 0
     cum_reward = 0
     while counter.value <args.numEpisodes:
-        if(idx!=0):
-            #steps_since_goal +=1
-            #current_steps +=1
+        if(True):#idx!=0):
+            steps_to_goal +=1
             epsilon,new_lr = updateParams(args, counter.value)
-            print_eps.value = epsilon
+            print_eps.value, print_lr.value = epsilon,new_lr
             action, actionID = act(newObservation,value_network,args,hfoEnv,epsilon)
             newObservation, reward, done, status, info = hfoEnv.step(action)
-            #cum_reward += reward
+            cum_reward += reward
             reward = torch.Tensor([reward])
             tar = computeTargets(reward, newObservation, args.discountFactor, done, target_value_network)
             pred = computePrediction(torch.Tensor(newObservation),actionID,value_network)
             loss = 0.5*(tar-pred)**2
             loss.backward()
         else:
-            steps_since_goal +=1
-            current_steps +=1
+            steps_to_goal +=1
             epsilon,new_lr = updateParams(args, counter.value)
             epsilon = 0
-            print_eps.value, print_lr.value = updateParams(args, counter.value)
+            print_eps.value, print_lr.value = epsilon,new_lr
             action, actionID = act(newObservation,value_network,args,hfoEnv,epsilon)
             newObservation, reward, done, status, info = hfoEnv.step(action)
             cum_reward += reward
@@ -68,15 +65,12 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
                 
         if done:
             games_counter.value +=1
-            if(idx==0):
-                #print("\n"*30,idx," status ",status,"GOAL is ",GOAL,"OUT OF is ", OUT_OF_BOUNDS,"Capture",CAPTURED_BY_DEFENSE ,"TIME ",OUT_OF_TIME ,"server ",SERVER_DOWN,"\n"*30)
+            if(True):#idx==0):
                 goals.put_nowait(1.0 if status == GOAL else 0.0)
-                if status == GOAL:
-                    time_goal.put_nowait(steps_since_goal)
-                    steps_since_goal = 0
-                elif(status == OUT_OF_BOUNDS):
-                    steps_since_goal += (500-current_steps)
-                current_steps = 0
+                if status != GOAL:
+                    steps_to_goal = 500
+                time_goal.put_nowait(steps_to_goal)
+                steps_to_goal = 0
                 cum_rew.put_nowait(cum_reward)
                 cum_reward= 0
             episodeN+=1
