@@ -29,7 +29,7 @@ if __name__ == "__main__" :
     parser = argparse.ArgumentParser()
     parser.add_argument('--save', type=str, default="MODEL1")
     parser.add_argument('--numEpisodes', type=int, default=5000000)
-    parser.add_argument('--numWorkers', type=int, default=8)
+    parser.add_argument('--numWorkers', type=int, default=6)
     parser.add_argument('--initEpsilon', type=int, default=0.95)
     parser.add_argument('--updateTarget', type=int, default=10000)
     parser.add_argument('--trainIter', type=int, default=150)

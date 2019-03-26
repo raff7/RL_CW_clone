@@ -28,7 +28,8 @@ class HFOEnv(object):
         self.seed = seed
         self.startEnv()
         self.hfo = HFOEnvironment()
-        
+        self.pre_ball_goal_distance = 0
+        self.pre_angent_ball_distance = 0
 
     # Method to initialize the server for HFO environment
     def startEnv(self):
@@ -82,10 +83,7 @@ class HFOEnv(object):
     # for monitoring purposes.
     
     def get_reward(self, status, nextState):
-        if not hasattr(self, 'pre_ball_goal_distance'):
-            self.pre_ball_goal_distance = 0
-        if not hasattr(self, 'pre_angent_ball_distance'):
-            self.pre_angent_ball_distance = 0
+
         goal = (1,0)
         ball = (nextState[3],nextState[4])
         agent_pos = (nextState[0],nextState[1])
@@ -95,26 +93,23 @@ class HFOEnv(object):
         reward = 0
         info = {}
         if(status == GOAL):
-            reward += 4.0
+            reward += 3
         elif(status == IN_GAME):
-            reward -= 0.02
+            reward -= 0.05
         elif(status ==CAPTURED_BY_DEFENSE):
-            reward -= 1.5
+            reward -= 3.5
         elif(status ==OUT_OF_BOUNDS):
-            reward -= 1.5
+            reward -= 3.5
         elif(status == OUT_OF_TIME):
-            reward -= 1
+            reward -= 2
         #print("\n\nREWARD (no H): {}".format(reward))    
         #reward += 0.001 *  abs(self.pre_angle)-abs(angle)
         
-        reward += 0.05* (self.pre_angent_ball_distance - agent_ball_distance)
-        reward += 0.05* (self.pre_ball_goal_distance - ball_goal_distance)
-        if(status == IN_GAME):
-            self.pre_ball_goal_distance = ball_goal_distance
-            self.pre_angent_ball_distance = agent_ball_distance
-        else:
-            self.pre_ball_goal_distance = 0
-            self.pre_angent_ball_distance = 0
+        reward += 0.1* (self.pre_angent_ball_distance - agent_ball_distance)
+        reward += 0.1* (self.pre_ball_goal_distance - ball_goal_distance)
+        self.pre_ball_goal_distance = ball_goal_distance
+        self.pre_angent_ball_distance = agent_ball_distance
+
         #print("\n\nREWARD (post H): {}".format(reward))   
         return reward, info
 
