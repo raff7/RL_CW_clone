@@ -27,13 +27,13 @@ if __name__ == "__main__" :
     
     os.system("killall -9 rcssserver")
     parser = argparse.ArgumentParser()
-    parser.add_argument('--numEpisodes', type=int, default=30000000)
-    parser.add_argument('--numWorkers', type=int, default=12)
+    parser.add_argument('--numEpisodes', type=int, default=10000000)
+    parser.add_argument('--numWorkers', type=int, default=4)
     parser.add_argument('--initEpsilon', type=int, default=0.6)
-    parser.add_argument('--updateTarget', type=int, default=1500)
+    parser.add_argument('--updateTarget', type=int, default=10000)
     parser.add_argument('--trainIter', type=int, default=50)
-    parser.add_argument('--lr', type=int, default=0.001)
-    parser.add_argument('--weightDecay', type=int, default=0.001)#0.00001
+    parser.add_argument('--lr', type=int, default=0.0001)
+    parser.add_argument('--weightDecay', type=int, default=0.00001)#0.00001
     parser.add_argument('--discountFactor', type=int, default=0.99)
 
     args=parser.parse_args()
@@ -129,7 +129,7 @@ if __name__ == "__main__" :
             [axxx.relim() for axxx in ax[:-1]]
             [axxx.autoscale_view() for axxx in ax[:-1]]
             
-            text_params.set_text('Game Counter: {}\nCounter: {}\nEpsilon: {}\nLearning Rate {}\nTotal goal percentage: {}\niterations in update: {}\nTime left{}'.format(games_counter.value,counter.value,print_eps.value,print_lr.value, len(all_time_goal)/max(1,len(all_goals)),counter.value-iter_update,(args.numEpisodes-counter.value)/((counter.value+0.01-iter_update)/2)/3600))
+            text_params.set_text('Game Counter: {}\nCounter: {}\nEpsilon: {}\nLearning Rate {}\niterations in update: {}\nTime left{}'.format(games_counter.value,counter.value,print_eps.value,print_lr.value, counter.value-iter_update,(args.numEpisodes-counter.value)/((counter.value+0.01-iter_update)/2)/3600))
             iter_update = counter.value
             f.canvas.draw()
             f.canvas.flush_events()

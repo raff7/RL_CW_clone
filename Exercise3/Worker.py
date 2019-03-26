@@ -18,7 +18,7 @@ from hfo import GOAL, OUT_OF_BOUNDS,IN_GAME ,CAPTURED_BY_DEFENSE ,OUT_OF_TIME ,S
 
 def train(idx, args, value_network, target_value_network, optimizer, lock, counter, games_counter, mp_done,time_goal, goals, cum_rew,print_eps,print_lr):
     new_lr = args.lr
-    port = 2600+idx*20
+    port = 4001+idx*20
     seed =idx*100
     hfoEnv = HFOEnv(numTeammates=0, numOpponents=1, port=port, seed=seed)
     hfoEnv.connectToServer()
@@ -90,6 +90,7 @@ def act(state,value_network,args,hfoEnv,epsilon):
         action = hfoEnv.possibleActions[actionID]
     else:
         qVals = value_network(torch.Tensor(state))
+        print("\n"*30,"Possible actions\n",hfoEnv.possibleActions,"Qvals\n",qVals,"\n"*30)
         actionID = np.argmax(qVals.detach().numpy())
         action = hfoEnv.possibleActions[actionID]
     return action, actionID
@@ -104,7 +105,7 @@ def computeTargets(reward, nextObservation, discountFactor, done, targetNetwork)
         target = reward
     else:
         qVals = targetNetwork(torch.Tensor(nextObservation)).detach()
-        target = reward +discountFactor*max(qVals)
+        target = reward + discountFactor*max(qVals)
     return target
 
         

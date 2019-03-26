@@ -88,18 +88,18 @@ class HFOEnv(object):
         reward = 0
         info = {}
         if(status == GOAL):
-            reward += 4
+            reward += 5
         elif(status == IN_GAME):
             reward -= 0#0.015
         elif(status ==CAPTURED_BY_DEFENSE):
-            reward -= 1.5
+            reward -= 1.4
         elif(status ==OUT_OF_BOUNDS):
-            reward -= 1.5
+            reward -= 1.4
         elif(status == OUT_OF_TIME):
             reward -= 1
         #print("\n\nREWARD (no H): {}".format(reward))    
-        reward -= 0.002 *abs(angle)
-        reward -= 0.02* self.euclDist(goal[0],goal[1],ball[0],ball[1])
+        reward -= 0.001 *abs(angle)
+        reward -= 0.01* self.euclDist(goal[0],goal[1],ball[0],ball[1])
         
         #print("\n\nREWARD (post H): {}".format(reward))   
         return reward, info
