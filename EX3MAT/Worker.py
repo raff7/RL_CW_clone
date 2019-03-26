@@ -19,17 +19,20 @@ def train(idx, args, value_network, target_value_network, optimizer, counter, re
     random.seed(seed)
     hfoEnv = HFOEnv(numTeammates=0, numOpponents=1, port=port, seed=seed)
     hfoEnv.connectToServer()
-
     observation = hfoEnv.reset()
 
     # This runs a random agent
     episodeNumber = 0
     cum_reward = 0
     steps_in_episode = 0
+
     while not main_terminated.is_set():
         eps = calculate_eps(counter, args)
+        #ACT
         action_id = act_epsgreedy(observation, value_network, hfoEnv, eps)
         act = hfoEnv.possibleActions[action_id]
+
+        #STEP
         newObservation, reward, done, status, info = hfoEnv.step(act)
 
         # Train network

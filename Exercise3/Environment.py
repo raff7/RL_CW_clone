@@ -95,15 +95,15 @@ class HFOEnv(object):
         reward = 0
         info = {}
         if(status == GOAL):
-            reward += 2.0
+            reward += 4.0
         elif(status == IN_GAME):
             reward -= 0.02
         elif(status ==CAPTURED_BY_DEFENSE):
-            reward -= 5
+            reward -= 1.5
         elif(status ==OUT_OF_BOUNDS):
-            reward -= 6
+            reward -= 1.5
         elif(status == OUT_OF_TIME):
-            reward -= 6
+            reward -= 1
         #print("\n\nREWARD (no H): {}".format(reward))    
         #reward += 0.001 *  abs(self.pre_angle)-abs(angle)
         

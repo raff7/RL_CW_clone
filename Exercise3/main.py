@@ -28,12 +28,12 @@ if __name__ == "__main__" :
     os.system("killall -9 rcssserver")
     parser = argparse.ArgumentParser()
     parser.add_argument('--numEpisodes', type=int, default=5000000)
-    parser.add_argument('--numWorkers', type=int, default=12)
+    parser.add_argument('--numWorkers', type=int, default=4)
     parser.add_argument('--initEpsilon', type=int, default=0.95)
-    parser.add_argument('--updateTarget', type=int, default=5000)
+    parser.add_argument('--updateTarget', type=int, default=1500)
     parser.add_argument('--trainIter', type=int, default=50)
-    parser.add_argument('--lr', type=int, default=0.001)
-    parser.add_argument('--weightDecay', type=int, default=0.01)#0.00001
+    parser.add_argument('--lr', type=int, default=0.005)
+    parser.add_argument('--weightDecay', type=int, default=0.00001)#0.00001
     parser.add_argument('--discountFactor', type=int, default=0.99)
 
     args=parser.parse_args()
@@ -51,7 +51,7 @@ if __name__ == "__main__" :
     avg_time_goal= 200
     avg_goals = 0.5
     avg_cum_rew=0
-    avg_coef = 0.00025
+    avg_coef = 0.0005
     last_time = time.time()
     f, ax = plt.subplots(2, 2, figsize=(12, 8))
     ax = ax.flatten()
