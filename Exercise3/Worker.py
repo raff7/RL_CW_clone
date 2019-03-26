@@ -28,7 +28,7 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
     steps_to_goal = 0
     cum_reward = 0
 
-    while counter.value <args.numEpisodes:
+    while counter.value < args.numEpisodes:
         steps_to_goal +=1
         epsilon,new_lr = updateParams(args, counter.value)
         print_eps.value, print_lr.value = epsilon,new_lr
@@ -51,10 +51,16 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
                     param_group['lr'] = new_lr
                 optimizer.step()
                 optimizer.zero_grad()
+
             if(counter.value % args.updateTarget ==0):
                 hard_update(target_value_network,value_network)
+
             if(counter.value% 100000 ==0 ):
                 saveModelNetwork(value_network,'model/saveModel.pt')
+
+            if counter.value >= args.numEpisodes:
+                mp_done.value = True
+
         observation = newObservation
 
         if done:
@@ -66,11 +72,10 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
             steps_to_goal = 0
             cum_rew.put_nowait(cum_reward)
             cum_reward= 0
-            newObservation =hfoEnv.reset()
+            observation =hfoEnv.reset()
             
 
-    with lock:
-        mp_done.value = True
+
 
         
         
