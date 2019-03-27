@@ -30,14 +30,15 @@ class HFOEnv(object):
         self.hfo = HFOEnvironment()
         self.pre_ball_goal_distance = 0
         self.pre_angent_ball_distance = 0
+        self.pre_angle = 0
 
     # Method to initialize the server for HFO environment
     def startEnv(self):
         if self.numTeammates == 0:
-            os.system("./../../../bin/HFO --seed {} --defense-npcs=0 --headless --defense-agents={} --offense-agents=1 --trials 80000 --untouched-time 500 --frames-per-trial 500 --port {} --fullstate &".format(str(self.seed),
+            os.system("./../../../bin/HFO --headless --seed {} --defense-npcs=0 --defense-agents={} --offense-agents=1 --trials 80000 --untouched-time 500 --frames-per-trial 500 --port {} --fullstate &".format(str(self.seed),
                 str(self.numOpponents), str(self.port)))
         else :
-            os.system("./../../../bin/HFO --seed {} --defense-agents={} --headless --defense-npcs=0 --offense-npcs={} --offense-agents=1 --trials 80000 --untouched-time 500 --frames-per-trial 500 --port {} --fullstate &".format(
+            os.system("./../../../bin/HFO --seed {} --defense-agents={} --defense-npcs=0 --offense-npcs={} --offense-agents=1 --trials 80000 --untouched-time 500 --frames-per-trial 500 --port {} --fullstate &".format(
                 str(self.seed), str(self.numOpponents), str(self.numTeammates), str(self.port)))
         time.sleep(5)
 
@@ -95,21 +96,22 @@ class HFOEnv(object):
         if(status == GOAL):
             reward += 3
         elif(status == IN_GAME):
-            reward -= 0.05
+            reward -= 0.03
         elif(status ==CAPTURED_BY_DEFENSE):
-            reward -= 3.5
+            reward -= 3
         elif(status ==OUT_OF_BOUNDS):
-            reward -= 3.5
+            reward -= 3
         elif(status == OUT_OF_TIME):
             reward -= 2
         #print("\n\nREWARD (no H): {}".format(reward))    
         #reward += 0.001 *  abs(self.pre_angle)-abs(angle)
-        
-        reward += 0.1* (self.pre_angent_ball_distance - agent_ball_distance)
-        reward += 0.1* (self.pre_ball_goal_distance - ball_goal_distance)
+
+        reward += 1*(abs(self.pre_angle)-abs(angle))
+        reward += 4* (self.pre_angent_ball_distance - agent_ball_distance)
+        reward += 4* (self.pre_ball_goal_distance - ball_goal_distance)
         self.pre_ball_goal_distance = ball_goal_distance
         self.pre_angent_ball_distance = agent_ball_distance
-
+        self.pre_angle = angle
         #print("\n\nREWARD (post H): {}".format(reward))   
         return reward, info
 

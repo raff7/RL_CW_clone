@@ -59,7 +59,7 @@ class MonteCarloAgent(Agent):
         self.discountFactor = discountFactor
         self.qValues = {}
         self.returns = {}
-        self.printing=False
+        self.printing=True
 
 
     def learn(self):
@@ -78,7 +78,6 @@ class MonteCarloAgent(Agent):
                 print()
                 print("Step ",i)
                 print(step)
-            if (self.printing):
                 print("G:{} =  discG[{}] + R[{}] ".format(self.discountFactor*G + step[2],self.discountFactor*G,step[2]))
             G = self.discountFactor*G + step[2]
             if(not (step[0],step[1]) in toVisit):
@@ -152,7 +151,7 @@ class MonteCarloAgent(Agent):
         self.epsilon = epsilon
 
     def computeHyperparameters(self, numTakenActions, episodeNumber):
-        ep = 0.7 * (pow(np.e, (-episodeNumber / 600))) #600
+        ep = 0.9 * (pow(np.e, (-episodeNumber / 600))) #600
         return ep
 
 
@@ -161,13 +160,13 @@ if __name__ == '__main__':
     parser.add_argument('--id', type=int, default=0)
     parser.add_argument('--numOpponents', type=int, default=0)
     parser.add_argument('--numTeammates', type=int, default=0)
-    parser.add_argument('--numEpisodes', type=int, default=500)
+    parser.add_argument('--numEpisodes', type=int, default=5000)
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--id', type=int, default=0)
     parser.add_argument('--numOpponents', type=int, default=0)
     parser.add_argument('--numTeammates', type=int, default=0)
-    parser.add_argument('--numEpisodes', type=int, default=500)
+    parser.add_argument('--numEpisodes', type=int, default=5000)
 
     args=parser.parse_args()
 
@@ -176,7 +175,7 @@ if __name__ == '__main__':
     hfoEnv.connectToServer()
 
     # Initialize a Monte-Carlo Agent
-    agent = MonteCarloAgent(discountFactor = 0.9, epsilon = 0.6)
+    agent = MonteCarloAgent(discountFactor = 0.95, epsilon = 1)
     numEpisodes = args.numEpisodes
     numTakenActions = 0
     # Run training Monte Carlo Method

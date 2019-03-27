@@ -27,17 +27,20 @@ if __name__ == "__main__" :
     
     os.system("killall -9 rcssserver")
     parser = argparse.ArgumentParser()
-    parser.add_argument('--save', type=str, default="MODEL1")
-    parser.add_argument('--numEpisodes', type=int, default=5000000)
-    parser.add_argument('--numWorkers', type=int, default=6)
+    parser.add_argument('--save', type=str, default="MODEL_3")
+    parser.add_argument('--numEpisodes', type=int, default=10000000)
+    parser.add_argument('--numWorkers', type=int, default=8)
     parser.add_argument('--initEpsilon', type=int, default=0.95)
     parser.add_argument('--updateTarget', type=int, default=10000)
-    parser.add_argument('--trainIter', type=int, default=150)
-    parser.add_argument('--lr', type=int, default=0.002)
+    parser.add_argument('--trainIter', type=int, default=50)
+    parser.add_argument('--lr', type=int, default=0.0005)
     parser.add_argument('--weightDecay', type=int, default=0.00001)#0.00001
     parser.add_argument('--discountFactor', type=int, default=0.99)
 
     args=parser.parse_args()
+    path =  os.path.join('v', args.save)
+    save_plots_every = 100000
+
     #print('\n\n\n\n\n\n\n\n\n\ncores {}\n\n\n\n\n\n\n\n'.format(mp.cpu_count()))
     #PLOT
     done = mp.Value(c_bool, False)
@@ -49,11 +52,12 @@ if __name__ == "__main__" :
     all_time_goal= []
     all_goals = []
     all_cum_rew=[]
-    avg_time_goal= 200
+    avg_time_goal= 500
     avg_goals = 0.5
     avg_cum_rew=0
     avg_coef = 0.0005
     last_time = time.time()
+    last_saved_plot = 0
     f, ax = plt.subplots(2, 2, figsize=(12, 8))
     ax = ax.flatten()
     
@@ -99,17 +103,18 @@ if __name__ == "__main__" :
         #Print update
         time.sleep(0.001)
         if not time_goal.empty():
-            c_coef = avg_coef*2 if len(all_time_goal)>100 else 0.05*np.exp(-len(all_cum_rew)/50)
+            #print("\nMain Agent CHECK")
+            c_coef = avg_coef*2 if len(all_time_goal)>500 else 0.025*np.exp(-len(all_cum_rew)/200)
             new_time_goal = time_goal.get()
             avg_time_goal = (1-c_coef)*(avg_time_goal) + c_coef*new_time_goal
             all_time_goal.append(avg_time_goal)
         if not goals.empty():
-            c_coef = avg_coef if len(all_cum_rew)>100 else 0.025*np.exp(-len(all_cum_rew)/50)
+            c_coef = avg_coef if len(all_cum_rew)>500 else 0.01*np.exp(-len(all_cum_rew)/200)
             new_goals = goals.get()
             avg_goals = (1-c_coef)*(avg_goals) + c_coef*new_goals
             all_goals.append(avg_goals)
         if(not cum_rew.empty()):
-            c_coef = avg_coef*2 if len(all_cum_rew)>100 else 0.05*np.exp(-len(all_cum_rew)/50)
+            c_coef = avg_coef*2 if len(all_cum_rew)>500 else 0.025*np.exp(-len(all_cum_rew)/200)
             new_cum_rew = cum_rew.get()
             avg_cum_rew = (1-c_coef)*(avg_cum_rew) + c_coef*new_cum_rew
             all_cum_rew.append(avg_cum_rew)
@@ -136,6 +141,13 @@ if __name__ == "__main__" :
             f.canvas.flush_events()
             last_time = time.time()
             plt.show()
+        if(counter.value - last_saved_plot > save_plots_every):
+            f.tight_layout()
+            if not os.path.exists(path):
+                os.makedirs(path)
+            f.savefig(os.path.join(path, 'plot.png'))
+            last_saved_plot = counter.value
+
         if(done.value):
             break
             

@@ -17,18 +17,25 @@ from hfo import GOAL, OUT_OF_BOUNDS,IN_GAME ,CAPTURED_BY_DEFENSE ,OUT_OF_TIME ,S
 
 
 def train(idx, args, value_network, target_value_network, optimizer, lock, counter, games_counter, mp_done,time_goal, goals, cum_rew,print_eps,print_lr):
+    print("\n"*10)
+    print("CALL LEARN AGENT ",idx)
     new_lr = args.lr
-    port = int(random.random()*10000)+idx*20
+    port = 1258+idx*582#nt(random.random()*10000)+idx*20
     seed =idx*100
 
+    print("try HFO init FOR {}, PORT {}, SEED {}".format(idx,port, seed))
     hfoEnv = HFOEnv(numTeammates=0, numOpponents=1, port=port, seed=seed)
+    print("MADE HFO, try connect to server  FOR {}".format(idx))
     hfoEnv.connectToServer()
+    print("CONNECTED {}, reset".format(idx))
     observation =hfoEnv.reset()
+    print("HFO INIT FOR {}".format(idx))
 
     steps_to_goal = 0
     cum_reward = 0
 
     while counter.value < args.numEpisodes:
+        print("AGENT {} CHECK {}".format(idx, counter.value))
         steps_to_goal +=1
         epsilon,new_lr = updateParams(args, counter.value)
         print_eps.value, print_lr.value = epsilon,new_lr
@@ -56,7 +63,7 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
                 hard_update(target_value_network,value_network)
 
             if(counter.value% 100000 ==0 ):
-                folder = os.path.join('Model', args.save)
+                folder = os.path.join('v', args.save)
                 if(not os.path.exists(folder)):
                     os.makedirs(folder)
                 saveModelNetwork(value_network,os.path.join(folder, 'Saving_step={}.pt'.format(counter.value)))
