@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # encoding utf-8
 
+import sys
+sys.path.append('../')
 from DiscreteHFO.HFOAttackingPlayer import HFOAttackingPlayer
 from DiscreteHFO.Agent import Agent
 import numpy as np
@@ -56,7 +58,6 @@ class SARSAAgent(Agent):
           super(SARSAAgent, self).__init__()
           self.qValues = {}
           self.discountFactor = discountFactor
-          self.initEpsilon = epsilon
           self.epsilon =epsilon
           self.printing=False
           self.learningRate=learningRate
@@ -139,8 +140,8 @@ class SARSAAgent(Agent):
             self.qValues[nextState] = dict.fromkeys(self.possibleActions, 0)
 
     def computeHyperparameters(self, numTakenActions, episodeNumber):
-        lr = self.learningRate
-        ep = self.initEpsilon * (pow(np.e, (-episodeNumber / 600)))
+        lr = 0.3
+        ep = 0.7 * (pow(np.e, (-episodeNumber / 600)))
 
         return lr, ep
         return lr, ep

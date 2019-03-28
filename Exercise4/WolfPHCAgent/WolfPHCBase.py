@@ -128,12 +128,12 @@ class WolfPHCAgent(Agent):
 
         #ld = 0.009 * (pow(np.e, (-episodeNumber / 20000)))+0.001
         #wd = 0.0009 * (pow(np.e, (-episodeNumber / 20000)))+0.0001
-        ld = 0.25*(np.log(episodeNumber / 8000 + 1))
-        wd = 0.025*(np.log(episodeNumber / 8000 + 1))
-        #ld = self.loseDelta
-        #wd = self.winDelta
-        lr = 0.4 * (pow(np.e, (-episodeNumber / 30000)))
-        #lr = self.learningRate
+        #ld = 0.25*(np.log(episodeNumber / 8000 + 1))
+        #wd = 0.025*(np.log(episodeNumber / 8000 + 1))
+        ld = 0.01
+        wd = 0.001
+        #lr = 0.4 * (pow(np.e, (-episodeNumber / 30000)))
+        lr = 0.5 *(50000-episodeNumber )/50000
         return ld, wd, lr
 
 if __name__ == '__main__':

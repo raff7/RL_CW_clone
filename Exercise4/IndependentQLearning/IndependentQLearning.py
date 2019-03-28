@@ -111,7 +111,8 @@ class IndependentQLearningAgent(Agent):
         self.epsilon = epsilon
         
     def computeHyperparameters(self, numTakenActions, episodeNumber):
-        lr = 0.4 * (pow(np.e, (-episodeNumber / 8000)))
+        #lr = 0.4 * (pow(np.e, (-episodeNumber / 8000)))
+        lr = 0.5 *(50000-episodeNumber )/50000
         ep = 0.7 * (pow(np.e, (-episodeNumber / 8000)))
 
         return lr, ep

@@ -59,7 +59,7 @@ class MonteCarloAgent(Agent):
         self.discountFactor = discountFactor
         self.qValues = {}
         self.returns = {}
-        self.printing=True
+        self.printing=False
 
 
     def learn(self):
@@ -151,7 +151,7 @@ class MonteCarloAgent(Agent):
         self.epsilon = epsilon
 
     def computeHyperparameters(self, numTakenActions, episodeNumber):
-        ep = 0.9 * (pow(np.e, (-episodeNumber / 600))) #600
+        ep = 1 * (pow(np.e, (-episodeNumber / 700))) #600
         return ep
 
 

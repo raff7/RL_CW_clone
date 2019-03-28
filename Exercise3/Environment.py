@@ -32,6 +32,9 @@ class HFOEnv(object):
         self.pre_angent_ball_distance = 0
         self.pre_angle = 0
 
+        self.pre_ball_pos = (0, 0)
+        self.pre_agent_pos = (0, 0)
+
     # Method to initialize the server for HFO environment
     def startEnv(self):
         if self.numTeammates == 0:
@@ -98,21 +101,32 @@ class HFOEnv(object):
         elif(status == IN_GAME):
             reward -= 0.03
         elif(status ==CAPTURED_BY_DEFENSE):
-            reward -= 3
+            reward -= 5
         elif(status ==OUT_OF_BOUNDS):
-            reward -= 3
+            reward -= 5
         elif(status == OUT_OF_TIME):
             reward -= 2
         #print("\n\nREWARD (no H): {}".format(reward))    
         #reward += 0.001 *  abs(self.pre_angle)-abs(angle)
+        # print("\n\nState:\nAgent position pre: {} NOW {}\nball position pre: {} NOW {}\nagent angle pre {} NOW {}\n".format(self.pre_agent_pos,agent_pos,self.pre_ball_pos, ball, self.pre_angle, angle))
+        # print("ball-goal distance reduction: {} = pre[{}] - current[{}]".format(
+        #     50 * (self.pre_ball_goal_distance - ball_goal_distance), self.pre_ball_goal_distance, ball_goal_distance))
+        # print("agent-ball distance reduction: {} = pre[{}] - current[{}]".format(
+        #     50 * (self.pre_angent_ball_distance - agent_ball_distance), self.pre_angent_ball_distance,
+        #     agent_ball_distance))
+        #print("angle reduction: {} = pre[{}] - current[{}]".format(10 * (abs(self.pre_angle) - abs(angle)), self.pre_angle,angle))
 
-        reward += 1*(abs(self.pre_angle)-abs(angle))
-        reward += 4* (self.pre_angent_ball_distance - agent_ball_distance)
-        reward += 4* (self.pre_ball_goal_distance - ball_goal_distance)
+        reward += 10*(abs(self.pre_angle)-abs(angle))
+        reward += 50* (self.pre_angent_ball_distance - agent_ball_distance)
+        reward += (50 * (self.pre_ball_goal_distance - ball_goal_distance))
         self.pre_ball_goal_distance = ball_goal_distance
         self.pre_angent_ball_distance = agent_ball_distance
         self.pre_angle = angle
-        #print("\n\nREWARD (post H): {}".format(reward))   
+
+        self.pre_ball_pos = ball
+        self.pre_agent_pos = agent_pos
+
+        #print("\nREWARD: {}".format(reward))
         return reward, info
 
     # Method that serves as an interface between a script controlling the agent

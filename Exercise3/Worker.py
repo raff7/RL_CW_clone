@@ -29,13 +29,14 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
     hfoEnv.connectToServer()
     print("CONNECTED {}, reset".format(idx))
     observation =hfoEnv.reset()
+
     print("HFO INIT FOR {}".format(idx))
 
     steps_to_goal = 0
     cum_reward = 0
 
     while counter.value < args.numEpisodes:
-        print("AGENT {} CHECK {}".format(idx, counter.value))
+        #print("AGENT {} CHECK {}".format(idx, counter.value))
         steps_to_goal +=1
         epsilon,new_lr = updateParams(args, counter.value)
         print_eps.value, print_lr.value = epsilon,new_lr
@@ -43,10 +44,14 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
         action, actionID = act(observation,value_network,args,hfoEnv,epsilon)
         #STEP
         newObservation, reward, done, status, info = hfoEnv.step(action)
+
         cum_reward += reward
+        #print('\n\n\n\n\n\n\n\nCUM REWARD = {} (pre:{} +:{})'.format(cum_reward,cum_reward-reward,reward))
         #TRAIN
-        tar = computeTargets(reward, newObservation, args.discountFactor, done, target_value_network)
-        pred = computePrediction(observation,actionID,value_network)
+        newState = torch.Tensor([newObservation])
+        tar = computeTargets(reward, newState, args.discountFactor, done, target_value_network)
+        state = torch.Tensor([observation])
+        pred = computePrediction(state,actionID,value_network)
         loss = 0.5*(pred-tar)**2
         loss.backward()
             
@@ -103,7 +108,7 @@ def act(state,value_network,args,hfoEnv,epsilon):
     return action, actionID
     
 def updateParams(args,episodeN):
-    eps= args.initEpsilon*(pow(np.e, (-episodeN / 1500000)))
+    eps= args.initEpsilon*(pow(np.e, (-episodeN / 700000)))
     lr= args.lr *(args.numEpisodes-episodeN )/args.numEpisodes
     return eps, lr
 
@@ -122,8 +127,8 @@ def computeTargets(reward, nextObservation, discountFactor, done, targetNetwork)
     
 
 def computePrediction(state, action, valueNetwork):
-    qVals = valueNetwork(torch.Tensor(state))#
-    return qVals[action]
+    qVals = valueNetwork(state)
+    return qVals[0][action]
 	
 # Function to save parameters of a neural network in pytorch.
 def saveModelNetwork(model, strDirectory):

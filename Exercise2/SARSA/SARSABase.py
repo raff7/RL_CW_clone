@@ -140,7 +140,8 @@ class SARSAAgent(Agent):
             self.qValues[nextState] = dict.fromkeys(self.possibleActions, 0)
 
     def computeHyperparameters(self, numTakenActions, episodeNumber):
-        lr = 0.3
+        #running: lr = 0.3
+        lr = 0.3 * (5000 - episodeNumber) / 5000
         ep = 0.7 * (pow(np.e, (-episodeNumber / 600)))
 
         return lr, ep

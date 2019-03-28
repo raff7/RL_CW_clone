@@ -1,25 +1,7 @@
-from MonteCarloBase import MonteCarloAgent
+from SARSABase import SARSAAgent
 import csv
 import ast
 import math
-
-def csvEpisodeLoader(filename):
-	result = []
-	epsData = []
-	epsId = ""
-	with open(filename, 'r') as csvfile:
-		reader = csv.reader(csvfile, delimiter='|')
-		for row in reader:
-			if row[0] != epsId:
-				if epsData != []:
-					result.append(epsData)
-					epsData = []
-				epsId = row[0]
-			epsData.append(row)
-
-		result.append(epsData)
-
-	return result
 
 def csvLoader(filename):
 	result = []
@@ -32,9 +14,9 @@ def csvLoader(filename):
 
 
 if __name__ == '__main__':
-	agent = MonteCarloAgent(discountFactor = 0.99, epsilon = 1.0)
+	agent = SARSAAgent(learningRate = 0.1, discountFactor = 0.99, epsilon = 1.0)
 	
-	inputData = csvEpisodeLoader('Input.csv')
+	inputData = csvLoader('Input.csv')
 	outputData = csvLoader('Output.csv')
 
 	numTakenActions = 0 
@@ -48,16 +30,21 @@ if __name__ == '__main__':
 	epsilon = 1.0
 
 	# For this example, we are only using 1 episode
-	numEpisodes = 2
+	numEpisodes = 1
 
-	for episode in range(numEpisodes):
-		timestep = 0
+	for timestep in range(numEpisodes):
 		agent.reset()
-		observation = ast.literal_eval(inputData[episode+1][timestep][2])
+
 		status = 0
-		
+		observation = ast.literal_eval(inputData[1][1])
+
+		nextObservation = None
+		epsStart = True
+
 		while status == 0:
 			agent.setEpsilon(epsilon)
+			agent.setLearningRate(learningRate)
+			nextObservation = None
 			obsCopy = observation.copy()
 			agent.setState(agent.toStateRepresentation(obsCopy))
 
@@ -68,26 +55,37 @@ if __name__ == '__main__':
 
 			# But since we're using a predefined set of experience, load them from our storage
 
-			action = inputData[episode+1][timestep][3]
+			action = inputData[timestep+1][2]
 			try :
-				nextObservation = ast.literal_eval(inputData[episode+1][timestep][5])
+				nextObservation = ast.literal_eval(inputData[timestep+1][4])
 			except:
-				nextObservation = inputData[episode+1][timestep][5]
+				nextObservation = inputData[timestep+1][4]
 
-			reward, done, status = float(inputData[episode+1][timestep][4]),(inputData[episode+1][timestep][6] == "True"), int(inputData[episode+1][timestep][7])
+			reward, done, status = float(inputData[timestep+1][3]),(inputData[timestep+1][5] == "True"), int(inputData[timestep+1][6])
+
 			# Set the experience and learn
 			agent.setExperience(agent.toStateRepresentation(obsCopy), action, reward, status, agent.toStateRepresentation(nextObservation))
+			
+			if not epsStart :
+				update = agent.learn()
+				if not math.isclose(update, float(outputData[timestep][1]), abs_tol=1e-5):
+					print("Wrong Output")
+					exit()
+
+				print("Correct Output")
+			
+			else:
+				epsStart = False
+
 			observation = nextObservation
 
 			timestep += 1
 
-		_ , update = agent.learn()
-		result_list = ast.literal_eval(outputData[episode+1][1])
-
-		for idx in range(len(result_list)):
-			if not math.isclose(update[idx], float(result_list[idx]), abs_tol=1e-5):
-				print("Wrong Output")
-				exit()
+		agent.setExperience(agent.toStateRepresentation(nextObservation), None, None, None, None)
+		update = agent.learn()
+		if not math.isclose(update, float(outputData[timestep][1]), abs_tol=1e-5):
+			print("Wrong Output")
+			exit()
 
 		print("Correct Output")
 	

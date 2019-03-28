@@ -91,9 +91,9 @@ class JointQLearningAgent(Agent):
         return (((state[0][0][0], state[0][0][1]), (state[0][1][0], state[0][1][1])))
         
     def computeHyperparameters(self, numTakenActions, episodeNumber):
-        eps =  0.6 * (pow(np.e, (-episodeNumber / 16000)))
-        lr = 0.5 * (pow(np.e, (-episodeNumber / 10000)))
-        #lr = 0.3
+        eps =  0.8 * (pow(np.e, (-episodeNumber / 10000)))
+        #lr = 0.5 * (pow(np.e, (-episodeNumber / 10000)))
+        lr = 0.5*(50000-episodeNumber )/50000#0.5
 
         return lr, eps
 
@@ -121,7 +121,8 @@ if __name__ == '__main__':
 
     for episode in range(numEpisodes):
         if (episode % 200 == 0):
-            print("Epsilon {}".format(agent.eps))
+            print("\nEpsilon {}".format(agent.eps))
+            print("LR {}".format(agent.lr))
             print("Episode {}/{}, tot win% {}, partial win %: {}".format(wins, episode, wins / max(1, episode),    (wins - prew) / 200))
             prew = wins
         status = ["IN_GAME","IN_GAME","IN_GAME"]
