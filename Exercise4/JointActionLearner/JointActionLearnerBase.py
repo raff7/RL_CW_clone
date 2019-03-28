@@ -93,7 +93,7 @@ class JointQLearningAgent(Agent):
     def computeHyperparameters(self, numTakenActions, episodeNumber):
         eps =  0.8 * (pow(np.e, (-episodeNumber / 10000)))
         #lr = 0.5 * (pow(np.e, (-episodeNumber / 10000)))
-        lr = 0.5*(50000-episodeNumber )/50000#0.5
+        lr = 0.1*(50000-episodeNumber )/50000#0.5
 
         return lr, eps
 
