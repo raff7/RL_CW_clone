@@ -12,46 +12,6 @@ import random
 import matplotlib.pyplot as plt
 import time
 
-def plot_greedy_policy(q_vals, f, ax, iteration):
-    if f == ax == None:
-        plt.ion()
-        f, ax = plt.subplots(1, 1, figsize=(6, 4))
-        plt.show()
-
-    possible_actions = ['DRIBBLE_UP','DRIBBLE_DOWN','DRIBBLE_LEFT','DRIBBLE_RIGHT','KICK']
-    ax.clear()
-    ax.set_title('Iteration {}'.format(iteration))
-    ax.set_ylim([0, 6])
-    ax.set_xlim([0, 5])
-    ax.invert_yaxis()
-
-    for y in range(6):
-        for x in range(5):
-            if(not (x,y) in q_vals.keys()):
-                continue
-
-            max_k = max(q_vals[(x,y)].items(), key=operator.itemgetter(1))[0]
-            max_v = q_vals[(x,y)][max_k]
-            actions = [key for (key, value) in q_vals[(x,y)].items() if value == max_v]
-
-
-            for action in actions:
-                if action == 'DRIBBLE_UP':
-                    ax.annotate('', (x + 0.5, y), (x + 0.5, y + 0.5), arrowprops={'width': 0.1})
-                if action == 'DRIBBLE_DOWN':
-                    ax.annotate('', (x + 0.5, y + 1), (x + 0.5, y + 0.5), arrowprops={'width': 0.1})
-                if action == 'DRIBBLE_RIGHT':
-                    ax.annotate('', (x + 1, y + 0.5), (x + 0.5, y + 0.5), arrowprops={'width': 0.1})
-                if action == 'DRIBBLE_LEFT':
-                    ax.annotate('', (x, y + 0.5), (x + 0.5, y + 0.5), arrowprops={'width': 0.1})
-                if action == 'KICK':
-                    ax.text(x + 0.5, y + 0.5, action, horizontalalignment='center', verticalalignment='center', )
-
-    f.canvas.draw()
-    f.canvas.flush_events()
-    time.sleep(0.001)
-
-    return f, ax
 
 class SARSAAgent(Agent):
     def __init__(self, learningRate, discountFactor, epsilon, initVals=0.0):
@@ -145,7 +105,6 @@ class SARSAAgent(Agent):
         ep = 0.7 * (pow(np.e, (-episodeNumber / 600)))
 
         return lr, ep
-        return lr, ep
     def toStateRepresentation(self, state):
         return state[0]
 
@@ -183,7 +142,6 @@ if __name__ == '__main__':
 
     # Run training using SARSA
     numTakenActions = 0
-    f, ax = plot_greedy_policy(agent.qValues,None,None,0)
     for episode in range(numEpisodes):
         if (agent.printing):
             print()
@@ -232,8 +190,7 @@ if __name__ == '__main__':
         agent.learn()
 
 
-        if (episode % 50 == 0):
-            f, ax = plot_greedy_policy(agent.qValues, f, ax, episode)
+        if (agent.printing and episode % 50 == 0):
             st = (0, 2)
             ac = 'S'
             print("Epsilon ",agent.epsilon)

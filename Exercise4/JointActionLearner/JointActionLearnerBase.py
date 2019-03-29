@@ -91,9 +91,9 @@ class JointQLearningAgent(Agent):
         return (((state[0][0][0], state[0][0][1]), (state[0][1][0], state[0][1][1])))
         
     def computeHyperparameters(self, numTakenActions, episodeNumber):
-        eps =  0.8 * (pow(np.e, (-episodeNumber / 10000)))
-        lr = 0.3 * (pow(np.e, (-episodeNumber / 10000)))
-        #lr = 0.1*(50000-episodeNumber )/50000#0.5
+        eps =  1 * (pow(np.e, (-episodeNumber / 12000)))
+        #lr = 0.15 * (pow(np.e, (-episodeNumber / 10000)))
+        lr = 0.1*(50000-episodeNumber )/50000#0.5
 
         return lr, eps
 
@@ -111,7 +111,7 @@ if __name__ == '__main__':
     numAgents = args.numAgents
     numEpisodes = args.numEpisodes
     for i in range(numAgents):
-        agent = JointQLearningAgent(learningRate = 0.1, discountFactor = 0.95, epsilon = 1.0, numTeammates=args.numAgents-1)
+        agent = JointQLearningAgent(learningRate = 0, discountFactor = 0.95, epsilon = 0, numTeammates=args.numAgents-1)
         agents.append(agent)
 
     numEpisodes = numEpisodes
